@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/08 19:54:43 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/08 20:27:04 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 #include <netinet/in.h>
 #include <cstring>
 #include <stdlib.h>
+#include <unistd.h>
 #include <exception>
 
 #define SCK_ADDR sockaddr_in
 
-#define PORT 18000
-
+#define PORT 8080
 
 class Socket
 {
@@ -39,6 +39,7 @@ public:
 	Socket();
 
 	int getNewSocket();
+	void waitForConnect();
 
 	class NoSocketException: public std::exception
 	{
