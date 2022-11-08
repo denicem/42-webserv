@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/08 21:06:32 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/08 21:35:20 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "socket.hpp"
+#include "Socket.hpp"
 #include <iostream>
 
 Socket::Socket()
