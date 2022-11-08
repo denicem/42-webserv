@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/08 21:54:13 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/08 22:12:32 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Socket::initSockAddr()
 	memset(this->_address.sin_zero, 0, sizeof(this->_address.sin_zero));
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_addr.s_addr = INADDR_ANY;
-	this->_address.sin_port = htons(PORT);
+	this->_address.sin_port = htons(PORT42);
 	if (bind(this->_server_socket_fd,(struct sockaddr *) &_address, sizeof(_address)) < 0)
 		throw NoBindException();
 }
@@ -51,7 +51,7 @@ void Socket::waitForConnect()
 		std::cout << buffer << std::endl;
 		if (valread < 0)
 			std::cout << "No bytes are there to read.\n";
-		std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 30\n\nHello from the other siiiiide.";
+		std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 39\n\n<h1>Hello from the other siiiiide.</h1>";
 		// write(this->_client_socket_fd, hello.c_str(), hello.length());
 		send(this->_client_socket_fd, hello.c_str(), hello.length(), 0);
 		std::cout << "-------- msg sent --------\n";
