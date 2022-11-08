@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/08 20:47:24 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/08 20:51:34 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,14 @@ void Socket::waitForConnect()
 		this->_newSocket = accept(this->_server_fd, (struct sockaddr *)&this->_address, (socklen_t*) &addrlen);
 		if (this->_newSocket < 0)
 			throw NoAcceptException();
-		char buffer[1024] = {0};
-		int valread = read(this->getNewSocket(), buffer, 1024);
+		char buffer[30000] = {0};
+		int valread = read(this->getNewSocket(), buffer, 30000);
 		std::cout << buffer << std::endl;
 		if (valread < 0)
 			std::cout << "No bytes are there to read.\n";
-		std::string hello = "Hello from the other siiiiide.";
+		std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 30\n\nHello from the other siiiiide.";
 		write(this->getNewSocket(), hello.c_str(), hello.length());
+		std::cout << "-------- msg sent --------\n";
 		close(this->getNewSocket());
 	}
 }
