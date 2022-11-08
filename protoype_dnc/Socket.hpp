@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   socket.hpp                                         :+:      :+:    :+:   */
+/*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/08 20:27:04 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/08 21:58:05 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@
 class Socket
 {
 private:
-	int _server_fd;
-	int _bind;
+	int _server_socket_fd;
+	int _client_socket_fd;
+	//int _bind;
 	int _listen;
-	int _newSocket;
 	SCK_ADDR _address;
 
 	void initSockAddr();
@@ -38,7 +38,7 @@ private:
 public:
 	Socket();
 
-	int getNewSocket();
+	int getClientSocketFD();
 	void waitForConnect();
 
 	class NoSocketException: public std::exception
