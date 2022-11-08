@@ -6,7 +6,7 @@
 #    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2022/11/08 22:26:02 by shaas            ###   ########.fr        #
+#    Updated: 2022/11/08 22:35:06 by shaas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ $(NAME): $(OBJ)
 $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 	@mkdir -p $(dir $@)
 	@$(CC) $(CC_FLAGS) -c $< -o $@
-	@printf "$< compiled\n"
+	@printf "$(notdir $<) compiled\n"
 
 clean:
 	@rm -rf $(DIR_OBJ)
