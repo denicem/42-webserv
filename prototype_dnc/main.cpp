@@ -6,13 +6,11 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/08 22:30:35 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/08 22:41:34 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Socket.hpp"
-#include <iostream>
-#include <unistd.h>
+#include "../inc/webserv.hpp"
 
 int main()
 {
