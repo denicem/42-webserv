@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/09 17:04:22 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/09 18:59:08 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,17 @@ void Socket::waitForConnect()
 		if (valread < 0)
 			std::cout << "No bytes are there to read.\n";
 		std::cout << buffer << std::endl;
-		std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: ";
+		std::string hello = "HTTP/1.1 200 OK\nFilename from Server: ";
 		std::string filename = getHeaderRequest(buffer);
 		if (filename == "/")
 			filename = "/index.html";
+		if (filename.find("favicon.ico") != std::string::npos)
+			filename = "/favicon.ico";
 		File file = getFileContent(filename);
 		// printFile(file);
 		std::cout << filename << " (" << file.fileSize << " bytes.)" << std::endl;
+		hello.append(filename);
+		hello.append("\nContent-Type: text/html\nContent-Length: ");
 		hello.append(std::to_string(file.fileSize)); // TODO: implement own to_string()
 		hello.append("\n\n");
 		hello.append(file.content);

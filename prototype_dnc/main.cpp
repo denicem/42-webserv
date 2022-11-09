@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/09 02:39:36 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/09 18:47:36 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int main()
 		Socket socket;
 		socket.waitForConnect();
 	} catch (std::exception& e) {
-		std::cout << e.what() << '\n';
+		std::cout << e.what() << " ERRNO: " << errno << '\n';
 	}
 	return (0);
 }
