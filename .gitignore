@@ -22,3 +22,6 @@
 
 # Mac folder files
 .DS_Store
+
+# VSCode files
+.vscode
