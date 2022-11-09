@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/09 03:53:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/09 17:04:22 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ void Socket::waitForConnect()
 		std::cout << buffer << std::endl;
 		std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: ";
 		std::string filename = getHeaderRequest(buffer);
+		if (filename == "/")
+			filename = "/index.html";
 		File file = getFileContent(filename);
 		// printFile(file);
 		std::cout << filename << " (" << file.fileSize << " bytes.)" << std::endl;
