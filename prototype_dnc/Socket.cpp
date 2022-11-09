@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/08 22:41:02 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/09 03:53:18 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Socket.hpp"
-#include <iostream>
+#include <sstream>
 
 Socket::Socket()
 {
@@ -31,13 +31,58 @@ void Socket::initSockAddr()
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_addr.s_addr = INADDR_ANY;
 	this->_address.sin_port = htons(PORT42);
+	
 	if (bind(this->_server_socket_fd,(struct sockaddr *) &_address, sizeof(_address)) < 0)
 		throw NoBindException();
 }
 
+void Socket::printFile(File& file)
+{
+	std::cout << file.fileSize << " bytes." << std::endl << "Content:\n" << file.content << std::endl;
+}
+
+// NOTE: gets the (html-)file from the html directory
+File Socket::getFileContent(std::string& name)
+{
+	
+	File res; // NOTE: struct File, which has the variables content (std::string) and fileSize (int).
+	std::cout << name << std::endl;
+	std::ifstream file("html" + name, std::ios::binary);
+
+	// calc the size of the file
+	file.seekg(0, std::ios::end);
+	res.fileSize = file.tellg();
+	//resets to beginning of the file
+	file.clear();
+	file.seekg(0);
+
+	// copy its content to the string
+	if (file.is_open())
+	{
+		std::string text;
+		while (!file.eof())
+		{
+			std::getline(file, text);
+			res.content.append(text);
+			if (!file.eof())
+				res.content.append("\n");
+		}
+	}
+	return (res);
+}
+
+// NOTE: gets the header of the request (GET / HTTP/1.1, ...)
+std::string Socket::getHeaderRequest(void* buff)
+{
+	std::string res((const char *)buff);
+	std::stringstream strstr(res);
+	strstr >> res;
+	strstr >> res;
+	return (res);
+}
+
 void Socket::waitForConnect()
 {
-	// std::cout << "hehe\n";
 	int addrlen = sizeof(this->_address);
 	while (42)
 	{
@@ -46,13 +91,19 @@ void Socket::waitForConnect()
 		if (this->_client_socket_fd < 0)
 			throw NoAcceptException();
 		char buffer[30000] = {0};
-		// int valread = read(this->_client_socket_fd, buffer, 30000);
 		int valread = recv(this->_client_socket_fd, buffer, 30000, 0);
-		std::cout << buffer << std::endl;
 		if (valread < 0)
 			std::cout << "No bytes are there to read.\n";
-		std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 39\n\n<h1>Hello from the other siiiiide.</h1>";
-		// write(this->_client_socket_fd, hello.c_str(), hello.length());
+		std::cout << buffer << std::endl;
+		std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: ";
+		std::string filename = getHeaderRequest(buffer);
+		File file = getFileContent(filename);
+		// printFile(file);
+		std::cout << filename << " (" << file.fileSize << " bytes.)" << std::endl;
+		hello.append(std::to_string(file.fileSize)); // TODO: implement own to_string()
+		hello.append("\n\n");
+		hello.append(file.content);
+
 		send(this->_client_socket_fd, hello.c_str(), hello.length(), 0);
 		std::cout << "-------- msg sent --------\n";
 		close(this->_client_socket_fd);
