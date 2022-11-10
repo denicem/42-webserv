@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/09 18:59:08 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:07:23 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ Socket::Socket()
 	if (this->_server_socket_fd == 0)
 		throw NoSocketException();
 	initSockAddr();
-	this->_listen = listen(this->_server_socket_fd, 10);
-	if(this->_listen < 0)
-		throw NoListenException();
+	// this->_listen = listen(this->_server_socket_fd, 10);
+	// if(this->_listen < 0)
+		// throw NoListenException();
 }
 
 void Socket::initSockAddr()
@@ -84,6 +84,8 @@ std::string Socket::getHeaderRequest(void* buff)
 void Socket::waitForConnect()
 {
 	int addrlen = sizeof(this->_address);
+	if(listen(this->_server_socket_fd, 10) < 0)
+		throw NoListenException();
 	while (42)
 	{
 		std::cout << "\n---------- Waiting for connection -----------\n\n";
