@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:53:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/10 20:34:58 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/13 18:55:34 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 class File
 {
 private:
+	std::string _pathfile;
 	std::string _content;
 	int _fileSize;
 
@@ -30,9 +31,11 @@ public:
 
 	File& operator=(const File&);
 
+	std::string getPathfile() const;
 	std::string getContent() const;
 	int getFileSize() const;
 
+	void setPathfile(const std::string&);
 	void setContent(const std::string&);
 	void setFileSize(const int&);
 

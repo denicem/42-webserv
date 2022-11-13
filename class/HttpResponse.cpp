@@ -6,11 +6,13 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/11 01:30:39 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/14 00:36:49 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/HttpResponse.hpp"
+
+
 
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
@@ -22,6 +24,14 @@
 
 HttpResponse::HttpResponse() {}
 HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), _statusCode(other._statusCode), _statusMsg(other._statusMsg) {}
+
+HttpResponse::HttpResponse(const std::string& filename)
+{
+	this->_file = File(filename);
+	this->_statusCode = 200;
+	this->_statusMsg = "OK";
+}
+
 HttpResponse::~HttpResponse() {}
 
 /*
@@ -70,6 +80,21 @@ void HttpResponse::setStatusMsg(const std::string& statusMsg)
 /*
 ** ----------------------- METHODS -----------------------
 */
+
+std::string HttpResponse::genHttpResponseMsg() const
+{
+	std::string res;
+
+	res.append("HTTP/1.1 ");
+	res.append(std::to_string(this->_statusCode));
+	res.append(" " + this->_statusMsg + "\n");
+	res.append("Content-Type: text/html\nContent-Length: ");
+	res.append(std::to_string(this->_file.getFileSize()));
+	res.append("\n\n");
+	res.append(this->_file.getContent());
+
+	return (res);
+}
 
 /*
 ** ----------------------- CLASS ATTRIBUTES -----------------------

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:32:40 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/10 23:04:53 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/13 01:42:09 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 #define HTTP_REQUEST_HPP
 
 #include "HttpMessage.hpp"
+
+#include <sstream>
+#include <string>
+#include <vector>
 
 class HttpRequest: public HttpMessage
 {
@@ -25,17 +29,27 @@ private:
 public:
 	HttpRequest();
 	HttpRequest(const HttpRequest&);
+	HttpRequest(void*);
 	~HttpRequest();
 
 	HttpRequest& operator=(const HttpRequest&);
 
-	HttpMethod getHttpMethod() const;
+	HttpMessage::HttpMethod getHttpMethod() const;
 	std::string getURI() const;
 	std::string getRestEndpoint() const;
 
 	void setHttpMethod(const HttpMethod&);
 	void setURI(const std::string&);
 	void setRestEndpoint(const std::string&);
+
+private:
+	void initVars();
+	void setHttpMethod(std::stringstream&);
+	void setURI(std::stringstream&);
+	void setHttpVer(std::stringstream&);
+
+public:
+	friend std::ostream& operator<<(std::ostream&, const HttpRequest&);
 };
 
 #endif
