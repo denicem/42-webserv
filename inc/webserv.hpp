@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 22:36:59 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/08 22:46:03 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/12 19:51:58 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "Socket.hpp"
+#include "tcpPoll.hpp"
 
 /* COLOURS */
 

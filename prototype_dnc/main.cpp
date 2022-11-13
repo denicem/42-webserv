@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/09 18:47:36 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/13 19:36:33 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,13 @@ int main()
 {
 	logo();
 	try {
-		Socket socket;
-		socket.waitForConnect();
+		tcpPoll tcp_poll;
+		// socket.waitForConnect();
+		for(int i = 0; i < 3; i++)
+		{
+			tcp_poll.add_fds(Socket(PORT + i));
+		}
+		tcp_poll.status_check();
 	} catch (std::exception& e) {
 		std::cout << e.what() << " ERRNO: " << errno << '\n';
 	}
