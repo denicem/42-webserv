@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/13 21:53:43 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/14 01:23:02 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ File::File(const std::string& pathfile): _pathfile(pathfile)
 		this->_pathfile = "/index.html";
 	if (this->_pathfile.find("favicon.ico") != std::string::npos)
 		this->_pathfile = "/favicon.ico";
-	std::cout << this->_pathfile << std::endl;
+	// std::cout << this->_pathfile << std::endl;
 
 	std::ifstream file("html" + this->_pathfile);
 

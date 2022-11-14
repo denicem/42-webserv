@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/13 21:29:00 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/14 01:16:19 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,6 @@
 
 #define PORT 8080
 
-struct File
-{
-	std::string content;
-	int fileSize;
-};
-
-
 class Socket
 {
 	private:
@@ -42,9 +35,6 @@ class Socket
 		size_t len;
 	public:
 		SCK_ADDR _address;
-	
-	private:
-		void printFile(File&);
 	
 	public:
 		Socket(int _port);
