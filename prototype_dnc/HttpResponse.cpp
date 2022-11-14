@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HttpRequest.cpp                                    :+:      :+:    :+:   */
+/*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/10 23:06:55 by dmontema         ###   ########.fr       */
+/*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
+/*   Updated: 2022/11/14 00:36:49 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/HttpRequest.hpp"
+#include "../inc/HttpResponse.hpp"
+
+
 
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
@@ -20,15 +22,23 @@
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-HttpRequest::HttpRequest() {}
-HttpRequest::HttpRequest(const HttpRequest& other): HttpMessage(other), _httpMethod(other._httpMethod), _uri(other._uri), _restEndpoint(other._restEndpoint) {}
-HttpRequest::~HttpRequest() {}
+HttpResponse::HttpResponse() {}
+HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), _statusCode(other._statusCode), _statusMsg(other._statusMsg) {}
+
+HttpResponse::HttpResponse(const std::string& filename)
+{
+	this->_file = File(filename);
+	this->_statusCode = 200;
+	this->_statusMsg = "OK";
+}
+
+HttpResponse::~HttpResponse() {}
 
 /*
 ** ----------------------- OPERATOR OVERLOADS -----------------------
 */
 
-HttpRequest& HttpRequest::operator=(const HttpRequest& other)
+HttpResponse& HttpResponse::operator=(const HttpResponse& other)
 {
 	if (this != &other)
 	{
@@ -36,9 +46,8 @@ HttpRequest& HttpRequest::operator=(const HttpRequest& other)
 		// this->_httpVer = other._httpVer;
 		// this->_headers = other._headers;
 		// this->_msgBody = other._msgBody; // NOTE: will the operator=() method from the Base class called first?
-		this->_httpMethod = other._httpMethod;
-		this->_uri = other._uri;
-		this->_restEndpoint = other._restEndpoint;
+		this->_statusCode = other._statusCode;
+		this->_statusMsg = other._statusMsg;
 	}
 	return (*this);
 }
@@ -47,40 +56,45 @@ HttpRequest& HttpRequest::operator=(const HttpRequest& other)
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
 
-HttpMethod HttpRequest::getHttpMethod() const
+int HttpResponse::getStatusCode() const
 {
-	return (this->_httpMethod);
+	return (this->_statusCode);
 }
 
-std::string HttpRequest::getURI() const
+std::string HttpResponse::getStatusMsg() const
 {
-	return (this->_uri);
-}
-
-std::string HttpRequest::getRestEndpoint() const
-{
-	return (this->_restEndpoint);
+	return (this->_statusMsg);
 }
 
 
-void HttpRequest::setHttpMethod(const HttpMethod& httpMethod)
+void HttpResponse::setStatusCode(const int& statusCode)
 {
-	this->_httpMethod = httpMethod;
+	this->_statusCode = statusCode;
 }
 
-void HttpRequest::setURI(const std::string& uri)
+void HttpResponse::setStatusMsg(const std::string& statusMsg)
 {
-	this->_uri = uri;
-}
-
-void HttpRequest::setRestEndpoint(const std::string& restEndpoint)
-{
-	this->_restEndpoint = restEndpoint;
+	this->_statusMsg = statusMsg;
 }
 
 /*
 ** ----------------------- METHODS -----------------------
 */
+
+std::string HttpResponse::genHttpResponseMsg() const
+{
+	std::string res;
+
+	res.append("HTTP/1.1 ");
+	res.append(std::to_string(this->_statusCode));
+	res.append(" " + this->_statusMsg + "\n");
+	res.append("Content-Type: text/html\nContent-Length: ");
+	res.append(std::to_string(this->_file.getFileSize()));
+	res.append("\n\n");
+	res.append(this->_file.getContent());
+
+	return (res);
+}
 
 /*
 ** ----------------------- CLASS ATTRIBUTES -----------------------

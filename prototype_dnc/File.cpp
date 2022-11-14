@@ -6,12 +6,14 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/10 22:59:43 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/14 01:23:02 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/File.hpp"
+
 #include <fstream>
+#include <iostream>
 
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
@@ -50,9 +52,18 @@ void File::calcFileSize(std::ifstream& file)
 File::File(): _content(""), _fileSize(0) {}
 File::File(const File& other): _content(other._content), _fileSize(other._fileSize) {}
 
-File::File(const std::string& filename)
+File::File(const std::string& pathfile): _pathfile(pathfile)
 {
-	std::ifstream file("html" + filename, std::ios::binary);
+	if (this->_pathfile == "/")
+		this->_pathfile = "/index.html";
+	if (this->_pathfile.find("favicon.ico") != std::string::npos)
+		this->_pathfile = "/favicon.ico";
+	// std::cout << this->_pathfile << std::endl;
+
+	std::ifstream file("html" + this->_pathfile);
+
+	if (!file.is_open())
+		throw std::exception();
 
 	this->calcFileSize(file);
 	this->getContentFromFile(file);
@@ -78,6 +89,11 @@ File& File::operator=(const File& other)
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
 
+std::string File::getPathfile() const
+{
+	return (this->_pathfile);
+}
+
 std::string File::getContent() const
 {
 	return (this->_content);
@@ -88,6 +104,11 @@ int File::getFileSize() const
 	return (this->_fileSize);
 }
 
+
+void File::setPathfile(const std::string& pathfile)
+{
+	this->_pathfile = pathfile;
+}
 
 void File::setContent(const std::string& content)
 {

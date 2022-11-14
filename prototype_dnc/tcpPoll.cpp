@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   tcpPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/13 23:33:16 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/14 01:24:41 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/tcpPoll.hpp"
+#include "../inc/HttpRequest.hpp"
+#include "../inc/HttpResponse.hpp"
+#include "../inc/File.hpp"
 
 tcpPoll::tcpPoll(){
 
@@ -74,13 +77,14 @@ void tcpPoll::status_check()
 						std::cout << "\n---------- We have a connection -----------\n\n";
 						acceptedFd = accept(sfds[i].getServerSocketFD(), (struct sockaddr *)&sfds[i]._address, (socklen_t *) &len);
 						//read and write to client
-						this->len = recv(acceptedFd, this->buffer, 30000, 0);
-						if(this->len < 0)
+						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
-						std::cout << "len after recv:\t" << this->len << std::endl;
-						std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 20\n\n<h1>Hello world</h1>";
-						send(acceptedFd, hello.c_str(), hello.length(), 0);
-						std::cout << "-------- msg sent --------\n";
+						// std::cout << "buffer len after recv:\t" << this->len << std::endl; 
+						HttpRequest req(this->buffer);
+						HttpResponse resp(req.getURI());
+						std::string respMsg(resp.genHttpResponseMsg());
+						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
+						std::cout << "\n-------- msg sent --------\n";
 						close(acceptedFd);
 						
 					}
