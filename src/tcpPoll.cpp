@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/14 01:24:41 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/14 23:55:37 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void tcpPoll::status_check()
 		//clean pollfd stuct
 		memset(&connection_poll[i], 0, sizeof(pollfd));
 		
-		//init socket's
+		//init sockets
 		this->sfds[i].initSockAddr(this->len);
 		if(bind(this->sfds[i].getServerSocketFD(),
 		(struct sockaddr *) &this->sfds[i]._address,

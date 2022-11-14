@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+         #
+#    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2022/11/12 19:40:32 by mjeyavat         ###   ########.fr        #
+#    Updated: 2022/11/14 23:56:08 by shaas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ CC_FLAGS = -Wall -Wextra -Werror -std=c++98
 
 DIR_OBJ = obj/
 
-DIR_SRC = prototype_dnc/
+DIR_SRC = src/
 
 SRC := $(wildcard $(DIR_SRC)*.cpp)
 
