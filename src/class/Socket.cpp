@@ -3,17 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 02:12:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 18:12:32 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
 #include <sstream>
 
-Socket::Socket(int _port){this->_port = _port;}
+Socket::Socket(int _port, std::string sId){
+	this->_port = _port;
+	this->socketId = sId;	
+}
 
 void Socket::initSockAddr(int len)
 {
