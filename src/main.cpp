@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 01:32:46 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:59:48 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int main()
 {
 	logo();
 	try {
-		tcpPoll tcp_poll;
+		TCPPoll tcp_poll;
 		// socket.waitForConnect();
 		for(int i = 0; i < 3; i++)
 		{

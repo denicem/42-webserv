@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tcpPoll.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:23:50 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/13 21:30:16 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/15 02:06:20 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
  * nt socketIn, std::string srcIP, int port
 */
 
-class tcpPoll
+class TCPPoll
 {
 	private:
 		// sockaddr_in sock[MAX_CONN];
@@ -50,7 +50,7 @@ class tcpPoll
 		char buffer[30000];
 		
 	public:
-		tcpPoll();
+		TCPPoll();
 		void add_fds(Socket);
 		void status_check();
 		
@@ -74,5 +74,5 @@ class tcpPoll
 		{
 			const char* what() const throw();
 		};
-		// ~tcpPoll();
+		// ~TCPPoll();
 };

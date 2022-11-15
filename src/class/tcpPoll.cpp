@@ -6,27 +6,27 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/15 01:33:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:59:48 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tcpPoll.hpp"
+#include "TCPPoll.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "File.hpp"
 
-tcpPoll::tcpPoll(){
+TCPPoll::TCPPoll(){
 
 	this->j = 0;
 	this->i = 0;
 	this->len = INADDR_ANY;
 }
 
-void tcpPoll::add_fds(Socket socket){
+void TCPPoll::add_fds(Socket socket){
 	this->sfds.push_back(socket);
 }
 
-void tcpPoll::status_check()
+void TCPPoll::status_check()
 {
 	memset(this->buffer, 0, MAXBUFF);
 	
@@ -93,12 +93,12 @@ void tcpPoll::status_check()
 	}
 }
 
-const char* tcpPoll::NoBindException::what() const throw()
+const char* TCPPoll::NoBindException::what() const throw()
 {
 	return ("\033[31;1mBind failed.\033[0m");
 }
 
-const char* tcpPoll::NoListenException::what() const throw()
+const char* TCPPoll::NoListenException::what() const throw()
 {
 	return ("\033[31;1mListen failed.\033[0m");
 }
