@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
+#    By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2022/11/14 23:56:08 by shaas            ###   ########.fr        #
+#    Updated: 2022/11/15 01:25:37 by dmontema         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,28 +25,38 @@ DIR_OBJ = obj/
 
 DIR_SRC = src/
 
-SRC := $(wildcard $(DIR_SRC)*.cpp)
+SRC := $(shell find $(DIR_SRC) -name "*.cpp")
 
 OBJ := $(patsubst $(DIR_SRC)%.cpp, $(DIR_OBJ)%.o, $(SRC))
+
+# **************************************************************************** #
+#	RULES																	   #
+# **************************************************************************** #
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
+	@printf $(BLUE)"Linking objects to a binary file\r"$(RESET)
 	@$(CC) $(CC_FLAGS) $^ -o $@
-	@printf $(BLUE)"$(NAME) created\n"$(RESET)
+	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
+	@printf $(GREEN)$(BOLD)"\t\tCOMPLETE!\n\n"$(RESET)
+	@printf $(MAGENTA)"\t\tName of executable: "$(BOLD)$(MAGENTA_BG)" $(NAME) "$(RESET)"\n\n"
 
 $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 	@mkdir -p $(dir $@)
+	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
 	@$(CC) $(CC_FLAGS) -c $< -o $@
-	@printf "$(notdir $<) compiled\n"
+	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 clean:
+	@printf $(MAGENTA)"Removing object files...\r"$(RESET)
 	@rm -rf $(DIR_OBJ)
-	@printf $(RED)"Object files removed\n"$(RESET)
+	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 fclean: clean
+	@printf $(MAGENTA)"Removing binary file...\r"$(RESET)
 	@rm -rf $(NAME)
-	@printf $(RED)"$(NAME) removed\n"$(RESET)
+	@printf $(SPACE)$(GREEN)"[✓]\n\n"$(RESET)
 
 re: fclean all
 
@@ -55,9 +65,12 @@ exe:
 
 run: $(NAME) exe
 
-.PHONY: all clean fclean re exe both
+.PHONY: all clean fclean re exe
 
-# text modifiers #
+# **************************************************************************** #
+#	TEXT MODIFIERS / FORMATITING CODES										   #
+# **************************************************************************** #
+
 RED =				"\e[31m"
 GREEN =				"\e[32m"
 YELLOW =			"\e[33m"
@@ -90,3 +103,4 @@ BOLD =				"\e[1m"
 ITALIC =			"\e[3m"
 UNDERLINED =		"\e[4m"
 RESET =				"\e[0m"
+SPACE =				"\e[50C"

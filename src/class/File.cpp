@@ -6,11 +6,11 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/14 01:23:02 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:26:30 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/File.hpp"
+#include "../../inc/File.hpp"
 
 #include <fstream>
 #include <iostream>
