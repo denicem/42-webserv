@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 02:11:49 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 18:11:55 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,13 @@ class Socket
 		int _server_socket_fd;
 		int _port;
 		size_t len;
+		//for identiyfing porposes
+		std::string socketId;
 	public:
 		SCK_ADDR _address;
 	
 	public:
-		Socket(int _port);
+		Socket(int _port, std::string sId);
 	
 		int getClientSocketFD();
 		int getServerSocketFD();
