@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 01:33:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 02:12:28 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,3 +30,8 @@ void Socket::initSockAddr(int len)
 
 int Socket::getServerSocketFD(){return (this->_server_socket_fd);}
 const char* Socket::NoSocketException::what() const throw(){return ("\033[31;1mCannot create socket.\033[0m");}
+
+int Socket::getPort()
+{
+	return (this->_port);
+}

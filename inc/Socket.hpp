@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/14 01:16:19 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 02:11:49 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Socket
 		int getRefAddrlen();
 		void setClientSocketFD(int);
 		void initSockAddr(int);
+		int getPort();
 		// void waitForConnect();
 		// File getFileContent(std::string&);
 		// std::string getHeaderRequest(void*);

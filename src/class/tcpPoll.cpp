@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/15 01:59:48 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 02:14:01 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void TCPPoll::status_check()
 						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
 						// std::cout << "buffer len after recv:\t" << this->len << std::endl; 
+						std::cout << "Port " << this->sfds[i].getPort() << " connected to client." << std::endl;
 						HttpRequest req(this->buffer);
 						HttpResponse resp(req.getURI());
 						std::string respMsg(resp.genHttpResponseMsg());
