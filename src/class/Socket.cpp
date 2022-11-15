@@ -6,11 +6,11 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 01:26:30 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:33:16 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/Socket.hpp"
+#include "Socket.hpp"
 #include <sstream>
 
 Socket::Socket(int _port){this->_port = _port;}

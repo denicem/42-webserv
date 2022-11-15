@@ -6,7 +6,7 @@
 #    By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2022/11/15 01:25:37 by dmontema         ###   ########.fr        #
+#    Updated: 2022/11/15 01:34:14 by dmontema         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,8 @@ SRC := $(shell find $(DIR_SRC) -name "*.cpp")
 
 OBJ := $(patsubst $(DIR_SRC)%.cpp, $(DIR_OBJ)%.o, $(SRC))
 
+INCLUDE := -I./inc/
+
 # **************************************************************************** #
 #	RULES																	   #
 # **************************************************************************** #
@@ -37,7 +39,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@printf $(BLUE)"Linking objects to a binary file\r"$(RESET)
-	@$(CC) $(CC_FLAGS) $^ -o $@
+	@$(CC) $(CC_FLAGS) $(INCLUDE) $^ -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 	@printf $(GREEN)$(BOLD)"\t\tCOMPLETE!\n\n"$(RESET)
 	@printf $(MAGENTA)"\t\tName of executable: "$(BOLD)$(MAGENTA_BG)" $(NAME) "$(RESET)"\n\n"
@@ -45,7 +47,7 @@ $(NAME): $(OBJ)
 $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 	@mkdir -p $(dir $@)
 	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
-	@$(CC) $(CC_FLAGS) -c $< -o $@
+	@$(CC) $(CC_FLAGS) $(INCLUDE) -c $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 clean:

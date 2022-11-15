@@ -6,14 +6,14 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/15 01:26:30 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:33:16 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/tcpPoll.hpp"
-#include "../../inc/HttpRequest.hpp"
-#include "../../inc/HttpResponse.hpp"
-#include "../../inc/File.hpp"
+#include "tcpPoll.hpp"
+#include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
+#include "File.hpp"
 
 tcpPoll::tcpPoll(){
 

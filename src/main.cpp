@@ -6,11 +6,11 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/14 01:11:42 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/15 01:32:46 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/webserv.hpp"
+#include "webserv.hpp"
 
 void	logo(void)
 {
