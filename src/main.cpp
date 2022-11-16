@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 18:13:09 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:19:57 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int main()
 		// socket.waitForConnect();
 		for(int i = 0; i < 3; i++)
 		{
-			tcp_poll.add_fds(Socket(PORT + i, "simple"));
+			tcp_poll.add_fds(Server(PORT + i, "simple"));
 		}
 		tcp_poll.status_check();
 	} catch (std::exception& e) {
