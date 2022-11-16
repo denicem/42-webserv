@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tcpPoll.hpp                                        :+:      :+:    :+:   */
+/*   TCPPoll.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:23:50 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/15 02:06:20 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:21:34 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 #include <vector>
-#include "Socket.hpp"
+#include "Server.hpp"
 
 
 /* our defines */
@@ -44,14 +44,14 @@ class TCPPoll
 	private:
 		// sockaddr_in sock[MAX_CONN];
 		pollfd connection_poll[MAX_CONN];
-		std::vector<Socket> sfds;
+		std::vector<Server> sfds;
 		int j, i, acceptedFd;
 		size_t len;
 		char buffer[30000];
 		
 	public:
 		TCPPoll();
-		void add_fds(Socket);
+		void add_fds(Server);
 		void status_check();
 		
 

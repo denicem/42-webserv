@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tcpPoll.cpp                                        :+:      :+:    :+:   */
+/*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/15 17:29:14 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:22:25 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ TCPPoll::TCPPoll(){
 	this->len = INADDR_ANY;
 }
 
-void TCPPoll::add_fds(Socket socket){
-	this->sfds.push_back(socket);
+void TCPPoll::add_fds(Server server){
+	this->sfds.push_back(server);
 }
 
 void TCPPoll::status_check()

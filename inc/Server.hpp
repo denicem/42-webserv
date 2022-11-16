@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Socket.hpp                                         :+:      :+:    :+:   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 18:11:55 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:20:05 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 
 #define PORT 8080
 
-class Socket
+class Server
 {
 	private:
 		int _server_socket_fd;
@@ -39,7 +39,7 @@ class Socket
 		SCK_ADDR _address;
 	
 	public:
-		Socket(int _port, std::string sId);
+		Server(int _port, std::string sId);
 	
 		int getClientSocketFD();
 		int getServerSocketFD();

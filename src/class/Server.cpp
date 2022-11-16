@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Socket.cpp                                         :+:      :+:    :+:   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 18:12:32 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/16 16:20:40 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Socket.hpp"
+#include "Server.hpp"
 #include <sstream>
 
-Socket::Socket(int _port, std::string sId){
+Server::Server(int _port, std::string sId){
 	this->_port = _port;
 	this->socketId = sId;	
 }
 
-void Socket::initSockAddr(int len)
+void Server::initSockAddr(int len)
 {
 	this->_server_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_server_socket_fd == 0)
@@ -31,10 +31,10 @@ void Socket::initSockAddr(int len)
 	
 }	
 
-int Socket::getServerSocketFD(){return (this->_server_socket_fd);}
-const char* Socket::NoSocketException::what() const throw(){return ("\033[31;1mCannot create socket.\033[0m");}
+int Server::getServerSocketFD(){return (this->_server_socket_fd);}
+const char* Server::NoSocketException::what() const throw(){return ("\033[31;1mCannot create socket.\033[0m");}
 
-int Socket::getPort()
+int Server::getPort()
 {
 	return (this->_port);
 }
