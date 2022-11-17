@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/16 16:19:57 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/17 19:00:33 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,20 @@ int main()
 {
 	logo();
 	try {
+		webserv dsm_server;
 		TCPPoll tcp_poll;
-		// socket.waitForConnect();
+		//ports list for testing testing 
+		std::vector<int>ports;
+		ports.push_back(8080);
+		ports.push_back(8081);
+		ports.push_back(8082);
+		
+		dsm_server.addServer(ports, "test_server_1");
+		dsm_server.addServer(ports, "test_server_2");
+		dsm_server.addServer(ports, "test_server_3");
 		for(int i = 0; i < 3; i++)
-		{
-			tcp_poll.add_fds(Server(PORT + i, "simple"));
-		}
+			tcp_poll.add_fds(dsm_server.getServerFromList(i));
+		// 	tcp_poll.add_fds(Server(PORT + i, "simple"));
 		tcp_poll.status_check();
 	} catch (std::exception& e) {
 		std::cout << e.what() << " ERRNO: " << errno << '\n';
