@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/16 18:40:26 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/17 19:29:04 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 #define SCK_ADDR sockaddr_in
 
@@ -31,25 +32,27 @@ class Server
 {
 	private:
 		int _server_socket_fd;
-		int _port;
+		// int _port;
+		std::vector<int>_port;
 		size_t len;
-		//for identiyfing purposes
-		std::string socketId;
+		//for identiyfing porposes
+		std::string serverName;
 	public:
 		SCK_ADDR _address;
 	
 	public:
-		Server(int _port, std::string sId);
+		Server(std::string sId);
 	
 		int getClientSocketFD();
 		int getServerSocketFD();
 		int getRefAddrlen();
+		int getPort(int);
+		std::string getServerName();
+
 		void setClientSocketFD(int);
-		void initSockAddr(int);
-		int getPort();
-		// void waitForConnect();
-		// File getFileContent(std::string&);
-		// std::string getHeaderRequest(void*);
+		void initSockAddr(int, int);
+		void setServerName(std::string);
+		void setPort(int);
 	
 		class NoSocketException: public std::exception
 		{

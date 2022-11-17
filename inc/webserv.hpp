@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 22:36:59 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/15 02:06:39 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/17 17:56:42 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,3 +60,23 @@
 # define LIGHTBLUE_BG		"\e[104m"
 # define LIGHTMAGENTA_BG	"\e[105m"
 # define LIGHTCYAN_BG		"\e[106m"
+
+class webserv{
+	
+	private:
+		std::vector<Server>serverList;
+		
+	public:
+		void addServer(std::vector<int>, std::string);
+		
+	//+++++++++++++++++++++Helper Function++++++++++++++++++++
+		std::string getServerAtIndexName(int);
+		void setServerAtIndexName(int);
+		
+		int getPortAtIndex(int);
+		void setPortAtIndex(int);
+
+		Server getServerFromList(int);
+		
+		
+};
