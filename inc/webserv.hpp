@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 22:36:59 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/17 17:56:42 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/17 21:41:17 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 #include <unistd.h>
 
 #include "TCPPoll.hpp"
+#include "Config.hpp"
+
+/* MODIFIABLE FEATURES */
+
+#define DEFAULT_CONFIG_FILE_PATH "/conf/default.conf"
 
 /* COLOURS */
 

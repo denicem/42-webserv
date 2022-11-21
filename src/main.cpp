@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/17 19:00:33 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/17 22:05:27 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	logo(void)
 {
 	std::cout <<					"                           _.-,=_\"\"\"--,_" << '\n';
 	std::cout <<					"                        .-\" =/7\"   _  .3#\"=." << '\n';
-	std::cout <<					"      " << GREEN << "Welcome to" << RESET << "      ,#7  \" \"  ,//)#d#######=." << '\n';
-	std::cout <<					"         " << GREEN << "the" << RESET << "        ,/ \"      # ,i-/###########=" << '\n';
+	std::cout << GREEN << BOLD <<	"      " << "Welcome to" << RESET << "      ,#7  \" \"  ,//)#d#######=." << '\n';
+	std::cout << GREEN << BOLD <<	"         " << "the" << RESET << "        ,/ \"      # ,i-/###########=" << '\n';
 	std::cout <<					"                   /         _)#sm###=#=# #######\\" << '\n';
 	std::cout <<					"                  /         (#/\"_`;\\//#=#\\-#######\\" << '\n';
 	std::cout <<					"                 /         ,d####-_.._.)##P########\\" << '\n';
@@ -30,16 +30,18 @@ void	logo(void)
 	std::cout << RESET <<			"                  \\B             /#######7 /      /" << '\n';
 	std::cout <<					"                   \\             \\######\" /\"     /" << '\n';
 	std::cout <<					"                    `.            \\###7'       ,'" << '\n';
-	std::cout <<					"                      \"-_          `\"'      ,-'     " << DARKGRAY << "by Denice, Mo & Svenja" << RESET << '\n';
+	std::cout <<					"                      \"-_          `\"'      ,-'     " << DARKGRAY << BOLD << "by Denice, Mo & Svenja" << RESET << '\n';
 	std::cout <<					"                         \"-._           _.-\"" << '\n';
 	std::cout <<					"                             \"\"\"\"---\"\"\"\"" << '\n';
 	
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-	logo();
 	try {
+		Config config(argc, argv);
+		logo();
+
 		webserv dsm_server;
 		TCPPoll tcp_poll;
 		//ports list for testing testing 
@@ -55,8 +57,9 @@ int main()
 			tcp_poll.add_fds(dsm_server.getServerFromList(i));
 		// 	tcp_poll.add_fds(Server(PORT + i, "simple"));
 		tcp_poll.status_check();
-	} catch (std::exception& e) {
-		std::cout << e.what() << " ERRNO: " << errno << '\n';
+	}
+	catch (std::exception& e) {
+		std::cerr << e.what() << " ERRNO: " << errno << '\n';
 	}
 	return (0);
 }
