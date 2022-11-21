@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/17 22:47:37 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/21 23:47:37 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ class Config
 		std::vector<ServerConfig> _server_configs;
 	
 		std::string	_config_file_path;
-		int			_mode; //?
-		int			_open_brackets;
+		// int			_mode; //?
+		// int			_open_brackets;
 	
 		void	getFilePath(int argc, char* argv[]);
 	

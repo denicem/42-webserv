@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:40:22 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/17 22:30:11 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/21 23:47:21 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ void Config::getFilePath(int argc, char* argv[])
 Config::Config(int argc, char* argv[])
 {
 	this->getFilePath(argc, argv);
-	std::ifstream	fileStream(fileName);
-	if (fileStream.is_open() == false) {
-		std::cerr	<< "\e[31mError: " << fileName
-					<< " couldn't be opened\e[0m" << std::endl;
-		return (true);
-	}
+	// std::ifstream	fileStream(fileName);
+	// if (fileStream.is_open() == false) {
+	// 	std::cerr	<< "\e[31mError: " << fileName
+	// 				<< " couldn't be opened\e[0m" << std::endl;
+	// 	return (true);
+	// }
 }
 
 Config::~Config() {}

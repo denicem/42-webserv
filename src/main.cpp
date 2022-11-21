@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/17 22:05:27 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/21 23:48:14 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	logo(void)
 int main(int argc, char* argv[])
 {
 	try {
-		Config config(argc, argv);
+		(void)argc, (void)argv;
+		//Config config(argc, argv);
 		logo();
 
 		webserv dsm_server;
