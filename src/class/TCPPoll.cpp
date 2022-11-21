@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/16 16:22:25 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/17 19:15:10 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void TCPPoll::status_check()
 		memset(&connection_poll[i], 0, sizeof(pollfd));
 		
 		//init sockets
-		this->sfds[i].initSockAddr(this->len);
+		this->sfds[i].initSockAddr(this->len , i);
 		if(bind(this->sfds[i].getServerSocketFD(),
 		(struct sockaddr *) &this->sfds[i]._address,
 		sizeof(SCK_ADDR)) < 0)
@@ -80,7 +80,10 @@ void TCPPoll::status_check()
 						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
 						// std::cout << "buffer len after recv:\t" << this->len << std::endl; 
-						std::cout << "Port " << this->sfds[i].getPort() << " connected to client." << std::endl;
+						// while(f++ < 3)
+						// {
+							std::cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << std::endl;	
+						// }
 						HttpRequest req(this->buffer);
 						HttpResponse resp(req.getURI());
 						std::string respMsg(resp.genHttpResponseMsg());
