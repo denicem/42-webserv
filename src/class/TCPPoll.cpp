@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/17 19:15:10 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/23 19:09:21 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,15 @@ void TCPPoll::status_check()
 						//read and write to client
 						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
-						// std::cout << "buffer len after recv:\t" << this->len << std::endl; 
-						// while(f++ < 3)
-						// {
-							std::cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << std::endl;	
-						// }
+						std::cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << std::endl;	
+
 						HttpRequest req(this->buffer);
-						HttpResponse resp(req.getURI());
-						std::string respMsg(resp.genHttpResponseMsg());
+						HttpResponse resp(req);
+						std::string respMsg(resp.genHttpResponseMsg(req));
 						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";
+						memset(this->buffer, 0, MAXBUFF);
 						close(acceptedFd);
-						
 					}
 				}
 		}
