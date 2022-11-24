@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:32:40 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/13 01:42:09 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/23 17:51:22 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#define CRLF "\r\n"
 
 class HttpRequest: public HttpMessage
 {
@@ -43,10 +45,11 @@ public:
 	void setRestEndpoint(const std::string&);
 
 private:
-	void initVars();
+	void initVars(std::stringstream&);
 	void setHttpMethod(std::stringstream&);
 	void setURI(std::stringstream&);
 	void setHttpVer(std::stringstream&);
+	void setHeaders(std::stringstream&);
 
 public:
 	friend std::ostream& operator<<(std::ostream&, const HttpRequest&);

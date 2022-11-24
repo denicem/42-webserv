@@ -6,13 +6,14 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 01:33:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/24 01:41:26 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpRequest.hpp"
 
 #include <sstream>
+#include <string>
 #include <iostream>
 #include <exception>
 
@@ -20,17 +21,19 @@
 ** ----------------------- PRIVATE METHODS -----------------------
 */
 
-void HttpRequest::initVars()
+void HttpRequest::initVars(std::stringstream& stream)
 {
-	std::stringstream stream(this->_firstLine);
-	this->setHttpMethod(stream);
-	this->setURI(stream);
-	this->setHttpVer(stream);
+	std::stringstream firstLineStream(this->_firstLine);
+	this->setHttpMethod(firstLineStream);
+	this->setURI(firstLineStream);
+	this->setHttpVer(firstLineStream);
+	this->setHeaders(stream);
 }
 
 void HttpRequest::setHttpMethod(std::stringstream& stream)
 {
 	std::string tmp;
+
 	stream >> tmp;
 	if (tmp == "GET")
 		this->_httpMethod = GET;
@@ -53,6 +56,20 @@ void HttpRequest::setHttpVer(std::stringstream& stream)
 	stream >> this->_httpVer;
 }
 
+void HttpRequest::setHeaders(std::stringstream& stream)
+{
+	std::string tmp;
+
+	while (!stream.eof() && tmp != "\r") // NOTE: "\r" identifies if HTTP headers end 
+	{
+		std::getline(stream, tmp);
+		// if (tmp.find(":") == std::string::npos)
+		// 	std::cout << "ERROR: " << tmp << std::endl;
+		if (tmp != "\r")
+			this->_headers[tmp.substr(0, tmp.find(":"))] = tmp.substr(tmp.find(":") + 2, tmp.find("\r") - (tmp.find(":") + 2));
+	}
+}
+
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
@@ -62,9 +79,13 @@ HttpRequest::HttpRequest(const HttpRequest& other): HttpMessage(other), _httpMet
 
 HttpRequest::HttpRequest(void* buff)
 {
-	std::istringstream stream(std::string((const char*) buff));
+	std::stringstream stream(std::string((const char*) buff));
 	std::getline(stream, this->_firstLine);
-	this->initVars();
+	this->initVars(stream);
+	// print map headers
+	// std::cout << "Headers size: " << this->_headers.size() << std::endl;
+	// for (std::map<std::string, std::string>::iterator it = this->_headers.begin(); it != this->_headers.end(); ++it)
+	// 	std::cout << "|" << (*it).first << "_" << (*it).second << "|" << std::endl;
 }
 
 HttpRequest::~HttpRequest() {}

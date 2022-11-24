@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:11:57 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/13 01:46:17 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/23 20:34:12 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 #define HTTPMESSAGE_HPP
 
 #include <string>
-
+#include <map>
 
 class HttpMessage
 {
 protected:
 	std::string _firstLine;
 	std::string _httpVer;
-	std::string _headers;
+	// std::string _headers;
+	std::map<std::string, std::string> _headers;
 	std::string _msgBody;
 
 	enum HttpMethod
