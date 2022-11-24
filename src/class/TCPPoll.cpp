@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/24 01:41:54 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/24 03:29:05 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,15 @@ void TCPPoll::status_check()
 						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
 						std::cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << std::endl;	
+						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
+						// std::cout << this->buffer << std::endl;
+						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
 						HttpResponse resp(req);
 						std::string respMsg(resp.genHttpResponseMsg(req));
 						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";
-						memset(this->buffer, 0, MAXBUFF);
+						memset(this->buffer, 0, MAXBUFF); // NOTE: resets everything to zero for the next loop to read into the buffer.
 						close(acceptedFd);
 					}
 				}
