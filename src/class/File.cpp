@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 01:33:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/16 21:53:58 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,28 @@ void File::calcFileSize(std::ifstream& file)
 	file.seekg(0);
 }
 
+void File::changeToRootOrFavicon()
+{
+	if (this->_path == "/")
+		this->_path = "/index.html";
+	else if (this->_path.find("favicon.ico") != std::string::npos)
+		this->_path = "/favicon.ico";
+}
+
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
 File::File(): _content(""), _fileSize(0) {}
-File::File(const File& other): _content(other._content), _fileSize(other._fileSize) {}
+File::File(const File& other):_filename(other._filename), _path(other._path), _content(other._content), _fileSize(other._fileSize) {}
 
-File::File(const std::string& pathfile): _pathfile(pathfile)
+File::File(const std::string& path): _path(path)
 {
-	if (this->_pathfile == "/")
-		this->_pathfile = "/index.html";
-	if (this->_pathfile.find("favicon.ico") != std::string::npos)
-		this->_pathfile = "/favicon.ico";
-	// std::cout << this->_pathfile << std::endl;
-
-	std::ifstream file("html" + this->_pathfile);
-
+	this->changeToRootOrFavicon();
+	std::ifstream file ("html" + this->_path);
 	if (!file.is_open())
-		throw std::exception();
-
+		throw FileNotFoundException();
+	this->_filename= this->_path.substr(this->_path.find_last_of('/') + 1);
 	this->calcFileSize(file);
 	this->getContentFromFile(file);
 }
@@ -79,6 +81,8 @@ File& File::operator=(const File& other)
 {
 	if(this != &other)
 	{
+		this->_filename = other._filename;
+		this->_path = other._path;
 		this->_content = other._content;
 		this->_fileSize = other._fileSize;
 	}
@@ -89,9 +93,14 @@ File& File::operator=(const File& other)
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
 
-std::string File::getPathfile() const
+std::string File::getFilename() const
 {
-	return (this->_pathfile);
+	return (this->_filename);
+}
+
+std::string File::getPath() const
+{
+	return (this->_path);
 }
 
 std::string File::getContent() const
@@ -105,9 +114,14 @@ int File::getFileSize() const
 }
 
 
-void File::setPathfile(const std::string& pathfile)
+void File::setFilename(const std::string& filename)
 {
-	this->_pathfile = pathfile;
+	this->_filename = filename;
+}
+
+void File::setPath(const std::string& path)
+{
+	this->_path = path;
 }
 
 void File::setContent(const std::string& content)

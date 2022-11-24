@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/23 20:55:25 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/24 03:29:05 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,19 +78,18 @@ void TCPPoll::status_check()
 						acceptedFd = accept(sfds[i].getServerSocketFD(), (struct sockaddr *)&sfds[i]._address, (socklen_t *) &len);
 						//read and write to client
 						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)
-							cout << "No bytes are there to read.\n";
-						// cout << "buffer len after recv:\t" << this->len << endl; 
-						// while(f++ < 3)
-						// {
-							cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << endl;	
-						// }
+							std::cout << "No bytes are there to read.\n";
+						std::cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << std::endl;	
+						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
+						// std::cout << this->buffer << std::endl;
+						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
-						HttpResponse resp(req.getURI());
-						string respMsg(resp.genHttpResponseMsg());
+						HttpResponse resp(req);
+						std::string respMsg(resp.genHttpResponseMsg(req));
 						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
-						cout << "\n-------- msg sent --------\n";
+						std::cout << "\n-------- msg sent --------\n";
+						memset(this->buffer, 0, MAXBUFF); // NOTE: resets everything to zero for the next loop to read into the buffer.
 						close(acceptedFd);
-						
 					}
 				}
 		}

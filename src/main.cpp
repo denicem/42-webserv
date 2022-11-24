@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/23 20:55:25 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/24 01:18:59 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,9 @@ void	logo(void)
 int main(int argc, char* argv[])
 {
 	try {
-		Config config((Config::getFilePath(argc, argv)));
+		(void) argc;
+		(void) argv;
+		// Config config((Config::getFilePath(argc, argv)));
 		logo();
 
 		webserv dsm_server;

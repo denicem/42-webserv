@@ -6,13 +6,14 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/15 01:33:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/16 22:12:48 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpResponse.hpp"
 
-
+#include <iostream>
+#include <sstream>
 
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
@@ -30,6 +31,25 @@ HttpResponse::HttpResponse(const std::string& filename)
 	this->_file = File(filename);
 	this->_statusCode = 200;
 	this->_statusMsg = "OK";
+}
+
+HttpResponse::HttpResponse(const HttpRequest& req)
+{
+	if (req.getHttpMethod() == GET)
+	{
+		try
+		{
+			this->_file = File(req.getURI());
+			this->_statusCode = 200;
+			this->_statusMsg = "OK";
+		}
+		catch (File::FileNotFoundException& e)
+		{
+			this->_file = File("/404/404.html");
+			this->_statusCode = 404;
+			this->_statusMsg = "Not Found";
+		}
+	}
 }
 
 HttpResponse::~HttpResponse() {}
@@ -81,19 +101,17 @@ void HttpResponse::setStatusMsg(const std::string& statusMsg)
 ** ----------------------- METHODS -----------------------
 */
 
-std::string HttpResponse::genHttpResponseMsg() const
+std::string HttpResponse::genHttpResponseMsg(const HttpRequest& req) const
 {
-	std::string res;
+	std::stringstream stream;
 
-	res.append("HTTP/1.1 ");
-	res.append(std::to_string(this->_statusCode));
-	res.append(" " + this->_statusMsg + "\n");
-	res.append("Content-Type: text/html\nContent-Length: ");
-	res.append(std::to_string(this->_file.getFileSize()));
-	res.append("\n\n");
-	res.append(this->_file.getContent());
+	stream << "HTTP/1.1 " << std::to_string(this->_statusCode) << " " << this->_statusMsg << std::endl;
+	stream << "Content-Type: text/html\nContent-Length: " << std::to_string(this->_file.getFileSize()) << std::endl;
+	stream << std::endl;
+	if (req.getHttpMethod() == GET)
+		stream << this->_file.getContent();
 
-	return (res);
+	return (stream.str());
 }
 
 /*

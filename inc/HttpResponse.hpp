@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:43:33 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/14 00:14:09 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/16 22:12:55 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define HTTP_RESPONSE_HPP
 
 #include "HttpMessage.hpp"
+#include "HttpRequest.hpp"
 #include "File.hpp"
 
 class HttpResponse: public HttpMessage
@@ -27,11 +28,12 @@ public:
 	HttpResponse();
 	HttpResponse(const HttpResponse&);
 	HttpResponse(const std::string&);
+	HttpResponse(const HttpRequest&);
 	~HttpResponse();
 
 	HttpResponse& operator=(const HttpResponse&);
 
-	std::string genHttpResponseMsg() const;
+	std::string genHttpResponseMsg(const HttpRequest&) const;
 
 	int getStatusCode() const;
 	std::string getStatusMsg() const;
