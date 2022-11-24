@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/23 19:09:21 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/24 01:11:13 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,16 @@ void TCPPoll::status_check()
 		switch(j)
 		{
 			case POLL_EXPIRE:
-				std::cout << "Timeout has expired!" << std::endl;
+				cout << "Timeout has expired!" << endl;
 				break;
 			case POLL_ERR:
-				std::cout << "Error on poll" << std::endl;
+				cout << "Error on poll" << endl;
 			default:
 				for( i = 0; i < MAX_CONN; i++)
 				{
 					if(connection_poll[i].revents & POLL_IN)
 					{
-						std::cout << "\n---------- We have a connection -----------\n\n";
+						cout << "\n---------- We have a connection -----------\n\n";
 						acceptedFd = accept(sfds[i].getServerSocketFD(), (struct sockaddr *)&sfds[i]._address, (socklen_t *) &len);
 						//read and write to client
 						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)

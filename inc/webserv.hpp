@@ -3,19 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 22:36:59 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/17 17:56:42 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/24 01:00:05 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iostream>
+#include <string>
 #include <unistd.h>
 
+using namespace std;
+
 #include "TCPPoll.hpp"
+#include "Config.hpp"
+#include "Server.hpp"
+class Server;
+
+
+/* MODIFIABLE FEATURES */
+
+#define DEFAULT_CONFIG_FILE_PATH "./conf/default.conf"
+
+//string	WAITING_ICON("🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛"); // 🌕🌖🌗🌘🌑🌒🌓🌔🌕
 
 /* COLOURS */
 
@@ -64,13 +77,13 @@
 class webserv{
 	
 	private:
-		std::vector<Server>serverList;
+		vector<Server>serverList;
 		
 	public:
-		void addServer(std::vector<int>, std::string);
+		void addServer(vector<int>, string);
 		
 	//+++++++++++++++++++++Helper Function++++++++++++++++++++
-		std::string getServerAtIndexName(int);
+		string getServerAtIndexName(int);
 		void setServerAtIndexName(int);
 		
 		int getPortAtIndex(int);
