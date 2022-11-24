@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/24 00:30:11 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/24 17:10:50 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ struct Setting
 enum file_location {
 	BASE,
 	SERVER,
-	ROUTE_OR_ERROR_PAGES
+	ROUTE,
+	ERROR_PAGES
 };
 
 struct RouteConfig
@@ -50,6 +51,7 @@ struct RouteConfig
 struct ServerConfig
 {
 	map<string, RouteConfig>	routes;
+	map<int, string>			error_pages;
 };
 
 class Config
@@ -70,7 +72,7 @@ class Config
 
 		static bool	lineHasBrackets(string& line);
 		static void	configError(int line_num, string error_msg);
-	
+		static void	removeWhitespace(std::string& string);
 	
 	public:
 		Config(string filePath);
