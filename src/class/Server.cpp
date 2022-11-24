@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/17 19:10:51 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/23 20:55:25 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-Server::Server(std::string sId){
+Server::Server(string sId){
 	this->serverName = sId;	
 }
 
@@ -28,8 +28,8 @@ void Server::initSockAddr(int len, int index){
 	// if(this->_port.size() == 1)
 	this->_address.sin_port = htons(_port[index]);
 	// else {
-	// 	for(std::vector<int>::iterator it = _port.begin(); it != _port.end(); it++){
-	// 		std::cout << "Port: " << *it << std::endl;
+	// 	for(vector<int>::iterator it = _port.begin(); it != _port.end(); it++){
+	// 		cout << "Port: " << *it << endl;
 	// 		this->_address.sin_port = htons(*it);
 	// 	}
 	
@@ -38,7 +38,7 @@ void Server::initSockAddr(int len, int index){
 	
 }	
 
-void Server::setServerName(std::string serverName){
+void Server::setServerName(string serverName){
 	this->serverName = serverName;
 }
 
@@ -53,7 +53,7 @@ void Server::setPort(int port){
 	this->_port.push_back(port);
 }
 
-std::string Server::getServerName(){
+string Server::getServerName(){
 	return(this->serverName);
 }
 

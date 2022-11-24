@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/17 19:29:04 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/11/24 00:06:29 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+#include "webserv.hpp"
+
 #define SCK_ADDR sockaddr_in
 
 #define PORT 8080
@@ -33,28 +35,28 @@ class Server
 	private:
 		int _server_socket_fd;
 		// int _port;
-		std::vector<int>_port;
+		vector<int>_port;
 		size_t len;
 		//for identiyfing porposes
-		std::string serverName;
+		string serverName;
 	public:
 		SCK_ADDR _address;
 	
 	public:
-		Server(std::string sId);
+		Server(string sId);
 	
 		int getClientSocketFD();
 		int getServerSocketFD();
 		int getRefAddrlen();
 		int getPort(int);
-		std::string getServerName();
+		string getServerName();
 
 		void setClientSocketFD(int);
 		void initSockAddr(int, int);
-		void setServerName(std::string);
+		void setServerName(string);
 		void setPort(int);
 	
-		class NoSocketException: public std::exception
+		class NoSocketException: public exception
 		{
 			const char* what() const throw();
 		};
