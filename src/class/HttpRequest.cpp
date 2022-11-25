@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/24 01:41:26 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/25 16:37:47 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void HttpRequest::initVars(std::stringstream& stream)
 	this->setURI(firstLineStream);
 	this->setHttpVer(firstLineStream);
 	this->setHeaders(stream);
+	if (this->_httpMethod == POST)
+		this->setMsgBody(stream);
 }
 
 void HttpRequest::setHttpMethod(std::stringstream& stream)
@@ -60,13 +62,26 @@ void HttpRequest::setHeaders(std::stringstream& stream)
 {
 	std::string tmp;
 
-	while (!stream.eof() && tmp != "\r") // NOTE: "\r" identifies if HTTP headers end 
+	while (!stream.eof() && tmp != "\r") // NOTE: "\r" identifies if HTTP headers end; NOTE: what about CRLF??
 	{
 		std::getline(stream, tmp);
 		// if (tmp.find(":") == std::string::npos)
 		// 	std::cout << "ERROR: " << tmp << std::endl;
-		if (tmp != "\r")
+		if (tmp != "\r") // TODO: should only do if right syntax!
 			this->_headers[tmp.substr(0, tmp.find(":"))] = tmp.substr(tmp.find(":") + 2, tmp.find("\r") - (tmp.find(":") + 2));
+	}
+}
+
+void HttpRequest::setMsgBody(std::stringstream& stream)
+{
+	std::string tmp;
+
+	while (!stream.eof()) // TODO: find out what to extract exactly
+	{
+		std::getline(stream, tmp);
+		this->_msgBody.append(tmp);
+		if (!stream.eof())
+			this->_msgBody.append("\n");
 	}
 }
 

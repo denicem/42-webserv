@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:32:40 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/23 17:51:22 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/24 02:39:33 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ private:
 	void setURI(std::stringstream&);
 	void setHttpVer(std::stringstream&);
 	void setHeaders(std::stringstream&);
+	void setMsgBody(std::stringstream&);
 
 public:
 	friend std::ostream& operator<<(std::ostream&, const HttpRequest&);
