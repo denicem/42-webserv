@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:40:22 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/24 17:38:52 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/26 16:18:54 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	Config::removeWhitespace(std::string& str)
 
 void	Config::parseConfigFile(void)
 {
-	ServerConfig*	curr_server = NULL;
+	/* ServerConfig*	curr_server = NULL;
 
 	for (int line_num = 1; getline(this->_config_stream, this->_line); line_num++)
 	{
@@ -46,7 +46,6 @@ void	Config::parseConfigFile(void)
 		switch (_line.back())
 		{
 			case '{':
-				/* just error parsing */
 				_line.pop_back(); removeWhitespace(_line);
 				if (lineHasBrackets(_line) || _file_location >= ROUTE)
 					configError(line_num, "Too many open brackets");
@@ -73,7 +72,6 @@ void	Config::parseConfigFile(void)
 				
 				break;
 			case '}':
-				/* just error parsing */
 				_line.pop_back();
 				if (!all_of(_line.begin(), _line.end(), static_cast<int(*)(int)>(&std::isspace)))
 					configError(line_num, "Closing bracket needs to be alone in line");
@@ -82,7 +80,6 @@ void	Config::parseConfigFile(void)
 					configError(line_num, "Too many closing brackets");
 				break;
 			default:
-				/* just error parsing */
 				if (lineHasBrackets(_line))
 					configError(line_num, "Bracket needs to be at the end of a line");
 				else if (_line.find(':') == string::npos)
@@ -93,7 +90,7 @@ void	Config::parseConfigFile(void)
 	if (this->_config_stream.bad()) {
 		cerr << "I/O Error\n";
 		throw ConfigException();
-	}
+	} */
 	// do stuff
 }
 
