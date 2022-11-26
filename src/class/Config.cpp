@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:40:22 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/24 01:01:09 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/26 16:18:54 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,15 @@ void	Config::configError(int line_num, string error_msg)
 	throw ConfigException();
 }
 
+void	Config::removeWhitespace(std::string& str)
+{
+	remove_if(str.begin(), str.end(), static_cast<int(*)(int)>(&std::isspace));
+}
+
 void	Config::parseConfigFile(void)
 {
+	/* ServerConfig*	curr_server = NULL;
+
 	for (int line_num = 1; getline(this->_config_stream, this->_line); line_num++)
 	{
 		//cout << ' ' << WAITING_ICON.substr((line_num % 12) * 4, 4) << "\n";
@@ -39,14 +46,32 @@ void	Config::parseConfigFile(void)
 		switch (_line.back())
 		{
 			case '{':
-				/* just error parsing */
-				_line.pop_back();
-				_file_location++;
-				if (lineHasBrackets(_line) || _file_location > ROUTE_OR_ERROR_PAGES)
+				_line.pop_back(); removeWhitespace(_line);
+				if (lineHasBrackets(_line) || _file_location >= ROUTE)
 					configError(line_num, "Too many open brackets");
+				else if (_file_location == BASE)
+				{
+					_server_configs.push_back(ServerConfig());
+					curr_server = &_server_configs.back();
+					_file_location = SERVER;
+				}
+				else if (_file_location == SERVER)
+				{
+					if (_line == "error_pages")
+					{
+						_file_location = ERROR_PAGES;
+					}
+					else if (*_line.begin() == '/')
+					{
+						if (curr_server->routes.insert() 
+						_file_location = ROUTE;
+					}
+					else
+						configError(line_num, "Unknown block inside server");
+				}
+				
 				break;
 			case '}':
-				/* just error parsing */
 				_line.pop_back();
 				if (!all_of(_line.begin(), _line.end(), static_cast<int(*)(int)>(&std::isspace)))
 					configError(line_num, "Closing bracket needs to be alone in line");
@@ -55,7 +80,6 @@ void	Config::parseConfigFile(void)
 					configError(line_num, "Too many closing brackets");
 				break;
 			default:
-				/* just error parsing */
 				if (lineHasBrackets(_line))
 					configError(line_num, "Bracket needs to be at the end of a line");
 				else if (_line.find(':') == string::npos)
@@ -66,7 +90,7 @@ void	Config::parseConfigFile(void)
 	if (this->_config_stream.bad()) {
 		cerr << "I/O Error\n";
 		throw ConfigException();
-	}
+	} */
 	// do stuff
 }
 
