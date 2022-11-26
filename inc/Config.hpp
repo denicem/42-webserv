@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/24 17:10:50 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/26 16:11:24 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,36 @@ enum file_location {
 	ERROR_PAGES
 };
 
+enum http_methods {
+	GET,
+	DELETE,
+	POST
+};
+
+enum cgi_extensions {
+	dotDMS,
+	dotPY,
+	dotC
+};
+
 struct RouteConfig
 {
-	
+	RouteConfig*	http_redirect; // can be NULL, then no redirect
+	vector<int>		http_methods; // will use values of enum "http_methods"
+	string			root;
+	bool			directory_listing;
+	string			default_file; // if empty string, no default file
+	vector<int>		cgi_extensions; // will use values of enum "cgi_extension"
+	string			upload_directory;
 };
 
 struct ServerConfig
 {
-	map<string, RouteConfig>	routes;
-	map<int, string>			error_pages;
+	vector<string>				server_names;
+	vector<int>					ports;
+	int							max_client_body_size; //if -1, allow infinite size
+	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page
+	map<string, RouteConfig>	routes; // "string" element of map is name of route
 };
 
 class Config
