@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/28 19:18:31 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 00:14:38 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,9 @@ File::File(const std::string& path, const Server& server, int indexLoc, bool isL
 	}
 	else
 	{
+		std::cout << server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex() << std::endl;
 		// file.open(server.getLocation(indexLoc).getName() + "/" + server.getLocation(indexLoc).getPath());
-		file.open(server.getLocation(indexLoc).getPath());
+		file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
 	}
 	if (!file.is_open())
 		throw FileNotFoundException();

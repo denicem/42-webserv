@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/28 19:19:09 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 00:11:56 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ HttpResponse::HttpResponse(const HttpRequest& req, const Server& server)
 	for (unsigned long i = 0; i < server.getLocations().size(); ++i)
 	{
 		std::cout << server.getLocation(i) << std::endl;
-		if ((req.getURI() == server.getLocation(i).getName()) || req.getURI() == "/") {
+		// if ((req.getURI() == server.getLocation(i).getName()) || req.getURI() == "/") {
+		if (req.getURI().find(server.getLocation(i).getName()) != std::string::npos) {
 			std::cout << "LOCATION FOUND" << std::endl;
 			// if (!isMethodAllowed(req.getHttpMethod(), server.getLocation(i)))
 			// 	std::cout << "ERROR!" << std::endl;
@@ -76,8 +77,9 @@ HttpResponse::HttpResponse(const HttpRequest& req, const Server& server)
 				{
 					try
 					{
-						this->_file = File(req.getURI());
-						this->_file = File(server.getLocation(i).getPath(), server, i, true);
+						std::cout << "hehe" << std::endl;
+						// this->_file = File(req.getURI());
+						this->_file = File(server.getLocation(i).getName(), server, i, true);
 						this->_statusCode = 200;
 						this->_statusMsg = "OK";
 					}
@@ -87,6 +89,7 @@ HttpResponse::HttpResponse(const HttpRequest& req, const Server& server)
 						this->_statusCode = 404;
 						this->_statusMsg = "Not Found";
 					}
+					break ;
 				}
 			// }
 		}
