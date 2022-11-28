@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/16 22:12:48 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/28 19:19:09 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
 */
+
+bool HttpResponse::isMethodAllowed(const int method, const Location& location) const {
+	for (unsigned long i = 0; i < location.getAllowedMethods().size(); ++i)
+	{
+		if (location.getAllowedMethods().at(i) == method)
+			return (true);
+	}
+	return (false);
+}
 
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
@@ -35,7 +44,7 @@ HttpResponse::HttpResponse(const std::string& filename)
 
 HttpResponse::HttpResponse(const HttpRequest& req)
 {
-	if (req.getHttpMethod() == GET)
+	if (req.getHttpMethod() == GET) //TODO: switch case!!
 	{
 		try
 		{
@@ -50,6 +59,57 @@ HttpResponse::HttpResponse(const HttpRequest& req)
 			this->_statusMsg = "Not Found";
 		}
 	}
+}
+
+HttpResponse::HttpResponse(const HttpRequest& req, const Server& server)
+{
+	for (unsigned long i = 0; i < server.getLocations().size(); ++i)
+	{
+		std::cout << server.getLocation(i) << std::endl;
+		if ((req.getURI() == server.getLocation(i).getName()) || req.getURI() == "/") {
+			std::cout << "LOCATION FOUND" << std::endl;
+			// if (!isMethodAllowed(req.getHttpMethod(), server.getLocation(i)))
+			// 	std::cout << "ERROR!" << std::endl;
+			// 	// throw exception(); // TODO: implement own exception
+			// else {
+				if (req.getHttpMethod() == GET)
+				{
+					try
+					{
+						this->_file = File(req.getURI());
+						this->_file = File(server.getLocation(i).getPath(), server, i, true);
+						this->_statusCode = 200;
+						this->_statusMsg = "OK";
+					}
+					catch (File::FileNotFoundException& e)
+					{
+						this->_file = File("/404/404.html");
+						this->_statusCode = 404;
+						this->_statusMsg = "Not Found";
+					}
+				}
+			// }
+		}
+		else
+		{
+			if (req.getHttpMethod() == GET)
+			{
+				try
+				{
+					this->_file = File(req.getURI());
+					this->_statusCode = 200;
+					this->_statusMsg = "OK";
+				}
+				catch (File::FileNotFoundException& e)
+				{
+					this->_file = File("/404/404.html");
+					this->_statusCode = 404;
+					this->_statusMsg = "Not Found";
+				}
+			}
+		}
+	}
+
 }
 
 HttpResponse::~HttpResponse() {}

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/24 03:29:05 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/28 18:47:32 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 #include "HttpResponse.hpp"
 #include "File.hpp"
 
-TCPPoll::TCPPoll(){
-
-	this->j = 0;
+TCPPoll::TCPPoll() {
+	this->pollStatus = 0;
 	this->i = 0;
 	this->len = INADDR_ANY;
 }
 
-void TCPPoll::add_fds(Server server){
+void TCPPoll::add_fds(Server server) {
 	this->sfds.push_back(server);
 }
 
@@ -38,17 +37,17 @@ void TCPPoll::status_check()
 		
 		//init sockets
 		this->sfds[i].initSockAddr(this->len , i);
-		if(bind(this->sfds[i].getServerSocketFD(),
-		(struct sockaddr *) &this->sfds[i]._address,
-		sizeof(SCK_ADDR)) < 0)
+		
+		if (bind(this->sfds[i].getServerSocketFD(),
+			(struct sockaddr *) &this->sfds[i]._address,
+			sizeof(SCK_ADDR)) < 0)
 			throw NoBindException();
 		
-		if( setsockopt(this->sfds[i].getServerSocketFD(), SOL_SOCKET, SO_REUSEADDR, &j, sizeof(int)) < 0)
+		if (setsockopt(this->sfds[i].getServerSocketFD(), SOL_SOCKET, SO_REUSEADDR, &pollStatus, sizeof(int)) < 0)
 			perror("Cannot set socket option");
 
-		if(listen(this->sfds[i].getServerSocketFD(), 10) < 0)
+		if (listen(this->sfds[i].getServerSocketFD(), 10) < 0)
 			throw NoListenException();
-		
 	}
 	
 	//init poll struct
@@ -57,12 +56,11 @@ void TCPPoll::status_check()
 		connection_poll[i].fd = sfds[i].getServerSocketFD();
 		connection_poll[i].events = POLL_IN;
 	}
-
 	//mainloop 
 	while(1)
 	{
-		j = poll(connection_poll, (unsigned int)MAX_CONN,TIMEOUT);
-		switch(j)
+		pollStatus = poll(connection_poll, (unsigned int) MAX_CONN, TIMEOUT);
+		switch (pollStatus)
 		{
 			case POLL_EXPIRE:
 				cout << "Timeout has expired!" << endl;
@@ -70,21 +68,22 @@ void TCPPoll::status_check()
 			case POLL_ERR:
 				cout << "Error on poll" << endl;
 			default:
-				for( i = 0; i < MAX_CONN; i++)
+				for (i = 0; i < MAX_CONN; i++)
 				{
-					if(connection_poll[i].revents & POLL_IN)
+					if (connection_poll[i].revents & POLL_IN)
 					{
 						cout << "\n---------- We have a connection -----------\n\n";
 						acceptedFd = accept(sfds[i].getServerSocketFD(), (struct sockaddr *)&sfds[i]._address, (socklen_t *) &len);
 						//read and write to client
-						if (recv(acceptedFd, this->buffer, 30000, 0) < 0)
+						if (recv(acceptedFd, this->buffer, MAXBUFF, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
 						std::cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << std::endl;	
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						// std::cout << this->buffer << std::endl;
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
-						HttpResponse resp(req);
+						std::cout << req << std::endl;
+						HttpResponse resp(req, this->sfds[i]);
 						std::string respMsg(resp.genHttpResponseMsg(req));
 						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";

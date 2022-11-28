@@ -1,9 +1,9 @@
 
 #include "webserv.hpp"
 
-void webserv::addServer(vector<int> Port, string server_name)
+void webserv::addServer(vector<int> Port, const string server_name ,const string root, vector<Location>locations)
 {
-	Server server_tmp(server_name);
+	Server server_tmp(server_name, root, locations);
 	//Server müssen vorher mit denn ports und all infos init werden.
 	if(Port.size() == 1)
 		server_tmp.setPort(*Port.begin());

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/24 01:18:59 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/28 19:15:11 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,27 @@ int main(int argc, char* argv[])
 		TCPPoll tcp_poll;
 		//ports list for testing testing 
 		vector<int>ports;
+		vector<int> allowedMethods;
+		vector<Location> locations;
+		allowedMethods.push_back(GET);
+		allowedMethods.push_back(POST);
+		allowedMethods.push_back(DELETE);
+		locations.push_back(Location("/hehe ", "/html", "hello.html", allowedMethods, false));
+		locations.push_back(Location("/ho", "/html", "/hi.html", allowedMethods, false));
 		ports.push_back(8080);
 		ports.push_back(8081);
 		ports.push_back(8082);
+		// print_class<Location>(locations)
 		
-		dsm_server.addServer(ports, "test_server_1");
-		dsm_server.addServer(ports, "test_server_2");
-		dsm_server.addServer(ports, "test_server_3");
+		dsm_server.addServer(ports, "test_server_1", "html",locations);
+		dsm_server.addServer(ports, "test_server_2", "html", locations);
+		dsm_server.addServer(ports, "test_server_3", "html", locations);
+		// dsm_server.addServer(ports, "test_server_2");
+		// dsm_server.addServer(ports, "test_server_3");
 		for(int i = 0; i < 3; i++)
 			tcp_poll.add_fds(dsm_server.getServerFromList(i));
 		// 	tcp_poll.add_fds(Server(PORT + i, "simple"));
+		
 		tcp_poll.status_check();
 	}
 	catch (exception& e) {

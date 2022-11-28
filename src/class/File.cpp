@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/16 21:53:58 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/28 19:18:31 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,27 @@ File::File(const std::string& path): _path(path)
 {
 	this->changeToRootOrFavicon();
 	std::ifstream file ("html" + this->_path);
+	if (!file.is_open())
+		throw FileNotFoundException();
+	this->_filename= this->_path.substr(this->_path.find_last_of('/') + 1);
+	this->calcFileSize(file);
+	this->getContentFromFile(file);
+}
+
+File::File(const std::string& path, const Server& server, int indexLoc, bool isLocation = false): _path(path), isLocation(isLocation)
+{
+	this->changeToRootOrFavicon();
+	std::ifstream file;
+	
+	if (!this->isLocation)
+	{
+		file.open("html" + this->_path);
+	}
+	else
+	{
+		// file.open(server.getLocation(indexLoc).getName() + "/" + server.getLocation(indexLoc).getPath());
+		file.open(server.getLocation(indexLoc).getPath());
+	}
 	if (!file.is_open())
 		throw FileNotFoundException();
 	this->_filename= this->_path.substr(this->_path.find_last_of('/') + 1);

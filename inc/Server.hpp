@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/26 22:30:46 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/27 19:25:51 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class Server
 
 		/* for TCP */
 		int serverSocketFD;
-		size_t len;
+		// size_t len;
 
 	public:
 		SCK_ADDR _address;
@@ -52,6 +52,7 @@ class Server
 		string getRoot() const;
 		int getPort(const int) const;
 		Location getLocation(const int) const;
+		const std::vector<Location>& getLocations() const;
 		int getServerSocketFD() const;
 
 		void setServerName(string&);

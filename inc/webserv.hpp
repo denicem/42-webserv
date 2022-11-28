@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 22:36:59 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/24 01:00:05 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/28 18:19:35 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ using namespace std;
 #include "TCPPoll.hpp"
 #include "Config.hpp"
 #include "Server.hpp"
+#include "Location.hpp"
+// #include "debug.hpp"
 class Server;
 
 
@@ -80,7 +82,7 @@ class webserv{
 		vector<Server>serverList;
 		
 	public:
-		void addServer(vector<int>, string);
+		void addServer(vector<int>, const string, const string, const vector<Location>);
 		
 	//+++++++++++++++++++++Helper Function++++++++++++++++++++
 		string getServerAtIndexName(int);

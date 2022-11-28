@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/26 22:30:25 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/28 18:28:28 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ Location Server::getLocation(const int index) const {
 	return (this->locations[index]);
 }
 
+const std::vector<Location>& Server::getLocations() const {
+	return (this->locations);
+}
+
 int Server::getServerSocketFD() const {
 	return (this->serverSocketFD);
 }
@@ -71,7 +75,9 @@ void Server::setLocation(const Location &location){
 */
 
 void Server::initSockAddr(int len, int index) {
+	// std::cout << "len: " << len << "index: " << index << std::endl;
 	this->serverSocketFD = socket(AF_INET, SOCK_STREAM, 0);
+	// std::cout << "HEHEHEH" << std::endl;
 	if (this->serverSocketFD == 0)
 		throw NoSocketException();
 	memset(&this->_address, 0, sizeof(SCK_ADDR));
