@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 22:36:59 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/29 01:43:06 by dmontema         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 
 #include <iostream>
@@ -23,14 +11,14 @@ using namespace std;
 #include "Server.hpp"
 #include "Location.hpp"
 
-#include "HttpMessage.hpp"
+// #include "HttpMessage.hpp"
 #include "HttpMethod.hpp"
-#include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
-#include "File.hpp"
+// #include "HttpRequest.hpp"
+// #include "HttpResponse.hpp"
+// #include "File.hpp"
+
 
 class Server;
-
 
 /* MODIFIABLE FEATURES */
 
@@ -82,20 +70,21 @@ class Server;
 # define LIGHTMAGENTA_BG	"\e[105m"
 # define LIGHTCYAN_BG		"\e[106m"
 
-class webserv{
-	
+/////////////////////////////////////////////////////////////////////////////////////////
+
+class Webserv {
 	private:
-		vector<Server>serverList;
+		vector<Server> serverList;
 		
 	public:
-		void addServer(vector<int>, const string, const string, const vector<Location>);
-		
-	//+++++++++++++++++++++Helper Function++++++++++++++++++++
-		string getServerAtIndexName(int);
-		void setServerAtIndexName(int);
-		
-		int getPortAtIndex(int);
-		void setPortAtIndex(int);
+		Webserv();
 
-		Server getServerFromList(int);
+		string getServerName(int) const;
+		int getPort(int) const;
+		Server getServer(int) const;
+
+		void setServerName(int, string&);
+		void setPort(int, int);
+
+		void addServer(vector<int>&, const string&, const string&, const vector<Location>&);
 };

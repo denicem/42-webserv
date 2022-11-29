@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/27 19:01:32 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 02:03:18 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 // #include <map>
 // #include <algorithm>
 
-// #include "webserv.hpp"
+// #include "Webserv.hpp"
 
 // struct Setting
 // {
@@ -43,11 +43,11 @@
 // 	ERROR_PAGES
 // };
 
-enum http_methods {
-	GET,
-	DELETE,
-	POST
-};
+// enum http_methods {
+// 	GET,
+// 	DELETE,
+// 	POST
+// };
 
 // enum cgi_extensions {
 // 	dotDMS,

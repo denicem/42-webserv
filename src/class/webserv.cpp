@@ -1,21 +1,45 @@
+#include "Webserv.hpp"
 
-#include "webserv.hpp"
+/*
+** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
+*/
 
-void webserv::addServer(vector<int> Port, const string server_name ,const string root, vector<Location>locations)
-{
-	Server server_tmp(server_name, root, locations);
-	//Server müssen vorher mit denn ports und all infos init werden.
-	if(Port.size() == 1)
-		server_tmp.setPort(*Port.begin());
-	else{
-		for(vector<int>::iterator it = Port.begin(); it != Port.end(); it ++)
-			server_tmp.setPort(*it);
-	}
-	this->serverList.push_back(server_tmp);
-}
+Webserv::Webserv() {}
 
+/*
+** ----------------------- OPERATOR OVERLOADS -----------------------
+*/
 
-Server webserv::getServerFromList(int index){
-	cout << "server name at index: " << this->serverList[index].getServerName() << endl;
+/*
+** ----------------------- GETTER AND SETTER METHODS -----------------------
+*/
+
+Server Webserv::getServer(int index) const {
+	cout << "Server name at index: " << this->serverList[index].getServerName() << endl;
 	return(this->serverList[index]);
 }
+
+/*
+** ----------------------- METHODS -----------------------
+*/
+
+void Webserv::addServer(vector<int>& ports, const string& serverName, const string& root, const vector<Location>& locations) {
+	Server tmpServer(serverName, root, locations);
+
+	//Server müssen vorher mit den ports und all infos init werden.
+	if (ports.size() == 1)
+		tmpServer.setPort(*ports.begin());
+	else {
+		for (vector<int>::iterator it = ports.begin(); it != ports.end(); it ++)
+			tmpServer.setPort(*it);
+	}
+	this->serverList.push_back(tmpServer);
+}
+
+/*
+** ----------------------- EXCEPTIONS -----------------------
+*/
+
+/*
+** ----------------------- FUNCS -----------------------
+*/

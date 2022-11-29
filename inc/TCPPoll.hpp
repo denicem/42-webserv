@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:23:50 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/26 22:50:24 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 02:03:21 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include "Server.hpp"
 class Server;
 
-#include "webserv.hpp"
+#include "Webserv.hpp"
 
 /* our defines */
 
