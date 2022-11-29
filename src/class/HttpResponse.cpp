@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 14:29:42 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:59:59 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ HttpResponse::HttpResponse(const HttpRequest& req, const Server& server) {
 			else {
 				if (req.getHttpMethod() == GET) {
 					try {
-						this->file = File(server.getLocation(i).getName(), server, i, true);
+						this->file = File(req.getURI(), server, i, true);
 						this->statusCode = 200;
 					}
 					catch (File::FileNotFoundException& e) {

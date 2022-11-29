@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:53:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 02:23:00 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:45:16 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class File {
 		File(const File&);
 		File(const std::string&);
 		File(const std::string&, const Server&, int, bool);
+		File(const std::string&, const Server&, int, string&, bool);
 		~File();
 
 		File& operator=(const File&);

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 01:33:11 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 15:54:31 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,16 @@ File::File(const std::string& path, const Server& server, int indexLoc, bool isL
 	if (!this->isLocation)
 		file.open("html" + this->path);
 	else
-		file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
+	{
+		// std::cout << server.getLocation(indexLoc).getName() << std::endl;
+		// std::cout << path.substr(0, server.getLocation(indexLoc).getName().size()) << std::endl;
+		if (path == server.getLocation(indexLoc).getName())
+		// if (!server.getLocation(indexLoc).getName().compare(0, server.getLocation(indexLoc).getName().size(), path))
+		// if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName())
+			file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
+		else
+			file.open(server.getLocation(indexLoc).getPath() + "/" + path.substr(path.find_last_of('/') + 1));
+	}
 	if (!file.is_open())
 		throw FileNotFoundException();
 
