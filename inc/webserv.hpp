@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 22:36:59 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/28 18:19:35 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 01:43:06 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,13 @@ using namespace std;
 #include "Config.hpp"
 #include "Server.hpp"
 #include "Location.hpp"
-// #include "debug.hpp"
+
+#include "HttpMessage.hpp"
+#include "HttpMethod.hpp"
+#include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
+#include "File.hpp"
+
 class Server;
 
 
@@ -92,6 +98,4 @@ class webserv{
 		void setPortAtIndex(int);
 
 		Server getServerFromList(int);
-		
-		
 };
