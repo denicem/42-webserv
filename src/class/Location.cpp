@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:30:29 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/28 17:56:48 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:07:02 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-Location::Location(const std::string& name, const std::string& root, const std::string& index, const std::vector<int>& allowedMethods, bool isAlias = false)
+Location::Location(const std::string& name, const std::string& root, const std::string& index, const std::vector<HttpMethod>& allowedMethods, bool isAlias = false)
 	: name(name), root(root), index(index), allowedMethods(allowedMethods), isAlias(isAlias)
 {
 	if (!this->isAlias)
@@ -52,7 +52,7 @@ std::string Location::getIndex() const {
 	return (this->index);
 }
 
-std::vector<int> Location::getAllowedMethods() const {
+std::vector<HttpMethod> Location::getAllowedMethods() const {
 	return(this->allowedMethods);
 }
 
@@ -92,9 +92,9 @@ std::ostream& operator<<(std::ostream& stream, const Location& loc)
 				stream << " ";
 			switch (loc.allowedMethods[i])
 			{
-				case 0: stream << "GET"; break;
-				case 1: stream << "POST"; break;
-				case 2: stream << "DELETE"; break;
+				case GET: stream << "GET"; break;
+				case POST: stream << "POST"; break;
+				case DELETE: stream << "DELETE"; break;
 				default: stream << "undefined"; break;
 			}
 		}

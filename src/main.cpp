@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 02:12:29 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:09:24 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 		TCPPoll tcpPoll;
 		//ports list for testing testing 
 		vector<int>ports;
-		vector<int> allowedMethods;
+		vector<HttpMethod> allowedMethods;
 		vector<Location> locations;
 		allowedMethods.push_back(GET);
 		allowedMethods.push_back(POST);
