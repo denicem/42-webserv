@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 00:11:56 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 02:36:30 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ bool HttpResponse::isMethodAllowed(const int method, const Location& location) c
 */
 
 HttpResponse::HttpResponse() {}
-HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), _statusCode(other._statusCode), _statusMsg(other._statusMsg) {}
+HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), statusCode(other.statusCode), statusMsg(other.statusMsg) {}
 
 HttpResponse::HttpResponse(const std::string& filename)
 {
-	this->_file = File(filename);
-	this->_statusCode = 200;
-	this->_statusMsg = "OK";
+	this->file = File(filename);
+	this->statusCode = 200;
+	this->statusMsg = "OK";
 }
 
 HttpResponse::HttpResponse(const HttpRequest& req)
@@ -48,15 +48,15 @@ HttpResponse::HttpResponse(const HttpRequest& req)
 	{
 		try
 		{
-			this->_file = File(req.getURI());
-			this->_statusCode = 200;
-			this->_statusMsg = "OK";
+			this->file = File(req.getURI());
+			this->statusCode = 200;
+			this->statusMsg = "OK";
 		}
 		catch (File::FileNotFoundException& e)
 		{
-			this->_file = File("/404/404.html");
-			this->_statusCode = 404;
-			this->_statusMsg = "Not Found";
+			this->file = File("/404/404.html");
+			this->statusCode = 404;
+			this->statusMsg = "Not Found";
 		}
 	}
 }
@@ -78,16 +78,16 @@ HttpResponse::HttpResponse(const HttpRequest& req, const Server& server)
 					try
 					{
 						std::cout << "hehe" << std::endl;
-						// this->_file = File(req.getURI());
-						this->_file = File(server.getLocation(i).getName(), server, i, true);
-						this->_statusCode = 200;
-						this->_statusMsg = "OK";
+						// this->file = File(req.getURI());
+						this->file = File(server.getLocation(i).getName(), server, i, true);
+						this->statusCode = 200;
+						this->statusMsg = "OK";
 					}
 					catch (File::FileNotFoundException& e)
 					{
-						this->_file = File("/404/404.html");
-						this->_statusCode = 404;
-						this->_statusMsg = "Not Found";
+						this->file = File("/404/404.html");
+						this->statusCode = 404;
+						this->statusMsg = "Not Found";
 					}
 					break ;
 				}
@@ -99,15 +99,15 @@ HttpResponse::HttpResponse(const HttpRequest& req, const Server& server)
 			{
 				try
 				{
-					this->_file = File(req.getURI());
-					this->_statusCode = 200;
-					this->_statusMsg = "OK";
+					this->file = File(req.getURI());
+					this->statusCode = 200;
+					this->statusMsg = "OK";
 				}
 				catch (File::FileNotFoundException& e)
 				{
-					this->_file = File("/404/404.html");
-					this->_statusCode = 404;
-					this->_statusMsg = "Not Found";
+					this->file = File("/404/404.html");
+					this->statusCode = 404;
+					this->statusMsg = "Not Found";
 				}
 			}
 		}
@@ -125,12 +125,12 @@ HttpResponse& HttpResponse::operator=(const HttpResponse& other)
 {
 	if (this != &other)
 	{
-		// this->_firstLine = other._firstLine;
-		// this->_httpVer = other._httpVer;
-		// this->_headers = other._headers;
-		// this->_msgBody = other._msgBody; // NOTE: will the operator=() method from the Base class called first?
-		this->_statusCode = other._statusCode;
-		this->_statusMsg = other._statusMsg;
+		// this->firstLine = other.firstLine;
+		// this->httpVer = other.httpVer;
+		// this->headers = other.headers;
+		// this->msgBody = other.msgBody; // NOTE: will the operator=() method from the Base class called first?
+		this->statusCode = other.statusCode;
+		this->statusMsg = other.statusMsg;
 	}
 	return (*this);
 }
@@ -141,23 +141,23 @@ HttpResponse& HttpResponse::operator=(const HttpResponse& other)
 
 int HttpResponse::getStatusCode() const
 {
-	return (this->_statusCode);
+	return (this->statusCode);
 }
 
 std::string HttpResponse::getStatusMsg() const
 {
-	return (this->_statusMsg);
+	return (this->statusMsg);
 }
 
 
 void HttpResponse::setStatusCode(const int& statusCode)
 {
-	this->_statusCode = statusCode;
+	this->statusCode = statusCode;
 }
 
 void HttpResponse::setStatusMsg(const std::string& statusMsg)
 {
-	this->_statusMsg = statusMsg;
+	this->statusMsg = statusMsg;
 }
 
 /*
@@ -168,11 +168,11 @@ std::string HttpResponse::genHttpResponseMsg(const HttpRequest& req) const
 {
 	std::stringstream stream;
 
-	stream << "HTTP/1.1 " << std::to_string(this->_statusCode) << " " << this->_statusMsg << std::endl;
-	stream << "Content-Type: text/html\nContent-Length: " << std::to_string(this->_file.getFileSize()) << std::endl;
+	stream << "HTTP/1.1 " << std::to_string(this->statusCode) << " " << this->statusMsg << std::endl;
+	stream << "Content-Type: text/html\nContent-Length: " << std::to_string(this->file.getFileSize()) << std::endl;
 	stream << std::endl;
 	if (req.getHttpMethod() == GET)
-		stream << this->_file.getContent();
+		stream << this->file.getContent();
 
 	return (stream.str());
 }

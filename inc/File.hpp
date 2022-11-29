@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:53:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/28 18:19:12 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 02:23:00 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,40 +19,39 @@
 #include <fstream>
 #include <exception>
 
-class File
-{
-private:
-	std::string _filename;
-	std::string _path;
-	bool isLocation;
-	std::string _content;
-	int _fileSize;
+class File {
+	private:
+		std::string filename;
+		std::string path;
+		std::string content;
+		int fileSize;
+		bool isLocation;
 
-public:
-	File();
-	File(const File&);
-	File(const std::string&);
-	File(const std::string&, const Server&, int, bool);
-	~File();
+	private:
+		void getContentFromFile(std::ifstream&);
+		void calcFileSize(std::ifstream&);
+		void changeToRootOrFavicon();
 
-	File& operator=(const File&);
+	public:
+		File();
+		File(const File&);
+		File(const std::string&);
+		File(const std::string&, const Server&, int, bool);
+		~File();
 
-	std::string getFilename() const;
-	std::string getPath() const;
-	std::string getContent() const;
-	int getFileSize() const;
+		File& operator=(const File&);
 
-	void setFilename(const std::string&);
-	void setPath(const std::string&);
-	void setContent(const std::string&);
-	void setFileSize(const int&);
+		std::string getFilename() const;
+		std::string getPath() const;
+		std::string getContent() const;
+		int getFileSize() const;
 
-	class FileNotFoundException: public std::exception {};
+		void setFilename(const std::string&);
+		void setPath(const std::string&);
+		void setContent(const std::string&);
+		void setFileSize(const int&);
 
-private:
-	void getContentFromFile(std::ifstream&);
-	void calcFileSize(std::ifstream&);
-	void changeToRootOrFavicon();
+		class FileNotFoundException: public std::exception {};
 };
 
 #endif

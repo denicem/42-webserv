@@ -6,9 +6,12 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 01:35:14 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 01:38:44 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 02:25:07 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef HTTP_METHOD_HPP
+#define HTTP_METHOD_HPP
 
 #include <string>
 
@@ -19,3 +22,5 @@ enum HttpMethod {
 };
 
 std::string getHttpMethodStr(HttpMethod&);
+
+#endif
