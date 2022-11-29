@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 13:59:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:29:42 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ std::string HttpResponse::getStatusMsg() const {
 	switch (this->statusCode) {
 		case 200: return ("OK");
 		case 404: return ("Not Found");
+		case 405: return ("Method Not Allowed");
 		default: return ("undefined");
 	}
 }
@@ -63,32 +64,29 @@ HttpResponse::HttpResponse(const HttpRequest& req) {
 HttpResponse::HttpResponse(const HttpRequest& req, const Server& server) {
 	for (unsigned long i = 0; i < server.getLocations().size(); ++i) {
 		std::cout << server.getLocation(i) << std::endl;
-		// if ((req.getURI() == server.getLocation(i).getName()) || req.getURI() == "/") {
 		if (req.getURI().find(server.getLocation(i).getName()) != std::string::npos) {
-			std::cout << "LOCATION FOUND" << std::endl;
-			// if (!isMethodAllowed(req.getHttpMethod(), server.getLocation(i)))
-			// 	std::cout << "ERROR!" << std::endl;
-			// 	// throw exception(); // TODO: implement own exception
-			// else {
-				if (req.getHttpMethod() == GET)
-				{
-					try
-					{
+			if (!isMethodAllowed(req.getHttpMethod(), server.getLocation(i))) {
+				// throw exception(); // TODO: implement own exception
+				std::cout << "ERROR!" << std::endl;
+				this->statusCode = 405;
+				break ;
+			}
+			else {
+				if (req.getHttpMethod() == GET) {
+					try {
 						this->file = File(server.getLocation(i).getName(), server, i, true);
 						this->statusCode = 200;
 					}
-					catch (File::FileNotFoundException& e)
-					{
+					catch (File::FileNotFoundException& e) {
 						this->file = File("/404/404.html");
 						this->statusCode = 404;
 					}
 					break ;
 				}
-			// }
+			}
 		}
 		else {
-			if (req.getHttpMethod() == GET)
-			{
+			if (req.getHttpMethod() == GET) {
 				try {
 					this->file = File(req.getURI());
 					this->statusCode = 200;
@@ -140,7 +138,7 @@ std::string HttpResponse::genHttpResponseMsg(const HttpRequest& req) const {
 	std::stringstream stream;
 
 	stream << req.getHttpVer() << " " << std::to_string(this->statusCode) << " " << this->getStatusMsg() << std::endl;
-	if (req.getHttpMethod() == GET) {
+	if (req.getHttpMethod() == GET && this->statusCode != 405) {
 		stream << "Content-Type: text/html\nContent-Length: " << std::to_string(this->file.getFileSize()) << std::endl;
 		stream << std::endl;
 		stream << this->file.getContent();
