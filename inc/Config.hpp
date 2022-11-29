@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/29 16:56:37 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/29 20:32:16 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,12 @@
 
 struct Setting
 {
+	const bool	mandatory;
+	bool		setting_is_set;
 
-	bool	mandatory;
-	bool	multiple_values_allowed;
-
-	Setting(bool mandatory, bool multiple_values_allowed)
+	Setting(bool mandatory): mandatory(mandatory)
 	{
-		this->mandatory = mandatory;
-		this->multiple_values_allowed = multiple_values_allowed;
+		this->setting_is_set = false;
 	}
 	Setting() {}
 };
@@ -79,22 +77,25 @@ struct ServerConfig
 class Config
 {
 	private:
+		vector<ServerConfig> _server_configs;
+
 		/*-CONSTANT VARIABLES FOR THE FORMATTING RULES-*/
-		map<string, Setting>	server_settings;
-		map<string, Setting>	route_settings;
+		map<string, Setting>	_server_settings;
+		map<string, Setting>	_route_settings;
 		/*---------------------------------------------*/
 
-		vector<ServerConfig> _server_configs;
-	
 		ifstream	_config_stream;
 		string		_line;
 		int			_file_location;
 
 		void	parseConfigFile(void);
+		void	setSetting(const string& setting, const ServerConfig* server, int line_num);
 
 		static bool	lineHasBrackets(string& line);
 		static void	configError(int line_num, string error_msg);
 		static void	removeWhitespace(std::string& string);
+		static void	resetSettings(map<string, Setting>& settings);
+		static bool	mandatorySettingsAreSet(map<string, Setting>& settings);
 	
 	public:
 		Config(string filePath);
