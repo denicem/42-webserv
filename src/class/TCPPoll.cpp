@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/28 18:47:32 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/11/29 16:54:51 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "File.hpp"
 
 TCPPoll::TCPPoll() {
-	this->pollStatus = 0;
+	this->pollStatus = 1;
 	this->i = 0;
 	this->len = INADDR_ANY;
 }
@@ -38,13 +38,14 @@ void TCPPoll::status_check()
 		//init sockets
 		this->sfds[i].initSockAddr(this->len , i);
 		
+		//kill all ports that are in use
+		if (setsockopt(this->sfds[i].getServerSocketFD(), SOL_SOCKET, SO_REUSEADDR, &pollStatus, sizeof(int)) == -1)
+			perror("Cannot set socket option");
+		
 		if (bind(this->sfds[i].getServerSocketFD(),
 			(struct sockaddr *) &this->sfds[i]._address,
 			sizeof(SCK_ADDR)) < 0)
 			throw NoBindException();
-		
-		if (setsockopt(this->sfds[i].getServerSocketFD(), SOL_SOCKET, SO_REUSEADDR, &pollStatus, sizeof(int)) < 0)
-			perror("Cannot set socket option");
 
 		if (listen(this->sfds[i].getServerSocketFD(), 10) < 0)
 			throw NoListenException();
