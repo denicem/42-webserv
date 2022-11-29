@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/26 16:11:24 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/29 16:56:37 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ struct RouteConfig
 	RouteConfig*	http_redirect; // can be NULL, then no redirect
 	vector<int>		http_methods; // will use values of enum "http_methods"
 	string			root;
+	string			alias;
 	bool			directory_listing;
 	string			default_file; // if empty string, no default file
 	vector<int>		cgi_extensions; // will use values of enum "cgi_extension"
