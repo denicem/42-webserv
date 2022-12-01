@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Config.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/17 17:40:22 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/29 20:58:31 by shaas            ###   ########.fr       */
-/*                                                                            */
+/*	*/
+/*	:::	  ::::::::   */
+/*   Config.cpp	 :+:	  :+:	:+:   */
+/*	+:+ +:+	 +:+	 */
+/*   By: shaas <shaas@student.42heilbronn.de>	   +#+  +:+	   +#+	*/
+/*	+#+#+#+#+#+   +#+	   */
+/*   Created: 2022/11/17 17:40:22 by shaas	 #+#	#+#	 */
+/*   Updated: 2022/12/01 00:37:11 by shaas	###   ########.fr	   */
+/*	*/
 /* ************************************************************************** */
 
 #include "Config.hpp"
@@ -42,7 +42,7 @@ void	Config::resetSettings(map<string, Setting>& settings)
 	}
 }
 
-bool	mandatorySettingsAreSet(map<string, Setting>& settings)
+bool	Config::mandatorySettingsAreSet(map<string, Setting>& settings)
 {
 	for(map<string, Setting>::iterator i = settings.begin(); i != settings.end(); i++)
 	{
@@ -55,13 +55,27 @@ bool	mandatorySettingsAreSet(map<string, Setting>& settings)
 	return true;
 }
 
-void	Config::setSetting(const string& setting, const ServerConfig* server, int line_num)
+void	Config::splitSettingValues(string& values, vector<string>& split)
+{
+	stringstream stream(values);
+	string buffer;
+
+	while (getline(stream, buffer, ','))
+	{
+		split.push_back(buffer);
+	}
+}
+
+void	Config::setSetting(const string& setting, ServerConfig* server, int line_num)
 {
 	if (setting == "server_names")
+		splitSettingValues(_line, server->server_names);
+	else if (setting == "ports")
 	{
+		vector<string>	str_ports;
+		splitSettingValues(_line, str_ports);
 		
 	}
-	else if (setting == "ports")
 	else if (setting == "max_client_body_size")
 }
 
@@ -143,12 +157,14 @@ void	Config::parseConfigFile(void)
 						configError(line_num, "why is there a setting outside of a block lmao");
 					case SERVER:
 						curr_setting = _server_settings.find(_line.substr(0, colon_pos));
+						_line.erase(0, colon_pos+1); /// <--------- here i am
 						if (curr_setting == _server_settings.end())
 							configError(line_num, "Unknown server setting");
-						if (curr_setting->second.setting_is_set)
+						else if (curr_setting->second.setting_is_set)
 							configError(line_num, "You are trying to set the same setting twice");
-						_line.erase(0, colon_pos+1); /// <--------- here i am
-						this->setSetting(curr_setting->first, curr_server, _line, line_num);
+						else if (*_line.rbegin() == ',')
+							configError(line_num, "You cannot have a comma at the end of a setiting. Where's the last value???");
+						this->setSetting(curr_setting->first, curr_server, line_num);
 						curr_setting->second.setting_is_set = true;
 				}
 				break;

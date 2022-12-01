@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/29 20:32:16 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/01 00:50:19 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <sstream>
 
 #include "webserv.hpp"
 
@@ -89,13 +90,14 @@ class Config
 		int			_file_location;
 
 		void	parseConfigFile(void);
-		void	setSetting(const string& setting, const ServerConfig* server, int line_num);
+		void	setSetting(const string& setting, ServerConfig* server, int line_num);
 
 		static bool	lineHasBrackets(string& line);
 		static void	configError(int line_num, string error_msg);
 		static void	removeWhitespace(std::string& string);
 		static void	resetSettings(map<string, Setting>& settings);
 		static bool	mandatorySettingsAreSet(map<string, Setting>& settings);
+		static void	splitSettingValues(string& str, vector<string>& split);
 	
 	public:
 		Config(string filePath);

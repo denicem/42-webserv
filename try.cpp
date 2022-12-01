@@ -1,9 +1,26 @@
 #include <string>
 #include <iostream>
+#include <vector>
+#include <sstream>
+
+using namespace std;
+
+void	splitSettingValues(string& values, vector<string>& split)
+{
+	stringstream stream(values);
+	string buffer;
+
+	while (getline(stream, buffer, ','))
+	{
+		split.push_back(buffer);
+	}
+}
 
 int main(void)
 {
-	std::string str("hello:yes");
+	string			str("yes");
+	vector<string>	split;
 
-	std::cout << str.erase(0, str.find(':')+1) << '\n';
+	splitSettingValues(str, split);
+	for (auto i : split) cout << i << endl;
 }
