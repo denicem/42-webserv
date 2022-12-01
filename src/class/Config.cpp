@@ -55,90 +55,146 @@ bool	Config::mandatorySettingsAreSet(map<string, Setting>& settings)
 	return true;
 }
 
-void	Config::splitSettingValues(string& values, vector<string>& split)
+void	Config::splitSettingValues(string& values, vector<string>& split, int line_num)
 {
 	stringstream stream(values);
 	string buffer;
 
 	while (getline(stream, buffer, ','))
 	{
+		if (buffer.empty())
+			configError(line_num, "Cannot have empty setting value");
 		split.push_back(buffer);
 	}
 }
 
-void	Config::setSetting(const string& setting, ServerConfig* server, int line_num)
+int	Config::stringToInt(string& str, int lower_limit, int upper_limit, int line_num)
+{
+	stringstream	stream(str);
+	int				integer;
+
+	stream >> integer;
+	if (integer < lower_limit || integer > upper_limit)
+			configError(line_num, "The number you are trying to set is outside of the setting's limits");
+	return (integer);
+}
+
+void	Config::setSetting(const string& setting, ServerConfig* server)
 {
 	if (setting == "server_names")
-		splitSettingValues(_line, server->server_names);
+		splitSettingValues(_line, server->server_names,  _line_num);
 	else if (setting == "ports")
 	{
+		if (_line.empty())
+			configError(_line_num, "Need at least one port");
 		vector<string>	str_ports;
-		splitSettingValues(_line, str_ports);
-		
+		splitSettingValues(_line, str_ports, _line_num);
+		for (vector<string>::iterator i = str_ports.begin(); i != str_ports.end(); i++)
+		{
+			if (i->find_first_not_of("0123456789") != string::npos)
+				configError(_line_num, "Port is not a positive integer, which it should be");
+			server->ports.push_back(stringToInt(*i, 0, USHRT_MAX, _line_num));
+		}
 	}
 	else if (setting == "max_client_body_size")
+	{
+		if (_line.find(',') != string::npos)
+			configError(_line_num, "max_client_body_size can only have one value");
+		if (_line.find_first_not_of("0123456789") != string::npos)
+				configError(_line_num, "Max client body size is not a positive integer, which it should be");
+		server->max_client_body_size = stringToInt(_line, 1, INT_MAX, _line_num);
+	}
+}
+
+void	Config::setSetting(const string& setting, RouteConfig* route)
+{
+	// need to fill with the settings
+}
+
+void	Config::handleSetting(size_t colon_pos)
+{
+	switch (_file_location)
+	{
+		case SERVER:
+			map<string, Setting>&	settings
+
+	}
+	map<string, Setting>::iterator	curr_setting;
+
+	curr_setting = _server_settings.find(_line.substr(0, colon_pos));
+	_line.erase(0, colon_pos+1);
+	if (curr_setting == _server_settings.end())
+		configError(_line_num, "Unknown server setting");
+	else if (curr_setting->second.setting_is_set)
+		configError(_line_num, "You are trying to set the same setting twice");
+	this->setSetting(curr_setting->first, curr_server);
+	curr_setting->second.setting_is_set = true;
 }
 
 void	Config::parseConfigFile(void)
 {
 	ServerConfig*					curr_server = NULL;
 	RouteConfig*					curr_route = NULL;
-	map<string, Setting>::iterator	curr_setting;
 	size_t							colon_pos;
+	map<string, Setting>::iterator	curr_setting;
 
-	for (int line_num = 1; getline(this->_config_stream, this->_line); line_num++)
+	for (_line_num = 1; getline(this->_config_stream, this->_line); _line_num++)
 	{
-		//cout << ' ' << WAITING_ICON.substr((line_num % 12) * 4, 4) << "\n";
-		if (all_of(_line.begin(), _line.end(), static_cast<int(*)(int)>(&std::isspace)))
+		//cout << ' ' << WAITING_ICON.substr((_line_num % 12) * 4, 4) << "\n";
+		if (_line.find('#') != string::npos)
+			_line.erase(_line.find('#'));
+		removeWhitespace(_line);
+		if (_line.empty())
 			continue;
 		switch (_line.back())
 		{
 			case '{':
-				_line.erase(_line.end() - 1); removeWhitespace(_line);
+				_line.erase(_line.end() - 1);
 				if (lineHasBrackets(_line) || _file_location >= ROUTE)
-					configError(line_num, "Too many open brackets");
-				else if (_file_location == BASE)
+					configError(_line_num, "Too many open brackets");
+				switch (_file_location)
 				{
-					_server_configs.push_back(ServerConfig());
-					curr_server = &_server_configs.back();
-					resetSettings(this->_server_settings);
-					_file_location = SERVER;
-				}
-				else if (_file_location == SERVER)
-				{
-					if (_line == "error_pages")
-					{
-						if (this->_server_settings["error_pages"].setting_is_set)
-							configError(line_num, "Two error_pages in one server not allowed");
-						_file_location = ERROR_PAGES;
-					}
-					else if (*_line.begin() == '/')
-					{
-						if (curr_server->routes.insert(map<string, RouteConfig>::value_type(_line, RouteConfig())).second == false)
-							configError(line_num, "Two routes of the same name shouldn't be in the same server");
-						curr_route = &curr_server->routes[_line];
-						resetSettings(this->_route_settings);
-						_file_location = ROUTE;
-					}
-					else
-						configError(line_num, "Unknown block inside server");
+					case BASE:
+						_server_configs.push_back(ServerConfig());
+						curr_server = &_server_configs.back();
+						resetSettings(this->_server_settings);
+						_file_location = SERVER;
+						break;
+					case SERVER:
+						if (_line == "error_pages")
+						{
+							if (this->_server_settings["error_pages"].setting_is_set)
+								configError(_line_num, "Two error_pages in one server not allowed");
+							_file_location = ERROR_PAGES;
+						}
+						else if (*_line.begin() == '/')
+						{
+							if (curr_server->routes.insert(map<string, RouteConfig>::value_type(_line, RouteConfig())).second == false)
+								configError(_line_num, "Two routes of the same name shouldn't be in the same server");
+							curr_route = &curr_server->routes[_line];
+							resetSettings(this->_route_settings);
+							_file_location = ROUTE;
+						}
+						else
+							configError(_line_num, "Unknown block inside server");
+						break;
 				}
 				break;
 			case '}':
 				_line.erase(_line.end() - 1);
-				if (!all_of(_line.begin(), _line.end(), static_cast<int(*)(int)>(&std::isspace)))
-					configError(line_num, "Closing bracket needs to be alone in line");
+				if (_line.empty() == false)
+					configError(_line_num, "Closing bracket needs to be alone in line");
 				switch(_file_location)
 				{
 					case BASE:
-						configError(line_num, "Too many closing brackets");
+						configError(_line_num, "Too many closing brackets");
 					case SERVER:
 						if (mandatorySettingsAreSet(_server_settings) == false)
-							configError(line_num, "All mandatory settings for this server were not set");
+							configError(_line_num, "All mandatory settings for this server were not set");
 						_file_location = BASE;
 					case ROUTE:
 						if (mandatorySettingsAreSet(_route_settings) == false)
-							configError(line_num, "All mandatory settings for this route were not set");
+							configError(_line_num, "All mandatory settings for this route were not set");
 						_file_location = SERVER;
 					case ERROR_PAGES:
 						_file_location = SERVER;
@@ -146,26 +202,49 @@ void	Config::parseConfigFile(void)
 				break;
 			default:
 				colon_pos = _line.find(':');
-				removeWhitespace(_line);
-				if (lineHasBrackets(_line))
-					configError(line_num, "Bracket needs to be at the end of a line");
-				else if (colon_pos == string::npos)
-					configError(line_num, "No colon in setting");
+				if (colon_pos == string::npos)
+					configError(_line_num, "No colon in setting");
+				else if (lineHasBrackets(_line))
+					configError(_line_num, "Bracket needs to be at the end of a line");
+				else if (*_line.rbegin() == ',')
+					configError(_line_num, "You cannot have a comma at the end of a setting. Where's the last value???");
 				switch (_file_location)
 				{
 					case BASE:
-						configError(line_num, "why is there a setting outside of a block lmao");
+						configError(_line_num, "why is there a setting outside of a block lmao");
+						break;
 					case SERVER:
+						//this->handleSetting(colon_pos);
 						curr_setting = _server_settings.find(_line.substr(0, colon_pos));
-						_line.erase(0, colon_pos+1); /// <--------- here i am
+						_line.erase(0, colon_pos+1);
 						if (curr_setting == _server_settings.end())
-							configError(line_num, "Unknown server setting");
+							configError(_line_num, "Unknown server setting");
 						else if (curr_setting->second.setting_is_set)
-							configError(line_num, "You are trying to set the same setting twice");
-						else if (*_line.rbegin() == ',')
-							configError(line_num, "You cannot have a comma at the end of a setiting. Where's the last value???");
-						this->setSetting(curr_setting->first, curr_server, line_num);
+							configError(_line_num, "You are trying to set the same setting twice");
+						this->setSetting(curr_setting->first, curr_server);
 						curr_setting->second.setting_is_set = true;
+						break;
+					case ROUTE:
+						curr_setting = _route_settings.find(_line.substr(0, colon_pos));
+						_line.erase(0, colon_pos+1);
+						if (curr_setting == _route_settings.end())
+							configError(_line_num, "Unknown route setting");
+						else if (curr_setting->second.setting_is_set)
+							configError(_line_num, "You are trying to set the same setting twice");
+						this->setSetting(curr_setting->first, curr_route);
+						curr_setting->second.setting_is_set = true;
+						break;
+					case ERROR_PAGES:
+						curr_server->error_pages
+										if (_line.empty())
+							configError(_line_num, "Need at least one port");
+						vector<string>	str_ports;
+						splitSettingValues(_line, str_ports, _line_num);
+						for (vector<string>::iterator i = str_ports.begin(); i != str_ports.end(); i++)
+						{
+							if (i->find_first_not_of("0123456789") != string::npos)
+								configError(_line_num, "Port is not a positive integer, which it should be");
+							server->ports.push_back(stringToInt(*i, 0, USHRT_MAX, _line_num));
 				}
 				break;
 		}

@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/01 00:50:19 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/01 22:15:11 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <map>
 #include <algorithm>
 #include <sstream>
+#include <limits>
 
 #include "webserv.hpp"
 
@@ -70,7 +71,7 @@ struct ServerConfig
 {
 	vector<string>				server_names;
 	vector<int>					ports;
-	int							max_client_body_size; //if -1, allow infinite size
+	int							max_client_body_size; //if 0, allow infinite size
 	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page
 	map<string, RouteConfig>	routes; // "string" element of map is name of route
 };
@@ -87,18 +88,22 @@ class Config
 
 		ifstream	_config_stream;
 		string		_line;
+		id_t		_line_num;
 		int			_file_location;
 
 		void	parseConfigFile(void);
-		void	setSetting(const string& setting, ServerConfig* server, int line_num);
+		void	handleSetting(size_t colon_pos);
+		void	setSetting(const string& setting, ServerConfig* server);
+		void	setSetting(const string& setting, RouteConfig* route);
 
 		static bool	lineHasBrackets(string& line);
 		static void	configError(int line_num, string error_msg);
 		static void	removeWhitespace(std::string& string);
 		static void	resetSettings(map<string, Setting>& settings);
 		static bool	mandatorySettingsAreSet(map<string, Setting>& settings);
-		static void	splitSettingValues(string& str, vector<string>& split);
-	
+		static void	splitSettingValues(string& str, vector<string>& split, int line_num);
+		static int	stringToInt(string& string, int lower_limit, int upper_limit, int line_num);
+
 	public:
 		Config(string filePath);
 		~Config();
