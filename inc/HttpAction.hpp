@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/01 20:20:46 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:55:19 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ class HttpAction: public HttpMessage {
 	public:
 		HttpAction();
 		HttpAction(const HttpAction&);
-		HttpAction(const HttpRequest&);
 		HttpAction(const HttpRequest&, const Server&);
 		~HttpAction();
 
@@ -40,7 +39,6 @@ class HttpAction: public HttpMessage {
 		File getFile() const;
 
 		HttpAction& operator=(const HttpAction&);
-
 };
 
 #endif

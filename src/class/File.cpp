@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 19:35:31 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:19:25 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,6 @@ File::File(const HttpRequest& req, const Server& server, int indexLoc, bool isLo
 {
 	this->changeToRootOrFavicon();
 	std::ifstream file;
-
-	std::cout << req << std::endl;
-	std::cout << req.getRestEndpoint().size() << " " << req.getRestEndpoint().empty() << std::endl;
 	
 	if (!this->isLocation)
 		file.open("html" + this->path);

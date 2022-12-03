@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/03 17:40:52 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:17:32 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,6 @@
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
 */
-
-bool HttpResponse::isMethodAllowed(const int method, const Location& location) const {
-	for (unsigned long i = 0; i < location.getAllowedMethods().size(); ++i) {
-		if (location.getAllowedMethods().at(i) == method)
-			return (true);
-	}
-	return (false);
-}
 
 std::string HttpResponse::getStatusMsg() const {
 	switch (this->statusCode) {
@@ -42,63 +34,6 @@ std::string HttpResponse::getStatusMsg() const {
 
 HttpResponse::HttpResponse() {}
 HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), statusCode(other.statusCode) {}
-
-HttpResponse::HttpResponse(const std::string& filename) {
-	this->file = File(filename);
-	this->statusCode = 200;
-}
-
-HttpResponse::HttpResponse(const HttpRequest& req) {
-	if (req.getHttpMethod() == GET) {  //TODO: switch case!!
-		try {
-			this->file = File(req.getURI());
-			this->statusCode = 200;
-		}
-		catch (File::FileNotFoundException& e) {
-			this->file = File("/404/404.html");
-			this->statusCode = 404;
-		}
-	}
-}
-
-HttpResponse::HttpResponse(const HttpRequest& req, const Server& server) {
-	for (unsigned long i = 0; i < server.getLocations().size(); ++i) {
-		std::cout << server.getLocation(i) << std::endl;
-		if (req.getURI().find(server.getLocation(i).getName()) != std::string::npos) {
-			if (!isMethodAllowed(req.getHttpMethod(), server.getLocation(i))) {
-				// throw exception(); // TODO: implement own exception
-				std::cout << "ERROR!" << std::endl;
-				this->statusCode = 405;
-				break ;
-			}
-			else {
-				if (req.getHttpMethod() == GET) {
-					try {
-						this->file = File(req, server, i, true);
-						this->statusCode = 200;
-					}
-					catch (File::FileNotFoundException& e) {
-						this->file = File("/404/404.html");
-						this->statusCode = 404;
-					}
-					break ;
-				}
-			}
-		}
-		else {
-			if (req.getHttpMethod() == GET) {
-				try {
-					this->file = File(req.getURI());
-					this->statusCode = 200;
-				}
-				catch (File::FileNotFoundException& e) {
-					this->file = File("/404/404.html");
-					this->statusCode = 404;
-				}
-			}
-		}
-	}
-}
 
 HttpResponse::HttpResponse(const HttpAction& act) {
 	this->httpVer = act.getHttpVer();
@@ -140,24 +75,12 @@ void HttpResponse::setStatusCode(const int& statusCode) {
 ** ----------------------- METHODS -----------------------
 */
 
-std::string HttpResponse::genHttpResponseMsg(const HttpRequest& req) const {
-	std::stringstream stream;
-
-	stream << req.getHttpVer() << " " << std::to_string(this->statusCode) << " " << this->getStatusMsg() << std::endl;
-	if (req.getHttpMethod() == GET && this->statusCode != 405) {
-		stream << "Content-Type: text/html\nContent-Length: " << std::to_string(this->file.getFileSize()) << std::endl;
-		stream << std::endl;
-		stream << this->file.getContent();
-	}
-	return (stream.str());
-}
-
 std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	std::stringstream stream;
 
-	stream << act.getHttpVer() << " " << std::to_string(this->statusCode) << " " << this->getStatusMsg() << std::endl;
+	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
 	if (act.getHttpMethod() == GET && act.getStatusCode() != 405) {
-		stream << "Content-Type: text/html\nContent-Length: " << std::to_string(act.getFile().getFileSize()) << std::endl;
+		stream << "Content-Type: text/html\nContent-Length: " << act.getFile().getFileSize() << std::endl;
 		stream << std::endl;
 		stream << act.getFile().getContent();
 	}

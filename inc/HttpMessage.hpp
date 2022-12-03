@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:11:57 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/02 17:55:52 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:51:30 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,6 @@ class HttpMessage {
 		std::string httpVer;
 		std::map<std::string, std::string> headers;
 		std::string msgBody;
-
-		// enum HttpMethod
-		// {
-		// 	GET = 42,
-		// 	POST,
-		// 	DELETE
-		// };
 
 	public:
 		HttpMessage();

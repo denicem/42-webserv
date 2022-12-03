@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:43:33 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/02 17:45:26 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:14:29 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,11 @@ class HttpResponse: public HttpMessage {
 		File file;
 
 	private:
-		bool isMethodAllowed(const int, const Location&) const;
 		std::string getStatusMsg() const;
 
 	public:
 		HttpResponse();
 		HttpResponse(const HttpResponse&);
-		HttpResponse(const std::string&);
-		HttpResponse(const HttpRequest&);
-		HttpResponse(const HttpRequest&, const Server&);
 		HttpResponse(const HttpAction&);
 		~HttpResponse();
 
@@ -43,7 +39,6 @@ class HttpResponse: public HttpMessage {
 
 		void setStatusCode(const int&);
 
-		std::string genHttpResponseMsg(const HttpRequest&) const;
 		std::string genHttpResponseMsg(const HttpAction&) const;
 
 		friend std::ostream& operator<<(std::ostream&, const HttpResponse&);
