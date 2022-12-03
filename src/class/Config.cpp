@@ -70,6 +70,8 @@ void	Config::splitSettingValues(string& values, vector<string>& split, int line_
 
 int	Config::stringToInt(string& str, int lower_limit, int upper_limit, int line_num)
 {
+	if (str.empty())
+		configError(line_num, "Cannot have empty setting value");
 	stringstream	stream(str);
 	int				integer;
 
@@ -77,6 +79,13 @@ int	Config::stringToInt(string& str, int lower_limit, int upper_limit, int line_
 	if (integer < lower_limit || integer > upper_limit)
 			configError(line_num, "The number you are trying to set is outside of the setting's limits");
 	return (integer);
+}
+
+bool	settingHasMultipleValues(string& line)
+{
+	if (line.find(',') == string::npos)
+		return false;
+	return true;
 }
 
 void	Config::setSetting(const string& setting, ServerConfig* server)
@@ -98,7 +107,7 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 	}
 	else if (setting == "max_client_body_size")
 	{
-		if (_line.find(',') != string::npos)
+		if (settingHasMultipleValues(_line))
 			configError(_line_num, "max_client_body_size can only have one value");
 		if (_line.find_first_not_of("0123456789") != string::npos)
 				configError(_line_num, "Max client body size is not a positive integer, which it should be");
@@ -108,36 +117,96 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 
 void	Config::setSetting(const string& setting, RouteConfig* route)
 {
-	// need to fill with the settings
+	if (setting == "http_redirect")
+	{
+		if (settingHasMultipleValues(_line))
+			configError(_line_num, "http_redirect can only have one value");
+		_http_redirects.push_back(HttpRedirect(_curr_route_name, _line));
+	}
+	else if (setting == "http_methods")
+	{
+
+	}
+	else if (setting == "root")
+	{
+
+	}
+	else if (setting == "alias")
+	{
+
+	}
+	else if (setting == "default_file")
+	{
+
+	}
+	else if (setting == "upload_directory")
+	{
+
+	}
+	else if (setting == "directory_listing")
+	{
+
+	}
+	else if (setting == "cgi_extensions")
+	{
+
+	}
 }
 
 void	Config::handleSetting(size_t colon_pos)
 {
+	map<string, Setting>* settings;
+
 	switch (_file_location)
 	{
 		case SERVER:
-			map<string, Setting>&	settings
-
+			settings = &_server_settings;
+			break;
+		case ROUTE:
+			settings = &_route_settings;
+			break;
 	}
-	map<string, Setting>::iterator	curr_setting;
 
-	curr_setting = _server_settings.find(_line.substr(0, colon_pos));
+	map<string, Setting>::iterator	curr_setting;
+	curr_setting = settings->find(_line.substr(0, colon_pos));
 	_line.erase(0, colon_pos+1);
-	if (curr_setting == _server_settings.end())
-		configError(_line_num, "Unknown server setting");
+	if (curr_setting == settings->end())
+		configError(_line_num, "Unknown setting for this block");
 	else if (curr_setting->second.setting_is_set)
 		configError(_line_num, "You are trying to set the same setting twice");
-	this->setSetting(curr_setting->first, curr_server);
+
+	switch (_file_location)
+	{
+		case SERVER:
+			this->setSetting(curr_setting->first, _curr_server);
+			break;
+		case ROUTE:
+			this->setSetting(curr_setting->first, _curr_route);
+			break;
+	}
+
 	curr_setting->second.setting_is_set = true;
+}
+
+void	Config::assignHttpRedirects(void)
+{
+	std::map<std::string, RouteConfig>::iterator	redirect;
+
+	for (vector<HttpRedirect>::iterator i = _http_redirects.begin(); i != _http_redirects.end(); i++)
+	{
+		redirect = _curr_server->routes.find(i->redirect);
+		if (redirect == _curr_server->routes.end())
+			configError(_line_num, "Http redirect to nonexistent route in this server");
+		_curr_server->routes.find(i->route)->second.http_redirect = &redirect->second;
+	}
+	_http_redirects.clear();
 }
 
 void	Config::parseConfigFile(void)
 {
-	ServerConfig*					curr_server = NULL;
-	RouteConfig*					curr_route = NULL;
-	size_t							colon_pos;
-	map<string, Setting>::iterator	curr_setting;
+	size_t	colon_pos;
 
+	//default values!
 	for (_line_num = 1; getline(this->_config_stream, this->_line); _line_num++)
 	{
 		//cout << ' ' << WAITING_ICON.substr((_line_num % 12) * 4, 4) << "\n";
@@ -156,7 +225,7 @@ void	Config::parseConfigFile(void)
 				{
 					case BASE:
 						_server_configs.push_back(ServerConfig());
-						curr_server = &_server_configs.back();
+						_curr_server = &_server_configs.back();
 						resetSettings(this->_server_settings);
 						_file_location = SERVER;
 						break;
@@ -169,9 +238,10 @@ void	Config::parseConfigFile(void)
 						}
 						else if (*_line.begin() == '/')
 						{
-							if (curr_server->routes.insert(map<string, RouteConfig>::value_type(_line, RouteConfig())).second == false)
+							if (_curr_server->routes.insert(map<string, RouteConfig>::value_type(_line, RouteConfig())).second == false)
 								configError(_line_num, "Two routes of the same name shouldn't be in the same server");
-							curr_route = &curr_server->routes[_line];
+							_curr_route = &_curr_server->routes[_line];
+							_curr_route_name = _line;
 							resetSettings(this->_route_settings);
 							_file_location = ROUTE;
 						}
@@ -189,6 +259,7 @@ void	Config::parseConfigFile(void)
 					case BASE:
 						configError(_line_num, "Too many closing brackets");
 					case SERVER:
+						this->assignHttpRedirects();
 						if (mandatorySettingsAreSet(_server_settings) == false)
 							configError(_line_num, "All mandatory settings for this server were not set");
 						_file_location = BASE;
@@ -214,37 +285,23 @@ void	Config::parseConfigFile(void)
 						configError(_line_num, "why is there a setting outside of a block lmao");
 						break;
 					case SERVER:
-						//this->handleSetting(colon_pos);
-						curr_setting = _server_settings.find(_line.substr(0, colon_pos));
-						_line.erase(0, colon_pos+1);
-						if (curr_setting == _server_settings.end())
-							configError(_line_num, "Unknown server setting");
-						else if (curr_setting->second.setting_is_set)
-							configError(_line_num, "You are trying to set the same setting twice");
-						this->setSetting(curr_setting->first, curr_server);
-						curr_setting->second.setting_is_set = true;
+						this->handleSetting(colon_pos);
 						break;
 					case ROUTE:
-						curr_setting = _route_settings.find(_line.substr(0, colon_pos));
-						_line.erase(0, colon_pos+1);
-						if (curr_setting == _route_settings.end())
-							configError(_line_num, "Unknown route setting");
-						else if (curr_setting->second.setting_is_set)
-							configError(_line_num, "You are trying to set the same setting twice");
-						this->setSetting(curr_setting->first, curr_route);
-						curr_setting->second.setting_is_set = true;
+						this->handleSetting(colon_pos);
 						break;
 					case ERROR_PAGES:
-						curr_server->error_pages
-										if (_line.empty())
-							configError(_line_num, "Need at least one port");
-						vector<string>	str_ports;
-						splitSettingValues(_line, str_ports, _line_num);
-						for (vector<string>::iterator i = str_ports.begin(); i != str_ports.end(); i++)
-						{
-							if (i->find_first_not_of("0123456789") != string::npos)
-								configError(_line_num, "Port is not a positive integer, which it should be");
-							server->ports.push_back(stringToInt(*i, 0, USHRT_MAX, _line_num));
+						if (_line.find(',') != string::npos)
+							configError(_line_num, "Can only have one error page per error code");
+						if (_line.find_first_not_of("0123456789") != string::npos)
+							configError(_line_num, "Error code is not a positive integer, which it should be");
+						std::string	error_code_str(_line.substr(0, colon_pos));
+						int error_code = stringToInt(error_code_str, 100, 599, _line_num);
+						if (access(_line.erase(0, colon_pos+1).c_str(), R_OK))
+							configError(_line_num, "Requested error file does not grant read permissions (or doesn't even exist)");
+						if (_curr_server->error_pages.insert(map<int, string>::value_type(error_code, _line)).second == false)
+							configError(_line_num, "Cannot have multiple pages for one error code");
+						break;
 				}
 				break;
 		}
