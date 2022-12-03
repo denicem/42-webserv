@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/29 16:54:51 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:42:52 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,11 @@ void TCPPoll::status_check()
 						// std::cout << this->buffer << std::endl;
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
-						std::cout << req << std::endl;
-						HttpResponse resp(req, this->sfds[i]);
-						std::string respMsg(resp.genHttpResponseMsg(req));
+						// std::cout << req << std::endl;
+						HttpAction act(req, this->sfds[i]);
+						// HttpResponse resp(req, this->sfds[i]);
+						HttpResponse resp(act);
+						std::string respMsg(resp.genHttpResponseMsg(act));
 						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";
 						memset(this->buffer, 0, MAXBUFF); // NOTE: resets everything to zero for the next loop to read into the buffer.

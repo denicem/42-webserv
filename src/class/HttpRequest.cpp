@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 13:15:48 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:56:55 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ HttpRequest& HttpRequest::operator=(const HttpRequest& other)
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
 
-HttpMessage::HttpMethod HttpRequest::getHttpMethod() const
+HttpMethod HttpRequest::getHttpMethod() const
 {
 	return (this->httpMethod);
 }

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 17:47:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:40:52 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,12 @@ HttpResponse::HttpResponse(const HttpRequest& req, const Server& server) {
 	}
 }
 
+HttpResponse::HttpResponse(const HttpAction& act) {
+	this->httpVer = act.getHttpVer();
+	this->msgBody = act.getMsgBody();
+	this->statusCode = act.getStatusCode();
+}
+
 HttpResponse::~HttpResponse() {}
 
 /*
@@ -142,6 +148,18 @@ std::string HttpResponse::genHttpResponseMsg(const HttpRequest& req) const {
 		stream << "Content-Type: text/html\nContent-Length: " << std::to_string(this->file.getFileSize()) << std::endl;
 		stream << std::endl;
 		stream << this->file.getContent();
+	}
+	return (stream.str());
+}
+
+std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
+	std::stringstream stream;
+
+	stream << act.getHttpVer() << " " << std::to_string(this->statusCode) << " " << this->getStatusMsg() << std::endl;
+	if (act.getHttpMethod() == GET && act.getStatusCode() != 405) {
+		stream << "Content-Type: text/html\nContent-Length: " << std::to_string(act.getFile().getFileSize()) << std::endl;
+		stream << std::endl;
+		stream << act.getFile().getContent();
 	}
 	return (stream.str());
 }

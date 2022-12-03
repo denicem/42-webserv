@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:43:33 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 13:51:10 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:45:26 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "HttpMessage.hpp"
 #include "HttpRequest.hpp"
+#include "HttpAction.hpp"
 #include "File.hpp"
 #include "Server.hpp"
 
@@ -33,6 +34,7 @@ class HttpResponse: public HttpMessage {
 		HttpResponse(const std::string&);
 		HttpResponse(const HttpRequest&);
 		HttpResponse(const HttpRequest&, const Server&);
+		HttpResponse(const HttpAction&);
 		~HttpResponse();
 
 		HttpResponse& operator=(const HttpResponse&);
@@ -42,6 +44,7 @@ class HttpResponse: public HttpMessage {
 		void setStatusCode(const int&);
 
 		std::string genHttpResponseMsg(const HttpRequest&) const;
+		std::string genHttpResponseMsg(const HttpAction&) const;
 
 		friend std::ostream& operator<<(std::ostream&, const HttpResponse&);
 };
