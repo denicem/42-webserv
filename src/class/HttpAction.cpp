@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/03 17:38:08 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 22:32:53 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,21 @@
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
 */
+
+void HttpAction::initVars(const HttpRequest& req) {
+	this->httpVer = req.getHttpVer();
+
+	// NOTE: deep copy map
+	// NOTE: typedefs in snake_case??
+	typedef std::map<std::string, std::string>::const_iterator str_map_iter;
+	str_map_iter it = req.getHeaders().begin();
+	str_map_iter ite = req.getHeaders().end();
+	for (; it != ite; ++it)
+		this->headers[(*it).first] = (*it).second;
+
+	this->msgBody = req.getMsgBody();
+	this->method = req.getHttpMethod();
+}
 
 bool HttpAction::isMethodAllowed(const int method, const Location& location) const {
 	for (unsigned long i = 0; i < location.getAllowedMethods().size(); ++i) {
@@ -29,9 +44,7 @@ bool HttpAction::isMethodAllowed(const int method, const Location& location) con
 */
 
 HttpAction::HttpAction(const HttpRequest& req, const Server& server) {
-	this->method = req.getHttpMethod();
-	this->httpVer = req.getHttpVer();
-	this->msgBody = req.getMsgBody();
+	this->initVars(req);
 	for (unsigned long i = 0; i < server.getLocations().size(); ++i) {
 		// std::cout << server.getLocation(i) << std::endl;
 		if (req.getURI().find(server.getLocation(i).getName()) != std::string::npos) {

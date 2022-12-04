@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:11:57 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/03 17:51:30 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 22:29:14 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ class HttpMessage {
 		HttpMessage& operator=(const HttpMessage&);
 
 		std::string getHttpVer() const;
-		std::string getHeaders() const;
+		const std::map<std::string, std::string>& getHeaders() const;
 		std::string getMsgBody() const;
 
 		void setHttpVer(const std::string&);
-		void setHeaders(const std::string&);
+		// void setHeaders(const std::string&);
 		void setMsgBody(const std::string&);
 };
 

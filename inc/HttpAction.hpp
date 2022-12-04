@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/03 17:55:19 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 22:08:03 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class HttpAction: public HttpMessage {
 		File file;
 
 	private:
+		void initVars(const HttpRequest&);
 		bool isMethodAllowed(const int, const Location&) const;
 
 	public:

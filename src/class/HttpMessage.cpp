@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 02:21:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 22:27:14 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ std::string HttpMessage::getHttpVer() const
 	return (this->httpVer);
 }
 
-// std::string HttpMessage::getHeaders() const
-// {
-// 	return (this->headers);
-// }
+const std::map<std::string, std::string>& HttpMessage::getHeaders() const
+{
+	return (this->headers);
+}
 
 std::string HttpMessage::getMsgBody() const
 {
