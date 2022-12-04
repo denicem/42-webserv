@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 18:37:57 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/29 14:08:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 23:35:02 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Location {
 	private:
 		std::string name;
 		std::string root; // root or alias
-		std::string path; // root from Server + this->name OR alias
+		std::string path; // root (from Server?) + this->name OR  if isAlias == true -> root
 		std::string index; //default_file
 		std::vector<HttpMethod>allowedMethods;
 		bool isAlias;

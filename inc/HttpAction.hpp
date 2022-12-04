@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/04 22:08:03 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 23:23:37 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@ class HttpAction: public HttpMessage {
 		HttpMethod method;
 		int statusCode;
 		File file;
+		
+		std::string uri;
 
 	private:
-		void initVars(const HttpRequest&);
+		void initVars(const HttpRequest&, const Server&);
+		void setURI(const HttpRequest&, const Server&);
 		bool isMethodAllowed(const int, const Location&) const;
 
 	public:
@@ -35,11 +38,11 @@ class HttpAction: public HttpMessage {
 		HttpAction(const HttpRequest&, const Server&);
 		~HttpAction();
 
+		HttpAction& operator=(const HttpAction&);
+
 		HttpMethod getHttpMethod() const;
 		int getStatusCode() const;
 		File getFile() const;
-
-		HttpAction& operator=(const HttpAction&);
 };
 
 #endif

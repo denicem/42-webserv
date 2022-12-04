@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/03 18:19:25 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 23:44:26 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,32 @@ File::File(const std::string& path): path(path)
 
 File::File(const std::string& path, const Server& server, int indexLoc, bool isLocation = false): path(path), isLocation(isLocation)
 {
-	this->changeToRootOrFavicon();
+	// this->changeToRootOrFavicon();
+	// std::ifstream file;
+	
+	// if (!this->isLocation)
+	// 	file.open("html" + this->path);
+	// else
+	// {
+	// 	if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName())
+	// 		file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
+	// 	else
+	// 		file.open(server.getLocation(indexLoc).getPath() + "/" + path.substr(path.find_last_of('/') + 1));
+	// }
+	// if (!file.is_open())
+	// 	throw FileNotFoundException();
+
+	// this->filename= this->path.substr(this->path.find_last_of('/') + 1);
+	// this->calcFileSize(file);
+	// this->getContentFromFile(file);
+	// this->changeToRootOrFavicon();
 	std::ifstream file;
 	
 	if (!this->isLocation)
 		file.open("html" + this->path);
 	else
 	{
-		if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName())
+		if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName() && path.find(".") == std::string::npos)
 			file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
 		else
 			file.open(server.getLocation(indexLoc).getPath() + "/" + path.substr(path.find_last_of('/') + 1));

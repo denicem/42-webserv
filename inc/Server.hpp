@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 02:03:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 23:06:22 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ class Server
 	private:
 		string serverName;
 		string root;
+		//string index/default_file -> TODO:
 		vector<int> ports;
 		vector<Location> locations;
+		// NOTE: Locations as a map<string, Location> with location name as Key
 
 		/* for TCP */
 		int serverSocketFD;
