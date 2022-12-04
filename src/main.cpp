@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 14:09:24 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 23:49:07 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 		allowedMethods.push_back(POST);
 		allowedMethods.push_back(DELETE);
 		locations.push_back(Location("/hehe", "html", "hello.html", allowedMethods, false));
-		locations.push_back(Location("/ho", "html", "/hi.html", allowedMethods, false));
+		locations.push_back(Location("/ho", "www", "/index.html", allowedMethods, true));
 		ports.push_back(8080);
 		ports.push_back(8081);
 		ports.push_back(8082);
