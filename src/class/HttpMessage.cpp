@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/23 20:58:38 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/04 22:27:14 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 */
 
 HttpMessage::HttpMessage() {}
-HttpMessage::HttpMessage(const HttpMessage& other): _firstLine(other._firstLine), _httpVer(other._httpVer), _headers(other._headers), _msgBody(other._msgBody) {}
+HttpMessage::HttpMessage(const HttpMessage& other): firstLine(other.firstLine), httpVer(other.httpVer), headers(other.headers), msgBody(other.msgBody) {}
 HttpMessage::~HttpMessage() {}
 
 /*
@@ -32,10 +32,10 @@ HttpMessage& HttpMessage::operator=(const HttpMessage& other)
 {
 	if (this != &other)
 	{
-		this->_firstLine = other._firstLine;
-		this->_httpVer = other._httpVer;
-		this->_headers = other._headers;
-		this->_msgBody = other._msgBody;
+		this->firstLine = other.firstLine;
+		this->httpVer = other.httpVer;
+		this->headers = other.headers;
+		this->msgBody = other.msgBody;
 	}
 	return (*this);
 }
@@ -46,33 +46,33 @@ HttpMessage& HttpMessage::operator=(const HttpMessage& other)
 
 std::string HttpMessage::getHttpVer() const
 {
-	return (this->_httpVer);
+	return (this->httpVer);
 }
 
-// std::string HttpMessage::getHeaders() const
-// {
-// 	return (this->_headers);
-// }
+const std::map<std::string, std::string>& HttpMessage::getHeaders() const
+{
+	return (this->headers);
+}
 
 std::string HttpMessage::getMsgBody() const
 {
-	return (this->_msgBody);
+	return (this->msgBody);
 }
 
 
 void HttpMessage::setHttpVer(const std::string& httpVer)
 {
-	this->_httpVer = httpVer;
+	this->httpVer = httpVer;
 }
 
 // void HttpMessage::setHeaders(const std::string& headers)
 // {
-// 	this->_headers = headers;
+// 	this->headers = headers;
 // }
 
 void HttpMessage::setMsgBody(const std::string& msgBody)
 {
-	this->_msgBody = msgBody;
+	this->msgBody = msgBody;
 }
 
 /*

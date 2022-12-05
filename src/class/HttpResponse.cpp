@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/16 22:12:48 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:17:32 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,37 +19,26 @@
 ** ----------------------- PRIVATE METHODS -----------------------
 */
 
+std::string HttpResponse::getStatusMsg() const {
+	switch (this->statusCode) {
+		case 200: return ("OK");
+		case 404: return ("Not Found");
+		case 405: return ("Method Not Allowed");
+		default: return ("undefined");
+	}
+}
+
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
 HttpResponse::HttpResponse() {}
-HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), _statusCode(other._statusCode), _statusMsg(other._statusMsg) {}
+HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), statusCode(other.statusCode) {}
 
-HttpResponse::HttpResponse(const std::string& filename)
-{
-	this->_file = File(filename);
-	this->_statusCode = 200;
-	this->_statusMsg = "OK";
-}
-
-HttpResponse::HttpResponse(const HttpRequest& req)
-{
-	if (req.getHttpMethod() == GET)
-	{
-		try
-		{
-			this->_file = File(req.getURI());
-			this->_statusCode = 200;
-			this->_statusMsg = "OK";
-		}
-		catch (File::FileNotFoundException& e)
-		{
-			this->_file = File("/404/404.html");
-			this->_statusCode = 404;
-			this->_statusMsg = "Not Found";
-		}
-	}
+HttpResponse::HttpResponse(const HttpAction& act) {
+	this->httpVer = act.getHttpVer();
+	this->msgBody = act.getMsgBody();
+	this->statusCode = act.getStatusCode();
 }
 
 HttpResponse::~HttpResponse() {}
@@ -58,16 +47,13 @@ HttpResponse::~HttpResponse() {}
 ** ----------------------- OPERATOR OVERLOADS -----------------------
 */
 
-HttpResponse& HttpResponse::operator=(const HttpResponse& other)
-{
-	if (this != &other)
-	{
-		// this->_firstLine = other._firstLine;
-		// this->_httpVer = other._httpVer;
-		// this->_headers = other._headers;
-		// this->_msgBody = other._msgBody; // NOTE: will the operator=() method from the Base class called first?
-		this->_statusCode = other._statusCode;
-		this->_statusMsg = other._statusMsg;
+HttpResponse& HttpResponse::operator=(const HttpResponse& other) {
+	if (this != &other) {
+		// this->firstLine = other.firstLine;
+		// this->httpVer = other.httpVer;
+		// this->headers = other.headers;
+		// this->msgBody = other.msgBody; // NOTE: will the operator=() method from the Base class called first?
+		this->statusCode = other.statusCode;
 	}
 	return (*this);
 }
@@ -76,52 +62,39 @@ HttpResponse& HttpResponse::operator=(const HttpResponse& other)
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
 
-int HttpResponse::getStatusCode() const
-{
-	return (this->_statusCode);
-}
-
-std::string HttpResponse::getStatusMsg() const
-{
-	return (this->_statusMsg);
+int HttpResponse::getStatusCode() const {
+	return (this->statusCode);
 }
 
 
-void HttpResponse::setStatusCode(const int& statusCode)
-{
-	this->_statusCode = statusCode;
-}
-
-void HttpResponse::setStatusMsg(const std::string& statusMsg)
-{
-	this->_statusMsg = statusMsg;
+void HttpResponse::setStatusCode(const int& statusCode) {
+	this->statusCode = statusCode;
 }
 
 /*
 ** ----------------------- METHODS -----------------------
 */
 
-std::string HttpResponse::genHttpResponseMsg(const HttpRequest& req) const
-{
+std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	std::stringstream stream;
 
-	stream << "HTTP/1.1 " << std::to_string(this->_statusCode) << " " << this->_statusMsg << std::endl;
-	stream << "Content-Type: text/html\nContent-Length: " << std::to_string(this->_file.getFileSize()) << std::endl;
-	stream << std::endl;
-	if (req.getHttpMethod() == GET)
-		stream << this->_file.getContent();
-
+	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
+	if (act.getHttpMethod() == GET && act.getStatusCode() != 405) {
+		stream << "Content-Type: text/html\nContent-Length: " << act.getFile().getFileSize() << std::endl;
+		stream << std::endl;
+		stream << act.getFile().getContent();
+	}
 	return (stream.str());
 }
 
 /*
-** ----------------------- CLASS ATTRIBUTES -----------------------
-*/
-
-/*
-** ----------------------- CLASS METHODS -----------------------
-*/
-
-/*
 ** ----------------------- FUNCS -----------------------
 */
+
+std::ostream& operator<<(std::ostream& stream, const HttpResponse& resp) {
+	stream << "***** RESPONSE *****" << std::endl;
+	stream << "HTTP ver: " << resp.httpVer << std::endl;
+	stream << "Status code: " << resp.statusCode <<  std::endl;
+	stream << "********************" << std::endl;
+	return (stream);
+}

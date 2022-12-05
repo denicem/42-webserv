@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:40:22 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/26 16:18:54 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/27 01:30:58 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,26 @@
 ** ----------------------- PRIVATE METHODS -----------------------
 */
 
-bool	Config::lineHasBrackets(string& line)
-{
-	if (line.find('{') != string::npos || line.find('}') != string::npos)
-		return true;
-	return false;
-}
+// bool	Config::lineHasBrackets(string& line)
+// {
+// 	if (line.find('{') != string::npos || line.find('}') != string::npos)
+// 		return true;
+// 	return false;
+// }
 
-void	Config::configError(int line_num, string error_msg)
-{
-	cerr << "\nLine " << line_num << ": " << error_msg << '\n';
-	throw ConfigException();
-}
+// void	Config::configError(int line_num, string error_msg)
+// {
+// 	cerr << "\nLine " << line_num << ": " << error_msg << '\n';
+// 	throw ConfigException();
+// }
 
-void	Config::removeWhitespace(std::string& str)
-{
-	remove_if(str.begin(), str.end(), static_cast<int(*)(int)>(&std::isspace));
-}
+// void	Config::removeWhitespace(std::string& str)
+// {
+// 	remove_if(str.begin(), str.end(), static_cast<int(*)(int)>(&std::isspace));
+// }
 
-void	Config::parseConfigFile(void)
-{
+// void	Config::parseConfigFile(void)
+// {
 	/* ServerConfig*	curr_server = NULL;
 
 	for (int line_num = 1; getline(this->_config_stream, this->_line); line_num++)
@@ -92,52 +92,52 @@ void	Config::parseConfigFile(void)
 		throw ConfigException();
 	} */
 	// do stuff
-}
+// }
 
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-Config::Config(string filePath): _config_stream(filePath), _file_location(BASE)
-{
-	this->server_settings["server_names"] = Setting(false, true);
-	this->server_settings["ports"] = Setting(true, true);
-	this->server_settings["max_client_body_size"] = Setting(false, false);
+// Config::Config(string filePath): _config_stream(filePath), _file_location(BASE)
+// {
+// 	this->server_settings["server_names"] = Setting(false, true);
+// 	this->server_settings["ports"] = Setting(true, true);
+// 	this->server_settings["max_client_body_size"] = Setting(false, false);
 
-	this->route_settings["http_redirect"] = Setting(false, false);
-	this->route_settings["http_methods"] = Setting(false, true);
-	this->route_settings["root"] = Setting(false, false);
-	this->route_settings["default_file"] = Setting(false, false);
-	this->route_settings["upload_directory"] = Setting(false, false);
-	this->route_settings["directory_listing"] = Setting(false, false);
-	this->route_settings["cgi_extensions"] = Setting(false, true);
+// 	this->route_settings["http_redirect"] = Setting(false, false);
+// 	this->route_settings["http_methods"] = Setting(false, true);
+// 	this->route_settings["root"] = Setting(false, false);
+// 	this->route_settings["default_file"] = Setting(false, false);
+// 	this->route_settings["upload_directory"] = Setting(false, false);
+// 	this->route_settings["directory_listing"] = Setting(false, false);
+// 	this->route_settings["cgi_extensions"] = Setting(false, true);
 
-	if (this->_config_stream.is_open() == false) {
-		cerr << "Config file couldn't be opened\n";
-		throw ConfigException();
-	}
-	this->parseConfigFile();
-}
+// 	if (this->_config_stream.is_open() == false) {
+// 		cerr << "Config file couldn't be opened\n";
+// 		throw ConfigException();
+// 	}
+// 	this->parseConfigFile();
+// }
 
-Config::~Config() {}
+// Config::~Config() {}
 
 /*
 ** ----------------------- STATIC METHODS -----------------------
 */
 
-string Config::getFilePath(int argc, char* argv[])
-{
-	switch (argc)
-	{
-		case 1:
-			return DEFAULT_CONFIG_FILE_PATH;
-		case 2:
-			return argv[1];
-		default:
-			cerr << "Why so many arguments?\n";
-			throw ConfigException();
-	}
-}
+// string Config::getFilePath(int argc, char* argv[])
+// {
+// 	switch (argc)
+// 	{
+// 		case 1:
+// 			return DEFAULT_CONFIG_FILE_PATH;
+// 		case 2:
+// 			return argv[1];
+// 		default:
+// 			cerr << "Why so many arguments?\n";
+// 			throw ConfigException();
+// 	}
+// }
 
 /*
 ** ----------------------- OPERATOR OVERLOADS -----------------------

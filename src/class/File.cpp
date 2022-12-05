@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/16 21:53:58 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/05 00:50:03 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void File::getContentFromFile(std::ifstream& file)
 		while (!file.eof())
 		{
 			std::getline(file, text);
-			this->_content.append(text);
+			this->content.append(text);
 			if (!file.eof())
-				this->_content.append("\n");
+				this->content.append("\n");
 		}
 	}
 }
@@ -38,7 +38,7 @@ void File::calcFileSize(std::ifstream& file)
 {
 	// calc the size of the file
 	file.seekg(0, std::ios::end);
-	this->_fileSize = file.tellg();
+	this->fileSize = file.tellg();
 
 	// resets to beginning of the file
 	file.clear();
@@ -47,26 +47,97 @@ void File::calcFileSize(std::ifstream& file)
 
 void File::changeToRootOrFavicon()
 {
-	if (this->_path == "/")
-		this->_path = "/index.html";
-	else if (this->_path.find("favicon.ico") != std::string::npos)
-		this->_path = "/favicon.ico";
+	if (this->path == "/")
+		this->path = "/index.html";
+	else if (this->path.find("favicon.ico") != std::string::npos)
+		this->path = "/favicon.ico";
 }
 
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-File::File(): _content(""), _fileSize(0) {}
-File::File(const File& other):_filename(other._filename), _path(other._path), _content(other._content), _fileSize(other._fileSize) {}
+File::File(): filename(""), path(""), content(""), fileSize(0), isLocation(false) {}
+File::File(const File& other): filename(other.filename), path(other.path), content(other.content), fileSize(other.fileSize), isLocation(other.isLocation) {}
 
-File::File(const std::string& path): _path(path)
+File::File(const std::string& path): path(path)
 {
 	this->changeToRootOrFavicon();
-	std::ifstream file ("html" + this->_path);
+	std::ifstream file ("html" + this->path);
 	if (!file.is_open())
 		throw FileNotFoundException();
-	this->_filename= this->_path.substr(this->_path.find_last_of('/') + 1);
+	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
+	this->calcFileSize(file);
+	this->getContentFromFile(file);
+}
+
+File::File(const std::string& path, const std::string& dest): filename(dest), path(path)
+{
+	std::ifstream file(path);
+	if (!file.is_open())
+		throw FileNotFoundException();
+	this->calcFileSize(file);
+	this->getContentFromFile(file);
+}
+
+File::File(const std::string& path, const Server& server, int indexLoc, bool isLocation = false): path(path), isLocation(isLocation)
+{
+	// this->changeToRootOrFavicon();
+	// std::ifstream file;
+	
+	// if (!this->isLocation)
+	// 	file.open("html" + this->path);
+	// else
+	// {
+	// 	if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName())
+	// 		file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
+	// 	else
+	// 		file.open(server.getLocation(indexLoc).getPath() + "/" + path.substr(path.find_last_of('/') + 1));
+	// }
+	// if (!file.is_open())
+	// 	throw FileNotFoundException();
+
+	// this->filename= this->path.substr(this->path.find_last_of('/') + 1);
+	// this->calcFileSize(file);
+	// this->getContentFromFile(file);
+	// this->changeToRootOrFavicon();
+	std::ifstream file;
+	
+	if (!this->isLocation)
+		file.open("html" + this->path);
+	else
+	{
+		if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName() && path.find(".") == std::string::npos)
+			file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
+		else
+			file.open(server.getLocation(indexLoc).getPath() + "/" + path.substr(path.find_last_of('/') + 1));
+	}
+	if (!file.is_open())
+		throw FileNotFoundException();
+
+	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
+	this->calcFileSize(file);
+	this->getContentFromFile(file);
+}
+
+File::File(const HttpRequest& req, const Server& server, int indexLoc, bool isLocation = false): path(req.getURI()), isLocation(isLocation)
+{
+	this->changeToRootOrFavicon();
+	std::ifstream file;
+	
+	if (!this->isLocation)
+		file.open("html" + this->path);
+	else
+	{
+		if (req.getURI().substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName() && req.getURI().find(".") == std::string::npos)
+			file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
+		else
+			file.open(server.getLocation(indexLoc).getPath() + "/" + req.getURI().substr(req.getURI().find_last_of('/') + 1));
+	}
+	if (!file.is_open())
+		throw FileNotFoundException();
+
+	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
 	this->calcFileSize(file);
 	this->getContentFromFile(file);
 }
@@ -81,10 +152,10 @@ File& File::operator=(const File& other)
 {
 	if(this != &other)
 	{
-		this->_filename = other._filename;
-		this->_path = other._path;
-		this->_content = other._content;
-		this->_fileSize = other._fileSize;
+		this->filename = other.filename;
+		this->path = other.path;
+		this->content = other.content;
+		this->fileSize = other.fileSize;
 	}
 	return (*this);
 }
@@ -95,43 +166,43 @@ File& File::operator=(const File& other)
 
 std::string File::getFilename() const
 {
-	return (this->_filename);
+	return (this->filename);
 }
 
 std::string File::getPath() const
 {
-	return (this->_path);
+	return (this->path);
 }
 
 std::string File::getContent() const
 {
-	return (this->_content);
+	return (this->content);
 }
 
 int File::getFileSize() const
 {
-	return (this->_fileSize);
+	return (this->fileSize);
 }
 
 
 void File::setFilename(const std::string& filename)
 {
-	this->_filename = filename;
+	this->filename = filename;
 }
 
 void File::setPath(const std::string& path)
 {
-	this->_path = path;
+	this->path = path;
 }
 
 void File::setContent(const std::string& content)
 {
-	this->_content = content;
+	this->content = content;
 }
 
 void File::setFileSize(const int& fileSize)
 {
-	this->_fileSize = fileSize;
+	this->fileSize = fileSize;
 }
 
 /*
@@ -139,13 +210,5 @@ void File::setFileSize(const int& fileSize)
 */
 
 /*
-** ----------------------- CLASS ATTRIBUTES -----------------------
-*/
-
-/*
-** ----------------------- CLASS METHODS -----------------------
-*/
-
-/*
-** ----------------------- FUNCS -----------------------
+** ----------------------- EXCEPTIONS -----------------------
 */
