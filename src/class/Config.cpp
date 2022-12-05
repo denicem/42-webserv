@@ -60,6 +60,8 @@ void	Config::splitSettingValues(string& values, vector<string>& split, int line_
 	stringstream stream(values);
 	string buffer;
 
+	if (values.empty())
+		return ;
 	while (getline(stream, buffer, ','))
 	{
 		if (buffer.empty())
@@ -91,7 +93,11 @@ bool	settingHasMultipleValues(string& line)
 void	Config::setSetting(const string& setting, ServerConfig* server)
 {
 	if (setting == "server_names")
-		splitSettingValues(_line, server->server_names,  _line_num);
+	{
+		if (_line.empty())
+			configError(_line_num, "Need at least one server_name");
+		splitSettingValues(_line, server->server_names, _line_num);
+	}
 	else if (setting == "ports")
 	{
 		if (_line.empty())
@@ -117,6 +123,8 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 
 void	Config::setSetting(const string& setting, RouteConfig* route)
 {
+	if (_line.empty())
+			configError(_line_num, "Cannot have empty setting value");
 	if (setting == "http_redirect")
 	{
 		if (settingHasMultipleValues(_line))
@@ -125,31 +133,77 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 	}
 	else if (setting == "http_methods")
 	{
-
+		vector<string>	str_methods;
+		splitSettingValues(_line, str_methods, _line_num);
+		for (vector<string>::iterator i = str_methods.begin(); i != str_methods.end(); i++)
+		{
+			if (*i == "GET")
+				route->http_methods.push_back(GET);
+			else if (*i == "DELETE")
+				route->http_methods.push_back(DELETE);
+			else if (*i == "POST")
+				route->http_methods.push_back(POST);
+			else
+				configError(_line_num, "Unknown http method");
+		}
 	}
 	else if (setting == "root")
 	{
-
+		if (settingHasMultipleValues(_line))
+			configError(_line_num, "root can only have one value");
+		if (route->alias.empty() == false)
+			configError(_line_num, "Can only either set root or alias, not both");
+		if (access(_line.c_str(), F_OK) == -1)
+			configError(_line_num, "Cannot access root directory");
+		route->root = _line;
+		
 	}
 	else if (setting == "alias")
 	{
-
+		if (settingHasMultipleValues(_line))
+			configError(_line_num, "alias can only have one value");
+		if (route->root.empty() == false)
+			configError(_line_num, "Can only either set root or alias, not both");
+		route->alias = _line;
 	}
 	else if (setting == "default_file")
 	{
-
+		if (settingHasMultipleValues(_line))
+			configError(_line_num, "default_file can only have one value");
+		route->default_file = _line;
 	}
 	else if (setting == "upload_directory")
 	{
-
+		if (settingHasMultipleValues(_line))
+			configError(_line_num, "upload_directory can only have one value");
+		if (access(_line.c_str(), F_OK) == -1)
+			configError(_line_num, "Cannot access upload directory");
+		route->upload_directory = _line;
 	}
 	else if (setting == "directory_listing")
 	{
-
+		if(_line == "on")
+			route->directory_listing = true;
+		else if(_line == "off")
+			route->directory_listing = false;
+		else
+			configError(_line_num, "Invalid value for directory listing, must be either on or off");
 	}
 	else if (setting == "cgi_extensions")
 	{
-
+		vector<string>	str_extensions;
+		splitSettingValues(_line, str_extensions, _line_num);
+		for (vector<string>::iterator i = str_extensions.begin(); i != str_extensions.end(); i++)
+		{
+			if (*i == ".dms")
+				route->cgi_extensions.push_back(dotDMS);
+			else if (*i == ".py")
+				route->http_methods.push_back(dotPY);
+			else if (*i == ".c")
+				route->http_methods.push_back(dotC);
+			else
+				configError(_line_num, "Unknown cgi extension");
+		}
 	}
 }
 
@@ -200,6 +254,22 @@ void	Config::assignHttpRedirects(void)
 		_curr_server->routes.find(i->route)->second.http_redirect = &redirect->second;
 	}
 	_http_redirects.clear();
+}
+
+void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route)
+{
+	if (route_settings["http_methods"].setting_is_set == false)
+	{
+		route->http_methods.push_back(GET);
+		route->http_methods.push_back(DELETE);
+		route->http_methods.push_back(POST);
+	}
+	if (route_settings["cgi_extensions"].setting_is_set == false)
+	{
+		route->cgi_extensions.push_back(dotDMS);
+		route->cgi_extensions.push_back(dotPY);
+		route->cgi_extensions.push_back(dotC);
+	}
 }
 
 void	Config::parseConfigFile(void)
@@ -266,6 +336,7 @@ void	Config::parseConfigFile(void)
 					case ROUTE:
 						if (mandatorySettingsAreSet(_route_settings) == false)
 							configError(_line_num, "All mandatory settings for this route were not set");
+						setDefaultValues(_route_settings, _curr_route);
 						_file_location = SERVER;
 					case ERROR_PAGES:
 						_file_location = SERVER;
@@ -297,7 +368,7 @@ void	Config::parseConfigFile(void)
 							configError(_line_num, "Error code is not a positive integer, which it should be");
 						std::string	error_code_str(_line.substr(0, colon_pos));
 						int error_code = stringToInt(error_code_str, 100, 599, _line_num);
-						if (access(_line.erase(0, colon_pos+1).c_str(), R_OK))
+						if (access(_line.erase(0, colon_pos+1).c_str(), R_OK) == -1)
 							configError(_line_num, "Requested error file does not grant read permissions (or doesn't even exist)");
 						if (_curr_server->error_pages.insert(map<int, string>::value_type(error_code, _line)).second == false)
 							configError(_line_num, "Cannot have multiple pages for one error code");

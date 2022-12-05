@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/03 22:46:42 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 00:30:22 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,21 @@ enum cgi_extensions {
 struct RouteConfig
 {
 	RouteConfig*	http_redirect; // can be NULL, then no redirect. need to be concious that it can redirect to another route with a redirection
-	vector<int>		http_methods; // will use values of enum "http_methods"
-	string			root;
+	vector<int>		http_methods; // will use values of enum "http_methods". will always be at least one
+	string			root; // one of root or alias will be empty.
 	string			alias;
 	bool			directory_listing;
-	string			default_file; // if empty string, no default file
-	vector<int>		cgi_extensions; // will use values of enum "cgi_extension"
-	string			upload_directory;
+	string			default_file; // if empty string, no default file // relative to location root
+	vector<int>		cgi_extensions; // will use values of enum "cgi_extension". can be empty, then no cgi allowed
+	string			upload_directory; // relative to server root, not location root
 
-	RouteConfig(): http_redirect(NULL) {}
+	RouteConfig(): http_redirect(NULL), directory_listing(false) {}
 };
 
 struct ServerConfig
 {
-	vector<string>				server_names;
-	vector<int>					ports;
+	vector<string>				server_names; // can be empty, then no server names
+	vector<int>					ports; // always at least one port
 	int							max_client_body_size; //if 0, allow infinite size
 	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page
 	map<string, RouteConfig>	routes; // "string" element of map is name of route
@@ -122,6 +122,7 @@ class Config
 		static void	splitSettingValues(string& str, vector<string>& split, int line_num);
 		static int	stringToInt(string& string, int lower_limit, int upper_limit, int line_num);
 		static bool	settingHasMultipleValues(string& line);
+		static void	setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route);
 
 	public:
 		Config(string filePath);
