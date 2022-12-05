@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/04 23:23:37 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/05 00:12:51 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,13 @@ class HttpAction: public HttpMessage {
 		File file;
 		
 		std::string uri;
+		std::string path;
+		std::string dest;
 
 	private:
 		void initVars(const HttpRequest&, const Server&);
 		void setURI(const HttpRequest&, const Server&);
+		void setDest(const HttpRequest&, const Server&);
 		bool isMethodAllowed(const int, const Location&) const;
 
 	public:

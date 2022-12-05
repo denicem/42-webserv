@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/04 23:47:07 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/05 01:00:28 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void HttpAction::initVars(const HttpRequest& req, const Server& server) {
 	this->msgBody = req.getMsgBody();
 	this->method = req.getHttpMethod();
 	this->setURI(req, server);
+	this->setDest(req, server);
 }
 
 void HttpAction::setURI(const HttpRequest& req, const Server& server) {
@@ -39,7 +40,19 @@ void HttpAction::setURI(const HttpRequest& req, const Server& server) {
 	else if (req.getURI().find("favicon.ico") != std::string::npos)
 		this->uri = server.getRoot() + "/favicon.ico";
 	else
-		this->uri = req.getURI();
+		this->uri = server.getRoot() + req.getURI();
+}
+
+void HttpAction::setDest(const HttpRequest& req, const Server& server) {
+	// for (size_t i = 0; i < server.getLocations().size(); ++i) {
+	// 	if (this->uri.find(server.getLocation(i).getName()) != std::string::npos) {
+
+	// 		return ;
+	// 	}
+	// }
+	(void) req;
+	(void) server;
+	this->dest = this->uri.substr(this->uri.find_last_of("/") + 1);
 }
 
 bool HttpAction::isMethodAllowed(const int method, const Location& location) const {
@@ -80,7 +93,7 @@ HttpAction::HttpAction(const HttpRequest& req, const Server& server) {
 		else {
 			if (req.getHttpMethod() == GET) {
 				try {
-					this->file = File(req.getURI());
+					this->file = File(this->uri, this->dest);
 					this->statusCode = 200;
 				}
 				catch (File::FileNotFoundException& e) {

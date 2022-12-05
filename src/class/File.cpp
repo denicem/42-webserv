@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/04 23:44:26 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/05 00:50:03 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,15 @@ File::File(const std::string& path): path(path)
 	if (!file.is_open())
 		throw FileNotFoundException();
 	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
+	this->calcFileSize(file);
+	this->getContentFromFile(file);
+}
+
+File::File(const std::string& path, const std::string& dest): filename(dest), path(path)
+{
+	std::ifstream file(path);
+	if (!file.is_open())
+		throw FileNotFoundException();
 	this->calcFileSize(file);
 	this->getContentFromFile(file);
 }
