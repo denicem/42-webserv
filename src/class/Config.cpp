@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 03:39:52 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 17:52:40 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,14 +264,11 @@ void	Config::handleSetting(size_t colon_pos)
 
 void	Config::assignHttpRedirects(void)
 {
-	std::map<std::string, RouteConfig>::iterator	redirect;
-
 	for (vector<HttpRedirect>::iterator i = _http_redirects.begin(); i != _http_redirects.end(); i++)
 	{
-		redirect = _curr_server->routes.find(i->redirect);
-		if (redirect == _curr_server->routes.end())
+		if (_curr_server->routes.find(i->redirect) == _curr_server->routes.end())
 			configError(_line_num, "Http redirect to nonexistent route in this server");
-		_curr_server->routes.find(i->route)->second.http_redirect = &redirect->second;
+		_curr_server->routes.find(i->route)->second.http_redirect = i->redirect;
 	}
 	_http_redirects.clear();
 }
