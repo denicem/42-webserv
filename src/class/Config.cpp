@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 01:41:40 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 02:20:17 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,7 +320,9 @@ void	Config::parseConfigFile(void)
 							_file_location = ROUTE;
 						}
 						else
+						{
 							configError(_line_num, "Unknown block inside server");
+						}
 						break;
 				}
 				break;
@@ -421,7 +423,7 @@ ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_n
 
 RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
 		root(orig.root), alias(orig.alias), directory_listing(orig.directory_listing), default_file(orig.default_file),
-		cgi_extensions(orig.cgi_extensions), upload_directory(orig.upload_directory) {}
+		upload_directory(orig.upload_directory), cgi_extensions(orig.cgi_extensions) {}
 
 /*
 ** ----------------------- STATIC METHODS -----------------------
@@ -443,14 +445,53 @@ string Config::getFilePath(int argc, char* argv[])
 
 void	Config::printServerConfig(const vector<ServerConfig>& config)
 {
-	cout << '\n' << GREEN_BG << "ALL THE SERVER BLOCKS" << RESET << "\n\n";
+	cout << '\n' << BLUE_BG << "ALL THE SERVER BLOCKS" << RESET << "\n\n";
 	for (vector<ServerConfig>::const_iterator server = config.begin(); server != config.end(); server++)
 	{
-		cout << GREEN_BG << "-----NEW SERVER------" << RESET << '\n';
-		cout << GREEN << "Server Names:" << RESET << '\n';
-		for (vector<string>::const_iterator name = server->server_names.begin(); name != server->server_names.end(); name++)
-		{
-			cout << '	' << *name << '\n';
+		cout << BLUE_BG << "--------NEW SERVER---------" << RESET << "\n\n";
+		cout << BLUE << "Server Names:	" << RESET;
+		for (vector<string>::const_iterator name = server->server_names.begin(); name != server->server_names.end(); name++) {
+			cout << *name;
+			if (name != server->server_names.end()-1)
+				cout << " | ";
+		}
+		cout << "\n\n" << BLUE << "Ports:	" << RESET;
+		for (vector<int>::const_iterator port = server->ports.begin(); port != server->ports.end(); port++) {
+			cout << *port;
+			if (port != server->ports.end()-1)
+				cout << " | ";
+		}
+		cout << "\n\n" << BLUE << "Max client body size: " << RESET << server->max_client_body_size << "\n\n";
+		cout << BLUE_BG << "Error Pages" << RESET << '\n';
+		for (map<int, string>::const_iterator page = server->error_pages.begin(); page != server->error_pages.end(); page++) {
+			cout << '	' << BLUE << page->first << ": " << RESET << page->second << '\n';
+		}
+		cout << "\n" << MAGENTA_BG << "---ROUTES---" << RESET << "\n\n";
+		for (map<string, RouteConfig>::const_iterator route = server->routes.begin(); route != server->routes.end(); route++) {
+			cout << "	" << MAGENTA_BG << route->first << RESET << '\n';
+			cout << '	' << MAGENTA << "Http redirect: " << RESET << route->second.http_redirect << '\n';
+			cout << MAGENTA << "	Http methods:	" << RESET;
+			for (vector<int>::const_iterator method = route->second.http_methods.begin(); method != route->second.http_methods.end(); method++) {
+				cout << *method;
+				if (method != route->second.http_methods.end()-1)
+					cout << " | ";
+				else
+					cout << '\n';
+			}
+			cout << '	' << MAGENTA << "Root: " << RESET << route->second.root << '\n';
+			cout << '	' << MAGENTA << "Alias: " << RESET << route->second.alias << '\n';
+			cout << '	' << MAGENTA << "Directory listing: " << RESET << route->second.directory_listing << '\n';
+			cout << '	' << MAGENTA << "Default file: " << RESET << route->second.default_file << '\n';
+			cout << '	' << MAGENTA << "Upload directory: " << RESET << route->second.upload_directory << '\n';
+			cout << MAGENTA << "	CGI Extensions:	" << RESET;
+			for (vector<int>::const_iterator cgi = route->second.cgi_extensions.begin(); cgi != route->second.cgi_extensions.end(); cgi++) {
+				cout << *cgi;
+				if (cgi != route->second.cgi_extensions.end()-1)
+					cout << " | ";
+				else
+					cout << '\n';
+			}
+			cout << '\n';
 		}
 	}
 }

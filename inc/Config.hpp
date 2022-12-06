@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 01:10:06 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 02:13:37 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ struct RouteConfig
 	string			alias;
 	bool			directory_listing;
 	string			default_file; // if empty string, no default file // relative to location root
-	vector<int>		cgi_extensions; // will use values of enum "cgi_extension". can be empty, then no cgi allowed
 	string			upload_directory; // relative to server root, not location root
+	vector<int>		cgi_extensions; // will use values of enum "cgi_extension". can be empty, then no cgi allowed
 
 	RouteConfig(): http_redirect(NULL), directory_listing(false) {}
 	RouteConfig(const RouteConfig& orig);
