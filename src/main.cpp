@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/06 16:57:04 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/06 17:18:12 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
 
 		logo();
 
+		//TODO: parsing muss ausgeführt werden
 		Webserv dmsServer;
 		TCPPoll tcpPoll;
 		//ports list for testing testing 
