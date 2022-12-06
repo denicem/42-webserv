@@ -1,19 +1,19 @@
 /* ************************************************************************** */
-/*	*/
-/*	:::	  ::::::::   */
-/*   Config.cpp	 :+:	  :+:	:+:   */
-/*	+:+ +:+	 +:+	 */
-/*   By: shaas <shaas@student.42heilbronn.de>	   +#+  +:+	   +#+	*/
-/*	+#+#+#+#+#+   +#+	   */
-/*   Created: 2022/11/17 17:40:22 by shaas	 #+#	#+#	 */
-/*   Updated: 2022/12/01 00:37:11 by shaas	###   ########.fr	   */
-/*	*/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Config.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
+/*   Updated: 2022/12/06 01:41:40 by shaas            ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "Config.hpp"
 
 /*
-** ----------------------- PRIVATE METHODS -----------------------
+** ----------------------- PRIVATE STATIC METHODS -----------------------
 */
 
 bool	Config::lineHasBrackets(string& line)
@@ -31,7 +31,7 @@ void	Config::configError(int line_num, string error_msg)
 
 inline void	Config::removeWhitespace(std::string& str)
 {
-	remove_if(str.begin(), str.end(), static_cast<int(*)(int)>(&std::isspace));
+	str.erase(remove_if(str.begin(), str.end(), static_cast<int(*)(int)>(&std::isspace)), str.end());
 }
 
 void	Config::resetSettings(map<string, Setting>& settings)
@@ -83,12 +83,32 @@ int	Config::stringToInt(string& str, int lower_limit, int upper_limit, int line_
 	return (integer);
 }
 
-bool	settingHasMultipleValues(string& line)
+bool	Config::settingHasMultipleValues(string& line)
 {
 	if (line.find(',') == string::npos)
 		return false;
 	return true;
 }
+
+void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route)
+{
+	if (route_settings["http_methods"].setting_is_set == false)
+	{
+		route->http_methods.push_back(GET);
+		route->http_methods.push_back(DELETE);
+		route->http_methods.push_back(POST);
+	}
+	if (route_settings["cgi_extensions"].setting_is_set == false)
+	{
+		route->cgi_extensions.push_back(dotDMS);
+		route->cgi_extensions.push_back(dotPY);
+		route->cgi_extensions.push_back(dotC);
+	}
+}
+
+/*
+** ----------------------- PRIVATE METHODS -----------------------
+*/
 
 void	Config::setSetting(const string& setting, ServerConfig* server)
 {
@@ -256,22 +276,6 @@ void	Config::assignHttpRedirects(void)
 	_http_redirects.clear();
 }
 
-void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route)
-{
-	if (route_settings["http_methods"].setting_is_set == false)
-	{
-		route->http_methods.push_back(GET);
-		route->http_methods.push_back(DELETE);
-		route->http_methods.push_back(POST);
-	}
-	if (route_settings["cgi_extensions"].setting_is_set == false)
-	{
-		route->cgi_extensions.push_back(dotDMS);
-		route->cgi_extensions.push_back(dotPY);
-		route->cgi_extensions.push_back(dotC);
-	}
-}
-
 void	Config::parseConfigFile(void)
 {
 	size_t	colon_pos;
@@ -288,14 +292,14 @@ void	Config::parseConfigFile(void)
 		switch (_line.back())
 		{
 			case '{':
-				_line.erase(_line.end() - 1);
+				_line.erase(_line.end()-1, _line.end());
 				if (lineHasBrackets(_line) || _file_location >= ROUTE)
 					configError(_line_num, "Too many open brackets");
 				switch (_file_location)
 				{
 					case BASE:
-						_server_configs.push_back(ServerConfig());
-						_curr_server = &_server_configs.back();
+						_config.push_back(ServerConfig());
+						_curr_server = &_config.back();
 						resetSettings(this->_server_settings);
 						_file_location = SERVER;
 						break;
@@ -364,7 +368,7 @@ void	Config::parseConfigFile(void)
 					case ERROR_PAGES:
 						if (_line.find(',') != string::npos)
 							configError(_line_num, "Can only have one error page per error code");
-						if (_line.find_first_not_of("0123456789") != string::npos)
+						if (_line.substr(0, colon_pos).find_first_not_of("0123456789") != string::npos)
 							configError(_line_num, "Error code is not a positive integer, which it should be");
 						std::string	error_code_str(_line.substr(0, colon_pos));
 						int error_code = stringToInt(error_code_str, 100, 599, _line_num);
@@ -381,7 +385,8 @@ void	Config::parseConfigFile(void)
 		cerr << "I/O Error\n";
 		throw ConfigException();
 	}
-	// do stuff
+	_config_stream.close();
+	_http_redirects.clear();
 }
 
 /*
@@ -411,7 +416,12 @@ Config::Config(string filePath): _config_stream(filePath), _file_location(BASE)
 	this->parseConfigFile();
 }
 
-Config::~Config() {}
+ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), ports(orig.ports),
+		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) {}
+
+RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
+		root(orig.root), alias(orig.alias), directory_listing(orig.directory_listing), default_file(orig.default_file),
+		cgi_extensions(orig.cgi_extensions), upload_directory(orig.upload_directory) {}
 
 /*
 ** ----------------------- STATIC METHODS -----------------------
@@ -431,23 +441,32 @@ string Config::getFilePath(int argc, char* argv[])
 	}
 }
 
+void	Config::printServerConfig(const vector<ServerConfig>& config)
+{
+	cout << '\n' << GREEN_BG << "ALL THE SERVER BLOCKS" << RESET << "\n\n";
+	for (vector<ServerConfig>::const_iterator server = config.begin(); server != config.end(); server++)
+	{
+		cout << GREEN_BG << "-----NEW SERVER------" << RESET << '\n';
+		cout << GREEN << "Server Names:" << RESET << '\n';
+		for (vector<string>::const_iterator name = server->server_names.begin(); name != server->server_names.end(); name++)
+		{
+			cout << '	' << *name << '\n';
+		}
+	}
+}
+
 /*
 ** ----------------------- OPERATOR OVERLOADS -----------------------
-*/
-
-
-/*
-** ----------------------- GETTER AND SETTER METHODS -----------------------
-*/
-
-/*
-** ----------------------- CLASS ATTRIBUTES -----------------------
 */
 
 /*
 ** ----------------------- CLASS METHODS -----------------------
 */
 
-/*
-** ----------------------- FUNCS -----------------------
-*/
+void	Config::extractConfigData(vector<ServerConfig>& buffer) const
+{
+	for (vector<ServerConfig>::const_iterator i = _config.begin(); i != _config.end(); i++)
+	{
+		buffer.push_back(ServerConfig(*i));
+	}
+}

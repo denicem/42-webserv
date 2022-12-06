@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Routes.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 18:37:57 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/26 16:21:46 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/06 00:38:43 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 class Routes{
 
 	private:
-		Config routeSetting;
+		//Config routeSetting;
 		bool alias;
 		std::string location_name;
 		std::string uriPath;
