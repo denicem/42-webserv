@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:43:33 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/16 22:12:55 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:14:29 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,33 @@
 
 #include "HttpMessage.hpp"
 #include "HttpRequest.hpp"
+#include "HttpAction.hpp"
 #include "File.hpp"
+#include "Server.hpp"
 
-class HttpResponse: public HttpMessage
-{
-private:
-	int _statusCode;
-	std::string _statusMsg;
-	File _file;
+class HttpResponse: public HttpMessage {
+	private:
+		int statusCode;
+		File file;
 
-public:
-	HttpResponse();
-	HttpResponse(const HttpResponse&);
-	HttpResponse(const std::string&);
-	HttpResponse(const HttpRequest&);
-	~HttpResponse();
+	private:
+		std::string getStatusMsg() const;
 
-	HttpResponse& operator=(const HttpResponse&);
+	public:
+		HttpResponse();
+		HttpResponse(const HttpResponse&);
+		HttpResponse(const HttpAction&);
+		~HttpResponse();
 
-	std::string genHttpResponseMsg(const HttpRequest&) const;
+		HttpResponse& operator=(const HttpResponse&);
 
-	int getStatusCode() const;
-	std::string getStatusMsg() const;
+		int getStatusCode() const;
 
-	void setStatusCode(const int&);
-	void setStatusMsg(const std::string&);
+		void setStatusCode(const int&);
+
+		std::string genHttpResponseMsg(const HttpAction&) const;
+
+		friend std::ostream& operator<<(std::ostream&, const HttpResponse&);
 };
 
 #endif

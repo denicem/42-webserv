@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 17:59:51 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 18:13:05 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <limits.h>
 #include <unistd.h>
 
-#include "webserv.hpp"
+#include "Webserv.hpp"
 
 struct HttpRedirect
 {
@@ -50,12 +50,6 @@ enum file_location {
 	SERVER,
 	ROUTE,
 	ERROR_PAGES
-};
-
-enum http_methods {
-	GET,
-	DELETE,
-	POST
 };
 
 enum cgi_extensions {

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/24 00:06:29 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 17:07:06 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SOCKET_HPP
-#define SOCKET_HPP
+#pragma once
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -24,44 +23,50 @@
 #include <string>
 #include <vector>
 
-#include "webserv.hpp"
+#include "Webserv.hpp"
+#include "Location.hpp"
 
 #define SCK_ADDR sockaddr_in
 
 #define PORT 8080
 
+class Location;
+
 class Server
 {
 	private:
-		int _server_socket_fd;
-		// int _port;
-		vector<int>_port;
-		size_t len;
-		//for identiyfing porposes
 		string serverName;
+		string root;
+		//string index/default_file -> TODO:
+		vector<int> ports;
+		vector<Location> locations;
+		// NOTE: Locations as a map<string, Location> with location name as Key
+
+		/* for TCP */
+		int serverSocketFD;
+		// size_t len;
+
 	public:
 		SCK_ADDR _address;
 	
 	public:
-		Server(string sId);
+		Server(const string&, const string&, const vector<Location> &);
 	
-		int getClientSocketFD();
-		int getServerSocketFD();
-		int getRefAddrlen();
-		int getPort(int);
-		string getServerName();
+		string getServerName() const;
+		string getRoot() const;
+		int getPort(const int) const;
+		Location getLocation(const int) const;
+		const std::vector<Location>& getLocations() const;
+		int getServerSocketFD() const;
 
-		void setClientSocketFD(int);
-		void initSockAddr(int, int);
-		void setServerName(string);
+		void setServerName(string&);
 		void setPort(int);
+		void setLocation(const Location&);
+
+		void initSockAddr(int, int);
 	
 		class NoSocketException: public exception
 		{
 			const char* what() const throw();
 		};
-		
 };
-
-
-#endif
