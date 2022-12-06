@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 02:20:17 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 03:19:06 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,7 +289,7 @@ void	Config::parseConfigFile(void)
 		removeWhitespace(_line);
 		if (_line.empty())
 			continue;
-		switch (_line.back())
+		switch (*(_line.end()-1))
 		{
 			case '{':
 				_line.erase(_line.end()-1, _line.end());
@@ -334,18 +334,22 @@ void	Config::parseConfigFile(void)
 				{
 					case BASE:
 						configError(_line_num, "Too many closing brackets");
+						break;
 					case SERVER:
 						this->assignHttpRedirects();
 						if (mandatorySettingsAreSet(_server_settings) == false)
 							configError(_line_num, "All mandatory settings for this server were not set");
 						_file_location = BASE;
+						break;
 					case ROUTE:
 						if (mandatorySettingsAreSet(_route_settings) == false)
 							configError(_line_num, "All mandatory settings for this route were not set");
 						setDefaultValues(_route_settings, _curr_route);
 						_file_location = SERVER;
+						break;
 					case ERROR_PAGES:
 						_file_location = SERVER;
+						break;
 				}
 				break;
 			default:
@@ -395,7 +399,7 @@ void	Config::parseConfigFile(void)
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-Config::Config(string filePath): _config_stream(filePath), _file_location(BASE)
+Config::Config(string filePath): _config_stream(filePath.c_str()), _file_location(BASE)
 {
 	this->_server_settings["server_names"] = Setting(false);
 	this->_server_settings["ports"] = Setting(true);
