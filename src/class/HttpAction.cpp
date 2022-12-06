@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/05 01:00:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/05 15:13:16 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void HttpAction::initVars(const HttpRequest& req, const Server& server) {
 	this->httpVer = req.getHttpVer();
 
 	// NOTE: deep copy map
-	// NOTE: typedefs in snake_case??
 	typedef std::map<std::string, std::string>::const_iterator str_map_iter;
 	str_map_iter it = req.getHeaders().begin();
 	str_map_iter ite = req.getHeaders().end();
@@ -44,12 +43,12 @@ void HttpAction::setURI(const HttpRequest& req, const Server& server) {
 }
 
 void HttpAction::setDest(const HttpRequest& req, const Server& server) {
-	// for (size_t i = 0; i < server.getLocations().size(); ++i) {
-	// 	if (this->uri.find(server.getLocation(i).getName()) != std::string::npos) {
-
-	// 		return ;
-	// 	}
-	// }
+	for (size_t i = 0; i < server.getLocations().size(); ++i) {
+		if (this->uri.find(server.getLocation(i).getName()) != std::string::npos) {
+			
+			return ;
+		}
+	}
 	(void) req;
 	(void) server;
 	this->dest = this->uri.substr(this->uri.find_last_of("/") + 1);

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/11/29 02:03:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/05 14:58:55 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@
 // 	RouteConfig*	http_redirect; // can be NULL, then no redirect
 // 	vector<int>		http_methods; // will use values of enum "http_methods"
 // 	string			root;
-	string			alias;
+// string			alias;
 // 	bool			directory_listing;
 // 	string			default_file; // if empty string, no default file
 // 	vector<int>		cgi_extensions; // will use values of enum "cgi_extension"
