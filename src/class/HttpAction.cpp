@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/05 15:13:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/06 17:54:41 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void HttpAction::setURI(const HttpRequest& req, const Server& server) {
 	else if (req.getURI().find("favicon.ico") != std::string::npos)
 		this->uri = server.getRoot() + "/favicon.ico";
 	else
-		this->uri = server.getRoot() + req.getURI();
+		this->uri = req.getURI();
 }
 
 void HttpAction::setDest(const HttpRequest& req, const Server& server) {
@@ -68,6 +68,9 @@ bool HttpAction::isMethodAllowed(const int method, const Location& location) con
 
 HttpAction::HttpAction(const HttpRequest& req, const Server& server) {
 	this->initVars(req, server);
+	std::cout << "URI: " <<  this->uri << std::endl;
+	std::cout << "Path: " << this->path << std::endl;
+	std::cout << "Destination: " << this->dest << std::endl;
 	for (unsigned long i = 0; i < server.getLocations().size(); ++i) {
 		if (this->uri.find(server.getLocation(i).getName()) != std::string::npos) {
 			if (!isMethodAllowed(req.getHttpMethod(), server.getLocation(i))) {
