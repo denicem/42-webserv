@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:23:50 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/24 00:59:05 by shaas            ###   ########.fr       */
+/*   Updated: 2022/11/29 16:52:49 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include "Server.hpp"
 class Server;
 
-#include "webserv.hpp"
+#include "Webserv.hpp"
 
 /* our defines */
 
@@ -47,7 +47,7 @@ class TCPPoll
 		// sockaddr_in sock[MAX_CONN];
 		pollfd connection_poll[MAX_CONN];
 		vector<Server> sfds;
-		int j, i, acceptedFd;
+		int pollStatus, i, acceptedFd;
 		size_t len;
 		char buffer[30000];
 		
