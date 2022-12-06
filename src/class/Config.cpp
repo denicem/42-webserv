@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 03:19:06 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/06 03:39:52 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,9 +218,9 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 			if (*i == ".dms")
 				route->cgi_extensions.push_back(dotDMS);
 			else if (*i == ".py")
-				route->http_methods.push_back(dotPY);
+				route->cgi_extensions.push_back(dotPY);
 			else if (*i == ".c")
-				route->http_methods.push_back(dotC);
+				route->cgi_extensions.push_back(dotC);
 			else
 				configError(_line_num, "Unknown cgi extension");
 		}
@@ -423,9 +423,9 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 }
 
 ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), ports(orig.ports),
-		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) {}
+		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) { }
 
-RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
+RouteConfig::RouteConfig(const RouteConfig& orig): http_methods(orig.http_methods),
 		root(orig.root), alias(orig.alias), directory_listing(orig.directory_listing), default_file(orig.default_file),
 		upload_directory(orig.upload_directory), cgi_extensions(orig.cgi_extensions) {}
 
