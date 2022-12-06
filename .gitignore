@@ -25,3 +25,6 @@
 
 # VSCode files
 .vscode
+
+# CLion
+.idea
