@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/04 23:49:07 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/06 16:57:04 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	logo(void)
 int main(int argc, char* argv[])
 {
 	try {
-		(void) argc;
-		(void) argv;
-		// Config config((Config::getFilePath(argc, argv)));
+		Config	config(Config::getFilePath(argc, argv));
+		Config::printServerConfig(config.getConfigData());
+
 		logo();
 
 		Webserv dmsServer;

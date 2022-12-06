@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/02 17:56:55 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/06 17:01:39 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,9 +173,9 @@ std::ostream& operator<<(std::ostream& stream, const HttpRequest& req)
 	stream << "HTTP ver: " << req.httpVer << std::endl;
 	stream << "HTTP method: ";
 	switch (req.httpMethod) {
-		case 42: stream << "GET" << std::endl; break;
-		case 43: stream << "POST" << std::endl; break;
-		case 44: stream << "DELETE" << std::endl; break;
+		case GET: stream << "GET" << std::endl; break;
+		case POST: stream << "POST" << std::endl; break;
+		case DELETE: stream << "DELETE" << std::endl; break;
 		default: stream << "undefined" << std::endl; break;
 	}
 	stream << "HTTP URI: " << req.uri << std::endl;

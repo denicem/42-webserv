@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpMethod.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 01:35:14 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/29 16:47:53 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/06 17:00:19 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <string>
 
 enum HttpMethod {
-	GET = 42,
+	GET,
 	POST,
 	DELETE
 };
