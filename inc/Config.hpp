@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 17:00:14 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/06 18:13:05 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ enum cgi_extensions {
 
 struct RouteConfig
 {
-	RouteConfig*	http_redirect; // can be NULL, then no redirect. need to be concious that it can redirect to another route with a redirection
+	string			http_redirect; // can be empty, then no redirect. need to be concious that it can redirect to another route with a redirection
 	vector<int>		http_methods; // will use values of enum "http_methods". will always be at least one
 	string			root; // one of root or alias will be empty.
 	string			alias;
@@ -69,7 +69,7 @@ struct RouteConfig
 	string			upload_directory; // relative to server root, not location root
 	vector<int>		cgi_extensions; // will use values of enum "cgi_extension". can be empty, then no cgi allowed
 
-	RouteConfig(): http_redirect(NULL), directory_listing(false) {}
+	RouteConfig(): directory_listing(false) {}
 	RouteConfig(const RouteConfig& orig);
 };
 
@@ -77,7 +77,7 @@ struct ServerConfig
 {
 	vector<string>				server_names; // can be empty, then no server names
 	vector<int>					ports; // always at least one port
-	int							max_client_body_size; //if 0, allow infinite size
+	int							max_client_body_size; //in bytes. if 0, allow infinite size
 	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page
 	map<string, RouteConfig>	routes; // "string" element of map is name of route
 
