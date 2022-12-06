@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   File.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/06 17:01:10 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/06 22:09:21 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,68 +76,6 @@ File::File(const std::string& path, const std::string& dest): filename(dest), pa
 	std::ifstream file(path);
 	if (!file.is_open())
 		throw FileNotFoundException();
-	this->calcFileSize(file);
-	this->getContentFromFile(file);
-}
-
-File::File(const std::string& path, const Server& server, int indexLoc, bool isLocation = false): path(path), isLocation(isLocation)
-{
-	// this->changeToRootOrFavicon();
-	// std::ifstream file;
-	
-	// if (!this->isLocation)
-	// 	file.open("html" + this->path);
-	// else
-	// {
-	// 	if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName())
-	// 		file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
-	// 	else
-	// 		file.open(server.getLocation(indexLoc).getPath() + "/" + path.substr(path.find_last_of('/') + 1));
-	// }
-	// if (!file.is_open())
-	// 	throw FileNotFoundException();
-
-	// this->filename= this->path.substr(this->path.find_last_of('/') + 1);
-	// this->calcFileSize(file);
-	// this->getContentFromFile(file);
-	// this->changeToRootOrFavicon();
-	std::ifstream file;
-	
-	if (!this->isLocation)
-		file.open("html" + this->path);
-	else
-	{
-		if (path.substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName() && path.find(".") == std::string::npos)
-			file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
-		else
-			file.open(server.getLocation(indexLoc).getPath() + "/" + path.substr(path.find_last_of('/') + 1));
-	}
-	if (!file.is_open())
-		throw FileNotFoundException();
-
-	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
-	this->calcFileSize(file);
-	this->getContentFromFile(file);
-}
-
-File::File(const HttpRequest& req, const Server& server, int indexLoc, bool isLocation = false): path(req.getURI()), isLocation(isLocation)
-{
-	this->changeToRootOrFavicon();
-	std::ifstream file;
-	
-	if (!this->isLocation)
-		file.open("html" + this->path);
-	else
-	{
-		if (req.getURI().substr(0, server.getLocation(indexLoc).getName().size()) == server.getLocation(indexLoc).getName() && req.getURI().find(".") == std::string::npos)
-			file.open(server.getLocation(indexLoc).getPath() + "/" + server.getLocation(indexLoc).getIndex());
-		else
-			file.open(server.getLocation(indexLoc).getPath() + "/" + req.getURI().substr(req.getURI().find_last_of('/') + 1));
-	}
-	if (!file.is_open())
-		throw FileNotFoundException();
-
-	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
 	this->calcFileSize(file);
 	this->getContentFromFile(file);
 }
