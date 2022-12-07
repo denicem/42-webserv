@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/06 17:07:06 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/07 16:33:06 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,16 @@ class Server
 	public:
 		Server(const string&, const string&, const vector<Location> &);
 	
-		string getServerName() const;
-		string getRoot() const;
-		int getPort(const int) const;
-		Location getLocation(const int) const;
-		const std::vector<Location>& getLocations() const;
-		int getServerSocketFD() const;
+		string							getServerName() const;
+		string							getRoot() const;
+		int								getPort(const int) const;
+		Location						getLocation(const int) const;
+		const std::vector<Location>&	getLocations() const;
+		int 							getServerSocketFD() const;
 
-		void setServerName(string&);
-		void setPort(int);
-		void setLocation(const Location&);
+		void	setServerName(string&);
+		void	setPort(int);
+		void	setLocation(const Location&);
 
 		void initSockAddr(int, int);
 	
