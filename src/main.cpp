@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/07 17:38:31 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 20:45:59 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	logo(void)
 	cout <<					"                    `.            \\###7'       ,'" << '\n';
 	cout <<					"                      \"-_          `\"'      ,-'     " << DARKGRAY << BOLD << "by Denice, Mo & Svenja" << RESET << '\n';
 	cout <<					"                         \"-._           _.-\"" << '\n';
-	cout <<					"                             \"\"\"\"---\"\"\"\"" << '\n';
+	cout <<					"                             \"\"\"\"---\"\"\"\"" << "\n\n\n";
 	
 }
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 		tcpPoll.status_check();
 	}
 	catch (exception& e) {
-		cerr << e.what() << " ERRNO: " << errno << '\n';
+		cerr << e.what() << "\nERRNO: " << errno << '\n';
 	}
 	return (0);
 }
