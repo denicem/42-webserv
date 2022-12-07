@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/07 15:36:12 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 16:44:12 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,14 @@ struct Setting
 	Setting() {}
 };
 
-enum file_location {
+enum FileLocation {
 	BASE,
 	SERVER,
 	ROUTE,
 	ERROR_PAGES
 };
 
-enum cgi_extensions {
+enum CGIExtension {
 	dotDMS,
 	dotPY,
 	dotC
@@ -52,14 +52,14 @@ enum cgi_extensions {
 
 struct RouteConfig
 {
-	string			http_redirect; // can be empty, then no redirect. need to be concious that it can redirect to another route with a redirection
-	vector<int>		http_methods; // will use values of enum "http_methods". will always be at least one
-	string			root; // one of root or alias will be empty.
-	string			alias;
-	bool			directory_listing;
-	string			default_file; // if empty string, no default file // relative to location root
-	string			upload_directory; // relative to server root, not location root
-	vector<int>		cgi_extensions; // will use values of enum "cgi_extension". can be empty, then no cgi allowed
+	string		http_redirect; // can be empty, then no redirect. need to be concious that it can redirect to another route with a redirection
+	vector<int>	http_methods; // will use values of enum "http_methods". will always be at least one
+	string		root; // one of root or alias will be empty.
+	string		alias;
+	bool		directory_listing;
+	string		default_file; // if empty string, no default file // relative to location root
+	string		upload_directory; // relative to server root, not location root
+	vector<int>	cgi_extensions; // will use values of enum "cgi_extension". can be empty, then no cgi allowed
 
 	RouteConfig(): directory_listing(false) {}
 	RouteConfig(const RouteConfig& orig);

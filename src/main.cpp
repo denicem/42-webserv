@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/07 16:28:52 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 16:40:24 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ int main(int argc, char* argv[])
 		Webserv dmsServer;
 		TCPPoll tcpPoll;
 		//ports list for testing testing 
-		vector<int>ports;
-		vector<HttpMethod> allowedMethods;
-		vector<Location> locations;
+		vector<int>			ports;
+		vector<HttpMethod>	allowedMethods;
+		vector<Location>	locations;
 		allowedMethods.push_back(GET);
 		allowedMethods.push_back(POST);
 		allowedMethods.push_back(DELETE);
