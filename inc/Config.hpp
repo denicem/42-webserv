@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/07 16:44:12 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 17:36:22 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,9 @@ class Config
 		static string	getFilePath(int argc, char* argv[]);
 		static void		printServerConfig(const vector<ServerConfig>& config);
 
-		/* faulty function!! redirections will not be correctly assigned */
+		/* this function will copy the data into a new variable (only works with an empty vector!!!) */
 		void						extractConfigData(vector<ServerConfig>& buffer) const;
+		/* this function just returns a reference to the vector of a given Config Class */
 		const vector<ServerConfig>&	getConfigData(void) { return (_config); }
 
 		struct ConfigException: public exception

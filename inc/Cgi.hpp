@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:24:27 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/07 17:24:30 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 17:32:37 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ class CGI
 		int _fd_in[2];
 		int _fd_out[2];
 		
-		CGI();
-		~CGI();
+		CGI() {}
+		~CGI() {}
 
 		//set enviroment
 		void	setEnv(void);
 
 		void	executeCGI(void);
 
-}
+};
