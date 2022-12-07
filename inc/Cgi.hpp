@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Cgi.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/07 17:24:27 by shaas             #+#    #+#             */
+/*   Updated: 2022/12/07 17:24:30 by shaas            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #pragma once
 
-extern char **enviroment;
+#include "Webserv.hpp"
 
+extern char **enviroment;
 
 class CGI
 {
@@ -10,7 +22,7 @@ class CGI
 		
 		// char **_argvp;
 		// char **_envp;
-		std::string request;
+		string request;
 		
 
 	public:
@@ -21,8 +33,8 @@ class CGI
 		~CGI();
 
 		//set enviroment
-		void set_envs(void);
-		
-		void execute_cgi(void);
+		void	setEnv(void);
+
+		void	executeCGI(void);
 
 }
