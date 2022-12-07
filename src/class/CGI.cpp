@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:25:48 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/07 17:29:35 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 22:25:29 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,28 @@
 ** ----------------------- STATIC METHODS -----------------------
 */
 
+bool	CGI::isCGI(const string& filename, const vector<string>* allowed_cgi_for_route)
+{
+	if (filename.rfind('.') == string::npos)
+		return false;
+	string file_extension = filename.substr(filename.rfind('.'));
+	if (allowed_cgi_for_route == NULL)
+	{
+		/////insert global cgi extensions here!!!
+		return false; /// just for now!!!!
+	}
+	for (vector<string>::const_iterator i = allowed_cgi_for_route->cbegin(); i != allowed_cgi_for_route->end(); i++)
+	{
+		if (file_extension == *i)
+			return true;
+	}
+	return false;
+}
+
 /*
 ** ----------------------- OPERATOR OVERLOADS -----------------------
 */
 
 /*
-** ----------------------- CLASS METHODS -----------------------
+** ----------------------- PUBLIC METHODS -----------------------
 */
-
-
