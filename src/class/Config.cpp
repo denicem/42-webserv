@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 18:12:58 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 15:46:49 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 	{
 		if (settingHasMultipleValues(_line))
 			configError(_line_num, "http_redirect can only have one value");
-		_http_redirects.push_back(HttpRedirect(_curr_route_name, _line));
+		route->http_redirect = _line;
 	}
 	else if (setting == "http_methods")
 	{
@@ -262,20 +262,23 @@ void	Config::handleSetting(size_t colon_pos)
 	curr_setting->second.setting_is_set = true;
 }
 
-void	Config::assignHttpRedirects(void)
+bool	Config::invalidHttpRedirect(ServerConfig* server)
 {
-	for (vector<HttpRedirect>::iterator i = _http_redirects.begin(); i != _http_redirects.end(); i++)
+	for (map<string, RouteConfig>::iterator i = server->routes.begin(); i != server->routes.end(); i++)
 	{
-		if (_curr_server->routes.find(i->redirect) == _curr_server->routes.end())
-			configError(_line_num, "Http redirect to nonexistent route in this server");
-		_curr_server->routes.find(i->route)->second.http_redirect = i->redirect;
+		if (!i->second.http_redirect.empty())
+		{
+			if (server->routes.find(i->second.http_redirect) == server->routes.end())
+				return true;
+		}
 	}
-	_http_redirects.clear();
+	return false;
 }
 
 void	Config::parseConfigFile(void)
 {
-	size_t	colon_pos;
+	size_t			colon_pos;
+	ServerConfig	new_server;
 
 	//default values!
 	for (_line_num = 1; getline(this->_config_stream, this->_line); _line_num++)
@@ -295,7 +298,7 @@ void	Config::parseConfigFile(void)
 				switch (_file_location)
 				{
 					case BASE:
-						_config.push_back(ServerConfig());
+						_config.push_back(new_server);
 						_curr_server = &_config.back();
 						resetSettings(this->_server_settings);
 						_file_location = SERVER;
@@ -317,9 +320,7 @@ void	Config::parseConfigFile(void)
 							_file_location = ROUTE;
 						}
 						else
-						{
 							configError(_line_num, "Unknown block inside server");
-						}
 						break;
 				}
 				break;
@@ -333,7 +334,8 @@ void	Config::parseConfigFile(void)
 						configError(_line_num, "Too many closing brackets");
 						break;
 					case SERVER:
-						this->assignHttpRedirects();
+						if (invalidHttpRedirect(_curr_server))
+							configError(_line_num, "Invalid http redirect in this server");
 						if (mandatorySettingsAreSet(_server_settings) == false)
 							configError(_line_num, "All mandatory settings for this server were not set");
 						_file_location = BASE;
@@ -389,7 +391,6 @@ void	Config::parseConfigFile(void)
 		throw ConfigException();
 	}
 	_config_stream.close();
-	_http_redirects.clear();
 }
 
 /*
@@ -422,7 +423,7 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), ports(orig.ports),
 		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) { }
 
-RouteConfig::RouteConfig(const RouteConfig& orig): http_methods(orig.http_methods),
+RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
 		root(orig.root), alias(orig.alias), directory_listing(orig.directory_listing), default_file(orig.default_file),
 		upload_directory(orig.upload_directory), cgi_extensions(orig.cgi_extensions) {}
 

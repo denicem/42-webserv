@@ -79,12 +79,12 @@ class Webserv {
 	public:
 		Webserv();
 
-		string getServerName(int) const;
-		int getPort(int) const;
-		Server getServer(int) const;
+		string	getServerName(int) const;
+		int		getPort(int) const;
+		Server	getServer(int) const;
 
-		void setServerName(int, string&);
-		void setPort(int, int);
+		void	setServerName(int, string&);
+		void	setPort(int, int);
 
-		void addServer(vector<int>&, const string&, const string&, const vector<Location>&);
+		void	addServer(vector<int>&, const string&, const string&, const vector<Location>&);
 };
