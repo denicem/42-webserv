@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/06 18:13:05 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 15:36:12 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,6 @@
 #include <unistd.h>
 
 #include "Webserv.hpp"
-
-struct HttpRedirect
-{
-	string	route;
-	string	redirect;
-
-	HttpRedirect(string route, string redirect): route(route), redirect(redirect) {}
-};
 
 struct Setting
 {
@@ -104,14 +96,12 @@ class Config
 		ServerConfig*	_curr_server;
 		RouteConfig*	_curr_route;
 		string			_curr_route_name;
-		vector<HttpRedirect>	_http_redirects;
 		/*-----------------------------------*/
 
 		void	parseConfigFile(void);
 		void	handleSetting(size_t colon_pos);
 		void	setSetting(const string& setting, ServerConfig* server);
 		void	setSetting(const string& setting, RouteConfig* route);
-		void	assignHttpRedirects(void);
 
 		static bool	lineHasBrackets(string& line);
 		static void	configError(int line_num, string error_msg);
@@ -122,6 +112,7 @@ class Config
 		static int	stringToInt(string& string, int lower_limit, int upper_limit, int line_num);
 		static bool	settingHasMultipleValues(string& line);
 		static void	setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route);
+		static bool	invalidHttpRedirect(ServerConfig* server);
 
 	public:
 		Config(string filePath);
