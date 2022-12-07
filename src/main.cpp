@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/07 15:59:19 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/07 16:28:52 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	logo(void)
 int main(int argc, char* argv[])
 {
 	try {
-		Config	parse_config_file(Config::getFilePath(argc, argv));
+		Config	config(Config::getFilePath(argc, argv));
 		Config::printServerConfig(config.getConfigData());
-		//const vector<ServerConfig>& data = config.getConfigData();
+		//const vector<ServerConfig>& server_data = config.getConfigData();
 	
 
 		logo();
