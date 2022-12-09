@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   CGI.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/07 17:24:27 by shaas             #+#    #+#             */
+/*   Updated: 2022/12/09 19:49:17 by shaas            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #pragma once
 
-extern char **enviroment;
+#include "Webserv.hpp"
+#include "HttpAction.hpp"
 
+extern char **enviroment;
 
 class CGI
 {
@@ -10,19 +23,22 @@ class CGI
 		
 		// char **_argvp;
 		// char **_envp;
-		std::string request;
+		string request;
 		
 
 	public:
 		int _fd_in[2];
 		int _fd_out[2];
 		
-		CGI();
-		~CGI();
+		CGI() {}
+		CGI(const HttpAction& http);
+		~CGI() {}
 
 		//set enviroment
-		void set_envs(void);
-		
-		void execute_cgi(void);
+		void	setEnv(void);
 
-}
+		void	executeCGI(void);
+
+		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route);
+
+};

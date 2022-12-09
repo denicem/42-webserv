@@ -6,11 +6,25 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/07 16:40:24 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/09 19:39:08 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Webserv.hpp"
+
+vector<string>	g_http_methods;
+vector<string>	g_cgi_extensions;
+
+void	initGlobals(void)
+{
+	g_http_methods.push_back("GET");
+	g_http_methods.push_back("DELETE");
+	g_http_methods.push_back("POST");
+
+	g_cgi_extensions.push_back(".py");
+	g_cgi_extensions.push_back(".c");
+	g_cgi_extensions.push_back(".dms");
+}
 
 void	logo(void)
 {
@@ -32,17 +46,21 @@ void	logo(void)
 	cout <<					"                    `.            \\###7'       ,'" << '\n';
 	cout <<					"                      \"-_          `\"'      ,-'     " << DARKGRAY << BOLD << "by Denice, Mo & Svenja" << RESET << '\n';
 	cout <<					"                         \"-._           _.-\"" << '\n';
-	cout <<					"                             \"\"\"\"---\"\"\"\"" << '\n';
+	cout <<					"                             \"\"\"\"---\"\"\"\"" << "\n\n\n";
 	
 }
 
 int main(int argc, char* argv[])
 {
 	try {
-		Config	config(Config::getFilePath(argc, argv));
-		Config::printServerConfig(config.getConfigData());
+		initGlobals();
+
+		Config*	config = new Config(Config::getFilePath(argc, argv));
+		vector<ServerConfig>	server_data;
+		config->extractConfigData(server_data);
+		delete config;
+		Config::printServerConfig(server_data);
 		//const vector<ServerConfig>& server_data = config.getConfigData();
-	
 
 		logo();
 
@@ -71,7 +89,7 @@ int main(int argc, char* argv[])
 		tcpPoll.status_check();
 	}
 	catch (exception& e) {
-		cerr << e.what() << " ERRNO: " << errno << '\n';
+		cerr << e.what() << "\nERRNO: " << errno << '\n';
 	}
 	return (0);
 }

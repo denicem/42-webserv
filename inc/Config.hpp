@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/07 16:44:12 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/09 19:32:15 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 #include <unistd.h>
 
 #include "Webserv.hpp"
+
+extern vector<string>	g_http_methods;
+extern vector<string>	g_cgi_extensions;
 
 struct Setting
 {
@@ -52,14 +55,14 @@ enum CGIExtension {
 
 struct RouteConfig
 {
-	string		http_redirect; // can be empty, then no redirect. need to be concious that it can redirect to another route with a redirection
-	vector<int>	http_methods; // will use values of enum "http_methods". will always be at least one
-	string		root; // one of root or alias will be empty.
-	string		alias;
-	bool		directory_listing;
-	string		default_file; // if empty string, no default file // relative to location root
-	string		upload_directory; // relative to server root, not location root
-	vector<int>	cgi_extensions; // will use values of enum "cgi_extension". can be empty, then no cgi allowed
+	string			http_redirect; // can be empty, then no redirect. need to be concious that it can redirect to another route with a redirection
+	vector<string>	http_methods; // will always be at least one.
+	string			root; // one of root or alias will be empty.
+	string			alias;
+	bool			directory_listing;
+	string			default_file; // if empty string, no default file // relative to location root
+	string			upload_directory; // relative to server root, not location root
+	vector<string>	cgi_extensions; // can be empty, then no cgi allowed for this route
 
 	RouteConfig(): directory_listing(false) {}
 	RouteConfig(const RouteConfig& orig);
@@ -121,8 +124,9 @@ class Config
 		static string	getFilePath(int argc, char* argv[]);
 		static void		printServerConfig(const vector<ServerConfig>& config);
 
-		/* faulty function!! redirections will not be correctly assigned */
+		/* this function will copy the data into a new variable (only works with an empty vector!!!) */
 		void						extractConfigData(vector<ServerConfig>& buffer) const;
+		/* this function just returns a reference to the vector of a given Config Class */
 		const vector<ServerConfig>&	getConfigData(void) { return (_config); }
 
 		struct ConfigException: public exception

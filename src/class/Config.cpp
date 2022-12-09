@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/07 15:46:49 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/09 19:40:50 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,17 +93,9 @@ bool	Config::settingHasMultipleValues(string& line)
 void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route)
 {
 	if (route_settings["http_methods"].setting_is_set == false)
-	{
-		route->http_methods.push_back(GET);
-		route->http_methods.push_back(DELETE);
-		route->http_methods.push_back(POST);
-	}
+		route->http_methods = g_http_methods;
 	if (route_settings["cgi_extensions"].setting_is_set == false)
-	{
-		route->cgi_extensions.push_back(dotDMS);
-		route->cgi_extensions.push_back(dotPY);
-		route->cgi_extensions.push_back(dotC);
-	}
+		route->cgi_extensions = g_cgi_extensions;
 }
 
 /*
@@ -157,14 +149,10 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 		splitSettingValues(_line, str_methods, _line_num);
 		for (vector<string>::iterator i = str_methods.begin(); i != str_methods.end(); i++)
 		{
-			if (*i == "GET")
-				route->http_methods.push_back(GET);
-			else if (*i == "DELETE")
-				route->http_methods.push_back(DELETE);
-			else if (*i == "POST")
-				route->http_methods.push_back(POST);
+			if (find(g_http_methods.begin(), g_http_methods.end(), *i) != g_http_methods.end())
+				route->http_methods.push_back(*i);
 			else
-				configError(_line_num, "Unknown http method");
+				configError(_line_num, "Http method not supported");
 		}
 	}
 	else if (setting == "root")
@@ -215,14 +203,10 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 		splitSettingValues(_line, str_extensions, _line_num);
 		for (vector<string>::iterator i = str_extensions.begin(); i != str_extensions.end(); i++)
 		{
-			if (*i == ".dms")
-				route->cgi_extensions.push_back(dotDMS);
-			else if (*i == ".py")
-				route->cgi_extensions.push_back(dotPY);
-			else if (*i == ".c")
-				route->cgi_extensions.push_back(dotC);
+			if (find(g_cgi_extensions.begin(), g_cgi_extensions.end(), *i) != g_cgi_extensions.end())
+				route->cgi_extensions.push_back(*i);
 			else
-				configError(_line_num, "Unknown cgi extension");
+				configError(_line_num, "CGI extension not supported");
 		}
 	}
 }
@@ -473,7 +457,7 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 			cout << "	" << MAGENTA_BG << route->first << RESET << '\n';
 			cout << '	' << MAGENTA << "Http redirect: " << RESET << route->second.http_redirect << '\n';
 			cout << MAGENTA << "	Http methods:	" << RESET;
-			for (vector<int>::const_iterator method = route->second.http_methods.begin(); method != route->second.http_methods.end(); method++) {
+			for (vector<string>::const_iterator method = route->second.http_methods.begin(); method != route->second.http_methods.end(); method++) {
 				cout << *method;
 				if (method != route->second.http_methods.end()-1)
 					cout << " | ";
@@ -486,7 +470,7 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 			cout << '	' << MAGENTA << "Default file: " << RESET << route->second.default_file << '\n';
 			cout << '	' << MAGENTA << "Upload directory: " << RESET << route->second.upload_directory << '\n';
 			cout << MAGENTA << "	CGI Extensions:	" << RESET;
-			for (vector<int>::const_iterator cgi = route->second.cgi_extensions.begin(); cgi != route->second.cgi_extensions.end(); cgi++) {
+			for (vector<string>::const_iterator cgi = route->second.cgi_extensions.begin(); cgi != route->second.cgi_extensions.end(); cgi++) {
 				cout << *cgi;
 				if (cgi != route->second.cgi_extensions.end()-1)
 					cout << " | ";
