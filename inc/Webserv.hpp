@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -16,15 +17,21 @@ using namespace std;
 // #include "HttpRequest.hpp"
 // #include "HttpResponse.hpp"
 // #include "File.hpp"
-
-
 class Server;
+
+
 
 /* MODIFIABLE FEATURES */
 
 #define DEFAULT_CONFIG_FILE_PATH "./conf/default.conf"
 
-//string	WAITING_ICON("🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛"); // 🌕🌖🌗🌘🌑🌒🌓🌔🌕
+/* all supported http methods for this server. initialized in initGlobals function */
+extern vector<string>	g_http_methods;
+
+/* all supported cgi extensions for this server. initialized in initGlobals function */
+extern vector<string>	g_cgi_extensions;
+
+// string	WAITING_ICON("🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛"); // 🌕🌖🌗🌘🌑🌒🌓🌔🌕
 
 /* COLOURS */
 
