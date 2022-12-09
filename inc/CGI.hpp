@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:24:27 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/09 19:49:17 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/09 22:40:22 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,32 @@
 #include "Webserv.hpp"
 #include "HttpAction.hpp"
 
-extern char **enviroment;
-
 class CGI
 {
 	private:
-		
-		// char **_argvp;
-		// char **_envp;
-		string request;
-		
+		string	programName;
+
+		//set enviroment
+		void		setEnv(void);
+		static void	CGIError(string error_msg);
+
+		CGI() {}
 
 	public:
 		int _fd_in[2];
 		int _fd_out[2];
 		
-		CGI() {}
+		/* assumes the request has already been established as valid for CGI */
 		CGI(const HttpAction& http);
 		~CGI() {}
 
-		//set enviroment
-		void	setEnv(void);
-
-		void	executeCGI(void);
-
-		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route);
-
+		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method);
+		string		executeCGI(void);
+		
+		struct CGIException: public exception
+		{
+			const char* what() const throw() {
+				return ("\033[31;1mError occured during CGI handling \033[0m");
+			}
+		};
 };
