@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:24:27 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/07 22:15:25 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/09 19:49:17 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,6 @@ class CGI
 
 		void	executeCGI(void);
 
-		/***
-		 * @param allowed_cgi_for_route when NULL, allow all possible cgi
-		*/
-		static bool	isCGI(const string& filename, const vector<string>* allowed_cgi_for_route);
+		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route);
 
 };
