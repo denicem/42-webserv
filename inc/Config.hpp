@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/09 19:32:15 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/10 20:50:57 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ struct RouteConfig
 struct ServerConfig
 {
 	vector<string>				server_names; // can be empty, then no server names
-	vector<int>					ports; // always at least one port
+	int							port;
 	int							max_client_body_size; //in bytes. if 0, allow infinite size
 	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page
 	map<string, RouteConfig>	routes; // "string" element of map is name of route
@@ -125,7 +125,7 @@ class Config
 		static void		printServerConfig(const vector<ServerConfig>& config);
 
 		/* this function will copy the data into a new variable (only works with an empty vector!!!) */
-		void						extractConfigData(vector<ServerConfig>& buffer) const;
+		void	extractConfigData(vector<ServerConfig>& buffer) const;
 		/* this function just returns a reference to the vector of a given Config Class */
 		const vector<ServerConfig>&	getConfigData(void) { return (_config); }
 

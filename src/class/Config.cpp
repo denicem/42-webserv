@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/09 19:40:50 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/10 20:59:08 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,18 +110,13 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 			configError(_line_num, "Need at least one server_name");
 		splitSettingValues(_line, server->server_names, _line_num);
 	}
-	else if (setting == "ports")
+	else if (setting == "port")
 	{
 		if (_line.empty())
 			configError(_line_num, "Need at least one port");
-		vector<string>	str_ports;
-		splitSettingValues(_line, str_ports, _line_num);
-		for (vector<string>::iterator i = str_ports.begin(); i != str_ports.end(); i++)
-		{
-			if (i->find_first_not_of("0123456789") != string::npos)
-				configError(_line_num, "Port is not a positive integer, which it should be");
-			server->ports.push_back(stringToInt(*i, 0, USHRT_MAX, _line_num));
-		}
+		if (_line.find_first_not_of("0123456789") != string::npos)
+			configError(_line_num, "Port is not a positive integer, which it should be");
+		server->port = stringToInt(_line, 0, USHRT_MAX, _line_num);
 	}
 	else if (setting == "max_client_body_size")
 	{
@@ -384,7 +379,7 @@ void	Config::parseConfigFile(void)
 Config::Config(string filePath): _config_stream(filePath.c_str()), _file_location(BASE)
 {
 	this->_server_settings["server_names"] = Setting(false);
-	this->_server_settings["ports"] = Setting(true);
+	this->_server_settings["port"] = Setting(true);
 	this->_server_settings["max_client_body_size"] = Setting(false);
 	this->_server_settings["error_pages"] = Setting(false);
 
@@ -404,7 +399,7 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 	this->parseConfigFile();
 }
 
-ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), ports(orig.ports),
+ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), port(orig.port),
 		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) { }
 
 RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
@@ -441,13 +436,8 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 			if (name != server->server_names.end()-1)
 				cout << " | ";
 		}
-		cout << "\n\n" << BLUE << "Ports:	" << RESET;
-		for (vector<int>::const_iterator port = server->ports.begin(); port != server->ports.end(); port++) {
-			cout << *port;
-			if (port != server->ports.end()-1)
-				cout << " | ";
-		}
-		cout << "\n\n" << BLUE << "Max client body size: " << RESET << server->max_client_body_size << "\n\n";
+		cout << "\n\n" << BLUE << "Port:	" << RESET << server->port << "\n\n";
+		cout << BLUE << "Max client body size: " << RESET << server->max_client_body_size << "\n\n";
 		cout << BLUE_BG << "Error Pages" << RESET << '\n';
 		for (map<int, string>::const_iterator page = server->error_pages.begin(); page != server->error_pages.end(); page++) {
 			cout << '	' << BLUE << page->first << ": " << RESET << page->second << '\n';
