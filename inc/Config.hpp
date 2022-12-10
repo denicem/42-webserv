@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/10 20:50:57 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/10 21:50:36 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ class Config
 		static bool	mandatorySettingsAreSet(map<string, Setting>& settings);
 		static void	splitSettingValues(string& str, vector<string>& split, int line_num);
 		static int	stringToInt(string& string, int lower_limit, int upper_limit, int line_num);
+		static bool	portIsDuplicate(int port, const vector<ServerConfig>& servers);
 		static bool	settingHasMultipleValues(string& line);
 		static void	setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route);
 		static bool	invalidHttpRedirect(ServerConfig* server);

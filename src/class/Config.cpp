@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/10 20:59:08 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/10 21:53:34 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,16 @@ int	Config::stringToInt(string& str, int lower_limit, int upper_limit, int line_
 	return (integer);
 }
 
+bool	Config::portIsDuplicate(int port, const vector<ServerConfig>& servers)
+{
+	for (vector<ServerConfig>::const_iterator i = servers.begin(); i != servers.end()-1; i++)
+	{
+		if (i->port == port)
+			return true;
+	}
+	return false;
+}
+
 bool	Config::settingHasMultipleValues(string& line)
 {
 	if (line.find(',') == string::npos)
@@ -117,6 +127,8 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 		if (_line.find_first_not_of("0123456789") != string::npos)
 			configError(_line_num, "Port is not a positive integer, which it should be");
 		server->port = stringToInt(_line, 0, USHRT_MAX, _line_num);
+		if (portIsDuplicate(server->port, _config))
+			configError(_line_num, "Two servers cannot have the same port");
 	}
 	else if (setting == "max_client_body_size")
 	{
