@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/06 22:09:21 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/13 16:23:07 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ File::File(const std::string& path, const std::string& dest): filename(dest), pa
 		throw FileNotFoundException();
 	this->calcFileSize(file);
 	this->getContentFromFile(file);
+	std::cout << "File: " << this->path << std::endl;
 }
 
 File::~File() {}
