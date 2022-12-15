@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/10 21:50:36 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/15 19:22:42 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ struct RouteConfig
 {
 	string			http_redirect; // can be empty, then no redirect. need to be concious that it can redirect to another route with a redirection
 	vector<string>	http_methods; // will always be at least one.
-	string			root; // one of root or alias will be empty.
-	string			alias;
+	string			root; // this will be the root directory for this route
 	bool			directory_listing;
 	string			default_file; // if empty string, no default file // relative to location root
 	string			upload_directory; // relative to server root, not location root

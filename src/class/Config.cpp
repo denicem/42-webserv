@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/10 21:53:34 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/15 19:25:23 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,11 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 	{
 		if (settingHasMultipleValues(_line))
 			configError(_line_num, "root can only have one value");
-		if (route->alias.empty() == false)
+		if (route->root.empty() == false)
 			configError(_line_num, "Can only either set root or alias, not both");
-		if (access(_line.c_str(), F_OK) == -1)
+		if (access((_line + _curr_route_name).c_str(), F_OK) == -1)
 			configError(_line_num, "Cannot access root directory");
-		route->root = _line;
+		route->root = _line + _curr_route_name;
 		
 	}
 	else if (setting == "alias")
@@ -179,7 +179,9 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 			configError(_line_num, "alias can only have one value");
 		if (route->root.empty() == false)
 			configError(_line_num, "Can only either set root or alias, not both");
-		route->alias = _line;
+		if (access(_line.c_str(), F_OK) == -1)
+			configError(_line_num, "Cannot access root directory");
+		route->root = _line;
 	}
 	else if (setting == "default_file")
 	{
@@ -415,7 +417,7 @@ ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_n
 		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) { }
 
 RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
-		root(orig.root), alias(orig.alias), directory_listing(orig.directory_listing), default_file(orig.default_file),
+		root(orig.root), directory_listing(orig.directory_listing), default_file(orig.default_file),
 		upload_directory(orig.upload_directory), cgi_extensions(orig.cgi_extensions) {}
 
 /*
@@ -467,7 +469,6 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 					cout << '\n';
 			}
 			cout << '	' << MAGENTA << "Root: " << RESET << route->second.root << '\n';
-			cout << '	' << MAGENTA << "Alias: " << RESET << route->second.alias << '\n';
 			cout << '	' << MAGENTA << "Directory listing: " << RESET << route->second.directory_listing << '\n';
 			cout << '	' << MAGENTA << "Default file: " << RESET << route->second.default_file << '\n';
 			cout << '	' << MAGENTA << "Upload directory: " << RESET << route->second.upload_directory << '\n';
