@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:25:48 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/09 22:44:18 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/11 20:49:03 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ void	CGI::CGIError(string error_msg)
 
 string	CGI::executeCGI(void)
 {
+	string	compile_cmd;
+
+	compile_cmd = "gcc ./cgi-bin/" + _program_name + " -o cgi_prg";
 	int pid;
 	int	pp[2];
 	if (pipe(pp) == -1)
@@ -65,7 +68,10 @@ string	CGI::executeCGI(void)
 
 CGI::CGI(const HttpAction& http)
 {
+	//change later!!!
 	(void)http;
+	_program_name = "telephone.c";
+	_cgi_extension = ".c";
 }
 
 /*
