@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:30:29 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/11/29 14:07:02 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/12 22:44:41 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,7 @@
 Location::Location(const std::string& name, const std::string& root, const std::string& index, const std::vector<HttpMethod>& allowedMethods, bool isAlias = false)
 	: name(name), root(root), index(index), allowedMethods(allowedMethods), isAlias(isAlias)
 {
-	if (!this->isAlias)
-		this->path = root + name;
-	else
-		this->path = root;
+	this->path = !this->isAlias ? root + name : root;
 }
 
 /*
