@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/15 16:29:39 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/15 18:01:28 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void TCPPoll::status_check()
 		this->sfds[i].initSockAddr(this->len , 0);
 		
 		//kill all ports that are in use
-		if (setsockopt(this->sfds[i].getServerSocketFD(), SOL_SOCKET, SO_REUSEADDR, &pollStatus, sizeof(int)) == -1)
+		if (setsockopt(this->sfds[i].getServerSocketFD(), SOL_SOCKET, SO_REUSEADDR, &pollStatus, sizeof(this->pollStatus)) != 0)
 			perror("Cannot set socket option");
 		
 		if (bind(this->sfds[i].getServerSocketFD(),
