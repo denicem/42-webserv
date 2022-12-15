@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/13 16:36:15 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/15 17:31:44 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,9 @@ class Server
 
 		/* for TCP */
 		int serverSocketFD;
-		// size_t len;
-
+		// size_t len;	
 	public:
 		SCK_ADDR _address;
-	
-	public:
 		Server(const string&, const string&, const vector<Location> &);
 		Server(const struct ServerConfig& config);
 	
