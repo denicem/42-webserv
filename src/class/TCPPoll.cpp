@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/15 14:37:43 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/15 14:59:08 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void TCPPoll::status_check()
 						//read and write to client
 						if (recv(acceptedFd, this->buffer, MAXBUFF, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
-						std::cout << "Port " << this->sfds[i].getPort(i) << " connected to client." << std::endl;	
+						std::cout << "Port " << this->sfds[i].getPort(0) << " connected to client." << std::endl;	
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						// std::cout << this->buffer << std::endl;
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
