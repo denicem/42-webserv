@@ -14,6 +14,7 @@ using namespace std;
 
 // #include "HttpMessage.hpp"
 #include "HttpMethod.hpp"
+#include "CGI.hpp"
 // #include "HttpRequest.hpp"
 // #include "HttpResponse.hpp"
 // #include "File.hpp"
