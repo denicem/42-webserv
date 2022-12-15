@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:30:29 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/12 22:44:41 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/15 19:47:06 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-Location::Location(const std::string& name, const std::string& root, const std::string& index, const std::vector<HttpMethod>& allowedMethods, bool isAlias = false)
-	: name(name), root(root), index(index), allowedMethods(allowedMethods), isAlias(isAlias)
+Location::Location(const std::string& name, const std::string& root, const std::string& index, const std::vector<HttpMethod>& allowedMethods, bool directoryListing = false)
+	: name(name), root(root), index(index), allowedMethods(allowedMethods), directoryListing(directoryListing)
 {
-	this->path = !this->isAlias ? root + name : root;
+	// this->path = !this->isAlias ? root + name : root;
+	std::cout << this->directoryListing << std::endl;
 }
 
 /*

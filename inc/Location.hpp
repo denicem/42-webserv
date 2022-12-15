@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 18:37:57 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/15 14:53:21 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/15 19:23:24 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,11 @@ class Location {
 		std::string index; //default_file
 		std::vector<HttpMethod>allowedMethods;
 		bool isAlias;
+		bool directoryListing;
 
 	public:
 		Location(const std::string& name, const std::string& rootOrAlias, 
-			const std::string& index, const std::vector<HttpMethod>&, bool);
+			const std::string& index, const std::vector<HttpMethod>&, bool directoryListing);
 
 		std::string getName() const;
 		std::string getPath() const;
