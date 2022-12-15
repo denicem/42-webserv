@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 14:36:03 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/15 16:35:50 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,14 +118,14 @@ void Server::initSockAddr(int len, int index) {
 	this->_address.sin_family = AF_INET;
 	this->_address.sin_addr.s_addr = INADDR_ANY;
 	//server has more than one port
-	// if(this->_port.size() == 1)
-	this->_address.sin_port = htons(ports[index]);
-	// else {
-	// 	for(vector<int>::iterator it = _port.begin(); it != _port.end(); it++){
-	// 		cout << "Port: " << *it << endl;
-	// 		this->_address.sin_port = htons(*it);
-	// 	}
-
+	if(this->ports.size() == 1)
+		this->_address.sin_port = htons(ports[index]);
+	else{
+		for(vector<int>::iterator it = ports.begin(); it != ports.end(); it++){
+			cout << "Port: " << *it << endl;
+			this->_address.sin_port = htons(*it);
+		}
+	}
 	memset(&this->_address.sin_addr, len, sizeof(SCK_ADDR));
 }
 
