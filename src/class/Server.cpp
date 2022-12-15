@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/11/28 18:28:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/15 14:36:03 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,14 @@
 Server::Server(const string& serverName, const string &root, const vector<Location> &locations)
 : serverName(serverName), root(root), locations(locations){}
 
+Server::Server(const ServerConfig& config) {
+	this->ports.push_back(config.port);
+	this->clientMaxBody = config.max_client_body_size;
+	this->serverNames = config.server_names;
+	// this->indexFile = config.IndexFile; //TODO:
+	setLocations(config.routes);
+}
+
 /*
 ** ----------------------- OPERATOR OVERLOADS -----------------------
 */
@@ -36,6 +44,11 @@ Server::Server(const string& serverName, const string &root, const vector<Locati
 string Server::getServerName() const {
 	return(this->serverName);
 }
+
+//TODO: mach dies getter für Dnice
+// string Server::getIndexFile() const{
+// 	return this.
+// }
 
 string Server::getRoot() const {
 	return(this->root);
@@ -57,6 +70,9 @@ int Server::getServerSocketFD() const {
 	return (this->serverSocketFD);
 }
 
+vector<string> Server::getServernameList() {
+	return(this->serverNames);
+}
 
 void Server::setServerName(string& serverName) {
 	this->serverName = serverName;
@@ -68,6 +84,24 @@ void Server::setPort(int port){
 
 void Server::setLocation(const Location &location){
 	this->locations.push_back(location);
+}
+
+void Server::setLocations(map<string, struct RouteConfig> routs){
+	map<string, RouteConfig>::iterator it = routs.begin();
+	// Location locTmp;
+	//!DONT NO IF WORKS
+	for(;it != routs.end(); it++){
+		if((*it).second.alias.empty())
+		{	
+			Location locTmp((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), false);
+			this->locations.push_back(locTmp);
+		}
+		else {
+			Location locTmp((*it).first, (*it).second.alias, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), true);
+			this->locations.push_back(locTmp);
+		}
+		
+	}
 }
 
 /*
@@ -104,3 +138,16 @@ const char* Server::NoSocketException::what() const throw(){return ("\033[31;1mC
 ** ----------------------- FUNCS -----------------------
 */
 
+vector<HttpMethod> Server::genarateAllowedMethods(vector<string>methods) {
+	vector<HttpMethod>result;
+
+	for(vector<string>::iterator it = methods.begin(); it != methods.end(); it++) {
+		if(*it == "GET")
+			result.push_back(GET);
+		else if (*it == "POST")
+			result.push_back(POST);
+		else if (*it == "DELETE")
+			result.push_back(DELETE);
+	}
+	return result;
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/03 17:42:52 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/15 14:37:43 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void TCPPoll::status_check()
 		memset(&connection_poll[i], 0, sizeof(pollfd));
 		
 		//init sockets
-		this->sfds[i].initSockAddr(this->len , i);
+		this->sfds[i].initSockAddr(this->len , 0);
 		
 		//kill all ports that are in use
 		if (setsockopt(this->sfds[i].getServerSocketFD(), SOL_SOCKET, SO_REUSEADDR, &pollStatus, sizeof(int)) == -1)
@@ -54,6 +54,7 @@ void TCPPoll::status_check()
 	//init poll struct
 	for(int i = 0; i < MAX_CONN; i++)
 	{
+		std::cout << "server filedescriptor: " << sfds[i].getServerSocketFD() << std::endl;
 		connection_poll[i].fd = sfds[i].getServerSocketFD();
 		connection_poll[i].events = POLL_IN;
 	}

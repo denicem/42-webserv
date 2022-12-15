@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 18:37:57 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/04 23:35:02 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/13 12:38:10 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ class Location {
 		bool isAlias;
 
 	public:
-		Location(const std::string& name, const std::string& rootOrAlias, const std::string& index, const std::vector<HttpMethod>&, bool);
+		Location(const std::string& name, const std::string& rootOrAlias, 
+			const std::string& index, const std::vector<HttpMethod>&, bool);
 
 		std::string getName() const;
 		std::string getPath() const;
