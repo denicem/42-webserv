@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/09 19:39:08 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/15 14:56:15 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ int main(int argc, char* argv[])
 		initGlobals();
 
 		Config*	config = new Config(Config::getFilePath(argc, argv));
-		vector<ServerConfig>	server_data;
+		vector<struct ServerConfig>	server_data;
 		config->extractConfigData(server_data);
 		delete config;
 		Config::printServerConfig(server_data);
-		//const vector<ServerConfig>& server_data = config.getConfigData();
+		// const vector<ServerConfig>& server_data = *config.getConfigData();
 
 		logo();
 
@@ -68,26 +68,40 @@ int main(int argc, char* argv[])
 		Webserv dmsServer;
 		TCPPoll tcpPoll;
 		//ports list for testing testing 
-		vector<int>			ports;
-		vector<HttpMethod>	allowedMethods;
-		vector<Location>	locations;
-		allowedMethods.push_back(GET);
-		allowedMethods.push_back(POST);
-		allowedMethods.push_back(DELETE);
-		locations.push_back(Location("/hehe", "html", "hello.html", allowedMethods, false));
-		locations.push_back(Location("/ho", "www", "/index.html", allowedMethods, true));
-		ports.push_back(8080);
-		ports.push_back(8081);
-		ports.push_back(8082);
+		// vector<int>			ports;
+		// vector<HttpMethod>	allowedMethods;
+		// vector<Location>	locations;
+		// allowedMethods.push_back(GET);
+		// allowedMethods.push_back(POST);
+		// allowedMethods.push_back(DELETE);
+		// locations.push_back(Location("/hehe", "html", "hello.html", allowedMethods, false));
+		// locations.push_back(Location("/ho", "www", "/index.html", allowedMethods, true));
+		// ports.push_back(8080);
+		// ports.push_back(8081);
+		// ports.push_back(8082);
 		
-		dmsServer.addServer(ports, "test_server_1", "html",locations);
-		dmsServer.addServer(ports, "test_server_2", "html", locations);
-		dmsServer.addServer(ports, "test_server_3", "html", locations);
+		// dmsServer.addServer(ports, "test_server_1", "html",locations);
+		// dmsServer.addServer(ports, "test_server_2", "html", locations);
+		// dmsServer.addServer(ports, "test_server_3", "html", locations);
+		vector<Server> servers;
+		for(size_t i = 0; i < server_data.size(); i++) {
+			Server s(server_data[i]);
+			servers.push_back(s);
+			dmsServer.addServer(servers[i]);
+		}
+
+		// for(size_t i = 0; i < servers.size(); i++)
+		// 	std::cout << "Server: " << servers.at(i).getPort(0) << std::endl;
+		// std::cout << "server name: " << *dmsServer.getServer(0).getServernameList().begin() << std::endl;
+
 		for (int i = 0; i < 3; i++)
+		{
 			tcpPoll.add_fds(dmsServer.getServer(i));
+			// std::cout << "server port: " << dmsServer.getServer(i) << std::endl;
+		}
 		// 	tcpPoll.add_fds(Server(PORT + i, "simple"));
-		tcpPoll.status_check();
-	}
+		
+		tcpPoll.status_check(); }
 	catch (exception& e) {
 		cerr << e.what() << "\nERRNO: " << errno << '\n';
 	}

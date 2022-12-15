@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/07 16:33:06 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/13 16:36:15 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@
 #include <string>
 #include <vector>
 
+
 #include "Webserv.hpp"
 #include "Location.hpp"
+#include "Config.hpp"
+#include "HttpMethod.hpp"
 
 #define SCK_ADDR sockaddr_in
 
@@ -36,7 +39,11 @@ class Server
 {
 	private:
 		string serverName;
+		vector<string> serverNames;
+		// int onePort;
+		int clientMaxBody;
 		string root;
+		string indexFile;
 		//string index/default_file -> TODO:
 		vector<int> ports;
 		vector<Location> locations;
@@ -51,6 +58,7 @@ class Server
 	
 	public:
 		Server(const string&, const string&, const vector<Location> &);
+		Server(const struct ServerConfig& config);
 	
 		string							getServerName() const;
 		string							getRoot() const;
@@ -63,8 +71,12 @@ class Server
 		void	setPort(int);
 		void	setLocation(const Location&);
 
+		void setLocations(map<string, struct RouteConfig>);
 		void initSockAddr(int, int);
 	
+		string getIndexFile() const;
+		vector<HttpMethod> genarateAllowedMethods(vector<string>methods);
+		vector<string> getServernameList();
 		class NoSocketException: public exception
 		{
 			const char* what() const throw();

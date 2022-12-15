@@ -81,10 +81,11 @@ extern vector<string>	g_cgi_extensions;
 
 class Webserv {
 	private:
-		vector<Server> serverList;
+		vector<const Server> serverList;
 		
 	public:
 		Webserv();
+		Webserv(const Server& server);
 
 		string	getServerName(int) const;
 		int		getPort(int) const;
@@ -93,5 +94,5 @@ class Webserv {
 		void	setServerName(int, string&);
 		void	setPort(int, int);
 
-		void	addServer(vector<int>&, const string&, const string&, const vector<Location>&);
+		void	addServer(const Server& server);
 };
