@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/10 21:50:36 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/15 19:42:02 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ struct RouteConfig
 {
 	string			http_redirect; // can be empty, then no redirect. need to be concious that it can redirect to another route with a redirection
 	vector<string>	http_methods; // will always be at least one.
-	string			root; // one of root or alias will be empty.
-	string			alias;
+	string			root; // this will be the root directory for this route
 	bool			directory_listing;
 	string			default_file; // if empty string, no default file // relative to location root
 	string			upload_directory; // relative to server root, not location root
@@ -72,8 +71,9 @@ struct ServerConfig
 {
 	vector<string>				server_names; // can be empty, then no server names
 	int							port;
+	string						root; // root dir for this server
 	int							max_client_body_size; //in bytes. if 0, allow infinite size
-	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page
+	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page. path from webserv root, not server root
 	map<string, RouteConfig>	routes; // "string" element of map is name of route
 
 	ServerConfig(): max_client_body_size(0) {}
@@ -115,7 +115,7 @@ class Config
 		static int	stringToInt(string& string, int lower_limit, int upper_limit, int line_num);
 		static bool	portIsDuplicate(int port, const vector<ServerConfig>& servers);
 		static bool	settingHasMultipleValues(string& line);
-		static void	setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route);
+		static void	setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route, string route_name, int line_num);
 		static bool	invalidHttpRedirect(ServerConfig* server);
 
 	public:

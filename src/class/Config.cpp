@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/10 21:53:34 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/15 19:53:43 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,18 @@ bool	Config::settingHasMultipleValues(string& line)
 	return true;
 }
 
-void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route)
+void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route, string route_name, int line_num)
 {
 	if (route_settings["http_methods"].setting_is_set == false)
 		route->http_methods = g_http_methods;
 	if (route_settings["cgi_extensions"].setting_is_set == false)
 		route->cgi_extensions = g_cgi_extensions;
+	if (route_settings["root"].setting_is_set == false && route_settings["alias"].setting_is_set == false)
+	{
+		if (access(('.' + route_name).c_str(), F_OK) == -1)
+			configError(line_num, "Cannot access route directory");
+		route->root = '.' + route_name;
+	}
 }
 
 /*
@@ -129,6 +135,15 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 		server->port = stringToInt(_line, 0, USHRT_MAX, _line_num);
 		if (portIsDuplicate(server->port, _config))
 			configError(_line_num, "Two servers cannot have the same port");
+	}
+	else if (setting == "root")
+	{
+		if (settingHasMultipleValues(_line))
+			configError(_line_num, "root can only have one value");
+		if (access(_line.c_str(), F_OK) == -1)
+			configError(_line_num, "Cannot access root directory");
+		server->root = _line;
+		
 	}
 	else if (setting == "max_client_body_size")
 	{
@@ -166,11 +181,11 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 	{
 		if (settingHasMultipleValues(_line))
 			configError(_line_num, "root can only have one value");
-		if (route->alias.empty() == false)
+		if (route->root.empty() == false)
 			configError(_line_num, "Can only either set root or alias, not both");
-		if (access(_line.c_str(), F_OK) == -1)
+		if (access((_line + _curr_route_name).c_str(), F_OK) == -1)
 			configError(_line_num, "Cannot access root directory");
-		route->root = _line;
+		route->root = _line + _curr_route_name;
 		
 	}
 	else if (setting == "alias")
@@ -179,7 +194,9 @@ void	Config::setSetting(const string& setting, RouteConfig* route)
 			configError(_line_num, "alias can only have one value");
 		if (route->root.empty() == false)
 			configError(_line_num, "Can only either set root or alias, not both");
-		route->alias = _line;
+		if (access(_line.c_str(), F_OK) == -1)
+			configError(_line_num, "Cannot access root directory");
+		route->root = _line;
 	}
 	else if (setting == "default_file")
 	{
@@ -334,7 +351,7 @@ void	Config::parseConfigFile(void)
 					case ROUTE:
 						if (mandatorySettingsAreSet(_route_settings) == false)
 							configError(_line_num, "All mandatory settings for this route were not set");
-						setDefaultValues(_route_settings, _curr_route);
+						setDefaultValues(_route_settings, _curr_route, _curr_route_name, _line_num);
 						_file_location = SERVER;
 						break;
 					case ERROR_PAGES:
@@ -392,6 +409,7 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 {
 	this->_server_settings["server_names"] = Setting(false);
 	this->_server_settings["port"] = Setting(true);
+	this->_server_settings["root"] = Setting(true);
 	this->_server_settings["max_client_body_size"] = Setting(false);
 	this->_server_settings["error_pages"] = Setting(false);
 
@@ -399,7 +417,7 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 	this->_route_settings["http_methods"] = Setting(false);
 	this->_route_settings["root"] = Setting(false);
 	this->_route_settings["alias"] = Setting(false);
-	this->_route_settings["default_file"] = Setting(false);
+	this->_route_settings["default_file"] = Setting(true);
 	this->_route_settings["upload_directory"] = Setting(false);
 	this->_route_settings["directory_listing"] = Setting(false);
 	this->_route_settings["cgi_extensions"] = Setting(false);
@@ -411,11 +429,11 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 	this->parseConfigFile();
 }
 
-ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), port(orig.port),
+ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), port(orig.port), root(orig.root),
 		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) { }
 
 RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
-		root(orig.root), alias(orig.alias), directory_listing(orig.directory_listing), default_file(orig.default_file),
+		root(orig.root), directory_listing(orig.directory_listing), default_file(orig.default_file),
 		upload_directory(orig.upload_directory), cgi_extensions(orig.cgi_extensions) {}
 
 /*
@@ -449,6 +467,7 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 				cout << " | ";
 		}
 		cout << "\n\n" << BLUE << "Port:	" << RESET << server->port << "\n\n";
+		cout << BLUE << "Root:	" << RESET << server->root << "\n\n";
 		cout << BLUE << "Max client body size: " << RESET << server->max_client_body_size << "\n\n";
 		cout << BLUE_BG << "Error Pages" << RESET << '\n';
 		for (map<int, string>::const_iterator page = server->error_pages.begin(); page != server->error_pages.end(); page++) {
@@ -467,7 +486,6 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 					cout << '\n';
 			}
 			cout << '	' << MAGENTA << "Root: " << RESET << route->second.root << '\n';
-			cout << '	' << MAGENTA << "Alias: " << RESET << route->second.alias << '\n';
 			cout << '	' << MAGENTA << "Directory listing: " << RESET << route->second.directory_listing << '\n';
 			cout << '	' << MAGENTA << "Default file: " << RESET << route->second.default_file << '\n';
 			cout << '	' << MAGENTA << "Upload directory: " << RESET << route->second.upload_directory << '\n';
