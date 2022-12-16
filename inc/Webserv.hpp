@@ -4,6 +4,7 @@
 #include <string>
 #include <unistd.h>
 #include <algorithm>
+#include <errno.h>
 
 using namespace std;
 
@@ -20,7 +21,11 @@ using namespace std;
 // #include "File.hpp"
 class Server;
 
-
+/* for Docker: define macros */
+#ifdef __linux__
+	#define POLL_IN POLLIN
+	#define POLL_ERR POLLERR
+#endif
 
 /* MODIFIABLE FEATURES */
 
@@ -82,7 +87,7 @@ extern vector<string>	g_cgi_extensions;
 
 class Webserv {
 	private:
-		vector<const Server> serverList;
+		vector<Server> serverList;
 		
 	public:
 		Webserv();

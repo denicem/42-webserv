@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   File.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/13 16:23:07 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/16 17:26:20 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ File::File(const std::string& path): path(path)
 
 File::File(const std::string& path, const std::string& dest): filename(dest), path(path)
 {
-	std::ifstream file(path);
+	std::ifstream file(path.c_str());
 	if (!file.is_open())
 		throw FileNotFoundException();
 	this->calcFileSize(file);

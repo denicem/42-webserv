@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 22:10:16 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/16 17:44:32 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int main(int argc, char* argv[])
 
 		logo();
 
-		CGI	cgi;
-		cgi.executeCGI();
+		//CGI	cgi;
+		//cgi.executeCGI();
 
 		//TODO: parsing muss ausgeführt werden
 		Webserv dmsServer;
