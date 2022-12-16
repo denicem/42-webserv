@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:24:27 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/15 23:52:00 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/16 20:19:28 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,23 @@ class CGI
 	private:
 		string	_program_name;
 		string	_cgi_extension;
-		int		port;
-		char**	env;
+
+		/* ENV FOR CGI */
+		string	_server_name;
+		int		_server_port;
+		string	_request_method; // or get as int?
+		string	_path_info;
+		string	_script_name;
+		string	_query_string;
+		string	_content_type;
+		string	_content_length;
+		char**	_env;
 
 		//set enviroment
-		void		setEnv(void);
-		static void	CGIError(string error_msg);
+		void			setEnv(void);
 
+		static void		CGIError(string error_msg);
+		static string	intToString(int i);
 
 	public:
 		CGI(); // for testing
