@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/15 18:01:28 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/16 17:35:00 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 TCPPoll::TCPPoll() {
 	this->pollStatus = 1;
-	this->i = 0;
+	this->index = 0;
 	this->len = INADDR_ANY;
 }
 
@@ -70,22 +70,22 @@ void TCPPoll::status_check()
 			case POLL_ERR:
 				cout << "Error on poll" << endl;
 			default:
-				for (i = 0; i < MAX_CONN; i++)
+				for (index = 0; index < MAX_CONN; index++)
 				{
-					if (connection_poll[i].revents & POLL_IN)
+					if (connection_poll[index].revents & POLL_IN)
 					{
 						cout << "\n---------- We have a connection -----------\n\n";
-						acceptedFd = accept(sfds[i].getServerSocketFD(), (struct sockaddr *)&sfds[i]._address, (socklen_t *) &len);
+						acceptedFd = accept(sfds[index].getServerSocketFD(), (struct sockaddr *)&sfds[index]._address, (socklen_t *) &len);
 						//read and write to client
 						if (recv(acceptedFd, this->buffer, MAXBUFF, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
-						std::cout << "Port " << this->sfds[i].getPort(0) << " connected to client." << std::endl;	
+						std::cout << "Port " << this->sfds[index].getPort(0) << " connected to client." << std::endl;	
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						// std::cout << this->buffer << std::endl;
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
 						// std::cout << req << std::endl;
-						HttpAction act(req, this->sfds[i]);
+						HttpAction act(req, this->sfds[index]);
 						// HttpResponse resp(req, this->sfds[i]);
 						HttpResponse resp(act);
 						std::string respMsg(resp.genHttpResponseMsg(act));

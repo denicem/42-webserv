@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 14:56:15 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/16 17:44:32 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ void	initGlobals(void)
 	g_http_methods.push_back("POST");
 
 	g_cgi_extensions.push_back(".py");
-	g_cgi_extensions.push_back(".c");
-	g_cgi_extensions.push_back(".dms");
+	g_cgi_extensions.push_back(".cgi");
 }
 
 void	logo(void)
@@ -63,6 +62,9 @@ int main(int argc, char* argv[])
 		// const vector<ServerConfig>& server_data = *config.getConfigData();
 
 		logo();
+
+		//CGI	cgi;
+		//cgi.executeCGI();
 
 		//TODO: parsing muss ausgeführt werden
 		Webserv dmsServer;
