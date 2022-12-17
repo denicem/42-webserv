@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/17 16:51:48 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/17 17:44:12 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,19 +170,12 @@ void HttpRequest::setRestEndpoint(const std::string& restEndpoint)
 std::ostream& operator<<(std::ostream& stream, const HttpRequest& req)
 {
 	stream << "***** REQUEST *****" << std::endl;
-	stream << "Request Line: " << req.firstLine << std::endl;
+	stream <<  "Request Line: " << req.firstLine << std::endl;
 	stream << "HTTP ver: " << req.httpVer << std::endl;
-	stream << "HTTP method: ";
-	switch (req.httpMethod) {
-		case GET: stream << "GET" << std::endl; break;
-		case POST: stream << "POST" << std::endl; break;
-		case DELETE: stream << "DELETE" << std::endl; break;
-		default: stream << "undefined" << std::endl; break;
-	}
+	stream << "HTTP method: " << getHttpMethodStr(req.httpMethod) << std::endl;
 	stream << "HTTP URI: " << req.uri << std::endl;
 	stream << "HTTP Restendpoint: " << req.restEndpoint << std::endl;
-	// stream << std::endl;
-	// stream << req.firstLine << std::endl;
+	// stream << std::endl << "HTTP HEADERS: " << std::endl;
 	// for (std::map<std::string, std::string>::const_iterator it = req.headers.begin(); it != req.headers.end(); ++it)
 	// {
 	// 	stream << (*it).first << ": " << (*it).second << std::endl;
