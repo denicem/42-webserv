@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/06 17:01:39 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/17 21:46:38 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ void HttpRequest::setURI(std::stringstream& stream)
 {
 	stream >> this->uri;
 	this->restEndpoint = this->uri.substr(this->uri.find_last_of('/') + 1);
+	if (this->uri.find('?') != std::string::npos) {
+		this->query = this->uri.substr(this->uri.find_first_of('?'));
+		this->path = this->uri.substr(0, this->uri.find_first_of('?'));
+		this->uri = this->path;
+	}
 }
 
 void HttpRequest::setHttpVer(std::stringstream& stream)
@@ -138,6 +143,16 @@ std::string HttpRequest::getURI() const
 	return (this->uri);
 }
 
+std::string HttpRequest::getPath() const
+{
+	return (this->path);
+}
+
+std::string HttpRequest::getQuery() const
+{
+	return (this->query);
+}
+
 std::string HttpRequest::getRestEndpoint() const
 {
 	return (this->restEndpoint);
@@ -170,18 +185,14 @@ void HttpRequest::setRestEndpoint(const std::string& restEndpoint)
 std::ostream& operator<<(std::ostream& stream, const HttpRequest& req)
 {
 	stream << "***** REQUEST *****" << std::endl;
+	stream <<  "Request Line: " << req.firstLine << std::endl;
 	stream << "HTTP ver: " << req.httpVer << std::endl;
-	stream << "HTTP method: ";
-	switch (req.httpMethod) {
-		case GET: stream << "GET" << std::endl; break;
-		case POST: stream << "POST" << std::endl; break;
-		case DELETE: stream << "DELETE" << std::endl; break;
-		default: stream << "undefined" << std::endl; break;
-	}
+	stream << "HTTP method: " << getHttpMethodStr(req.httpMethod) << std::endl;
 	stream << "HTTP URI: " << req.uri << std::endl;
+	stream << "HTTP PATH: " << req.path << std::endl;
+	stream << "HTTP QUERY: " << req.query << std::endl;
 	stream << "HTTP Restendpoint: " << req.restEndpoint << std::endl;
-	// stream << std::endl;
-	// stream << req.firstLine << std::endl;
+	// stream << std::endl << "HTTP HEADERS: " << std::endl;
 	// for (std::map<std::string, std::string>::const_iterator it = req.headers.begin(); it != req.headers.end(); ++it)
 	// {
 	// 	stream << (*it).first << ": " << (*it).second << std::endl;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/17 13:38:10 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/17 16:28:40 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,12 @@ void TCPPoll::status_check()
 						// std::cout << this->buffer << std::endl;
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
+						std::cout << MAGENTA;
+						for (size_t i = 0; i < sfds[index].getLocations().size(); ++i) {
+							std::cout << sfds[index].getLocation(i) << std::endl;
+						}
+						std::cout << RESET << std::endl;
+						std::cout << LIGHTBLUE << req << RESET << std::endl;
 						// std::cout << req << std::endl;
 						HttpAction act(req, this->sfds[index]);
 						// HttpResponse resp(req, this->sfds[i]);
