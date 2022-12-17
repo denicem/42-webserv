@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 14:56:15 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/17 13:22:13 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ void	initGlobals(void)
 	g_http_methods.push_back("POST");
 
 	g_cgi_extensions.push_back(".py");
-	g_cgi_extensions.push_back(".c");
-	g_cgi_extensions.push_back(".dms");
+	g_cgi_extensions.push_back(".cgi");
 }
 
 void	logo(void)
@@ -64,44 +63,36 @@ int main(int argc, char* argv[])
 
 		logo();
 
+		//CGI	cgi;
+		//cgi.executeCGI();
+
 		//TODO: parsing muss ausgeführt werden
 		Webserv dmsServer;
 		TCPPoll tcpPoll;
-		//ports list for testing testing 
-		// vector<int>			ports;
-		// vector<HttpMethod>	allowedMethods;
-		// vector<Location>	locations;
-		// allowedMethods.push_back(GET);
-		// allowedMethods.push_back(POST);
-		// allowedMethods.push_back(DELETE);
-		// locations.push_back(Location("/hehe", "html", "hello.html", allowedMethods, false));
-		// locations.push_back(Location("/ho", "www", "/index.html", allowedMethods, true));
-		// ports.push_back(8080);
-		// ports.push_back(8081);
-		// ports.push_back(8082);
-		
-		// dmsServer.addServer(ports, "test_server_1", "html",locations);
-		// dmsServer.addServer(ports, "test_server_2", "html", locations);
-		// dmsServer.addServer(ports, "test_server_3", "html", locations);
 		vector<Server> servers;
+		
+std::cout << "\e[31m servers are being inizialised\e[0m" << std::endl;
 		for(size_t i = 0; i < server_data.size(); i++) {
 			Server s(server_data[i]);
 			servers.push_back(s);
 			dmsServer.addServer(servers[i]);
 		}
-
 		// for(size_t i = 0; i < servers.size(); i++)
 		// 	std::cout << "Server: " << servers.at(i).getPort(0) << std::endl;
 		// std::cout << "server name: " << *dmsServer.getServer(0).getServernameList().begin() << std::endl;
 
-		for (int i = 0; i < 3; i++)
+std::cout << "\e[31m server fds being added to poll\e[0m" << std::endl;
+		for (size_t i = 0; i < server_data.size(); i++)
 		{
+			std::cout << "i in Loop is: " << i << std::endl;
 			tcpPoll.add_fds(dmsServer.getServer(i));
 			// std::cout << "server port: " << dmsServer.getServer(i) << std::endl;
 		}
 		// 	tcpPoll.add_fds(Server(PORT + i, "simple"));
+std::cout << "\e[31m status check is being called\e[0m" << std::endl;
 		
-		tcpPoll.status_check(); }
+		tcpPoll.status_check(); 
+	}
 	catch (exception& e) {
 		cerr << e.what() << "\nERRNO: " << errno << '\n';
 	}

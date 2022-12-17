@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:23:50 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/15 14:27:10 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/17 13:32:25 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,19 @@ class TCPPoll
 		// sockaddr_in sock[MAX_CONN];
 		pollfd connection_poll[MAX_CONN];
 		vector<Server> sfds;
-		int pollStatus, i, acceptedFd;
+		int pollStatus, index, acceptedFd;
 		size_t len;
 		char buffer[30000];
+		int maxConnection;
 		
 	public:
 		TCPPoll();
 		void add_fds(Server);
 		void status_check();
 		
+
+		int getMaxConnection();
+		void setMaxConnection(int);
 
 		class NoBindException: public exception
 		{

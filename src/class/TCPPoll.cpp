@@ -6,7 +6,7 @@
 /*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/15 18:01:28 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/17 13:38:10 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,28 @@
 
 TCPPoll::TCPPoll() {
 	this->pollStatus = 1;
-	this->i = 0;
+	this->index = 0;
 	this->len = INADDR_ANY;
 }
 
 void TCPPoll::add_fds(Server server) {
+	static int i = 0;
+	std::cout << "server " << i << "is being added to the list" << std::endl;
 	this->sfds.push_back(server);
+	if(i == 0)
+		this->setMaxConnection(1);
+	else
+		this->setMaxConnection(i);
+	i++;
 }
 
 void TCPPoll::status_check()
 {
+	std::cout << "status_check is starting: " << std::endl;
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
-	for(int i = 0; i < MAX_CONN; i++)
+	for(int i = 0; i < getMaxConnection(); i++)
 	{
 		//clean pollfd stuct
 		memset(&connection_poll[i], 0, sizeof(pollfd));
@@ -50,9 +58,9 @@ void TCPPoll::status_check()
 		if (listen(this->sfds[i].getServerSocketFD(), 10) < 0)
 			throw NoListenException();
 	}
-	
+	std::cout << "Poll struct about to inizialised" << std::endl;
 	//init poll struct
-	for(int i = 0; i < MAX_CONN; i++)
+	for(int i = 0; i < getMaxConnection(); i++)
 	{
 		std::cout << "server filedescriptor: " << sfds[i].getServerSocketFD() << std::endl;
 		connection_poll[i].fd = sfds[i].getServerSocketFD();
@@ -61,7 +69,7 @@ void TCPPoll::status_check()
 	//mainloop 
 	while(1)
 	{
-		pollStatus = poll(connection_poll, (unsigned int) MAX_CONN, TIMEOUT);
+		pollStatus = poll(connection_poll, (unsigned int) getMaxConnection(), TIMEOUT);
 		switch (pollStatus)
 		{
 			case POLL_EXPIRE:
@@ -70,22 +78,22 @@ void TCPPoll::status_check()
 			case POLL_ERR:
 				cout << "Error on poll" << endl;
 			default:
-				for (i = 0; i < MAX_CONN; i++)
+				for (index = 0; index < getMaxConnection(); index++)
 				{
-					if (connection_poll[i].revents & POLL_IN)
+					if (connection_poll[index].revents & POLL_IN)
 					{
 						cout << "\n---------- We have a connection -----------\n\n";
-						acceptedFd = accept(sfds[i].getServerSocketFD(), (struct sockaddr *)&sfds[i]._address, (socklen_t *) &len);
+						acceptedFd = accept(sfds[index].getServerSocketFD(), (struct sockaddr *)&sfds[index]._address, (socklen_t *) &len);
 						//read and write to client
 						if (recv(acceptedFd, this->buffer, MAXBUFF, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
-						std::cout << "Port " << this->sfds[i].getPort(0) << " connected to client." << std::endl;	
+						std::cout << "Port " << this->sfds[index].getPort(0) << " connected to client." << std::endl;	
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						// std::cout << this->buffer << std::endl;
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
 						// std::cout << req << std::endl;
-						HttpAction act(req, this->sfds[i]);
+						HttpAction act(req, this->sfds[index]);
 						// HttpResponse resp(req, this->sfds[i]);
 						HttpResponse resp(act);
 						std::string respMsg(resp.genHttpResponseMsg(act));
@@ -97,6 +105,14 @@ void TCPPoll::status_check()
 				}
 		}
 	}
+}
+
+int TCPPoll::getMaxConnection(){
+	return (this->maxConnection);
+}
+
+void TCPPoll::setMaxConnection(int connectionAmount){
+	this->maxConnection = connectionAmount;
 }
 
 const char* TCPPoll::NoBindException::what() const throw()

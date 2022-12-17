@@ -6,12 +6,17 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:25:48 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/15 19:17:36 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/16 17:21:47 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CGI.hpp"
 
+/*
+** ----------------------- GLOBAL VARIABLES -----------------------
+*/
+
+string g_cgi_dir("./cgi-bin/");
 
 /*
 ** ----------------------- PRIVATE STATIC METHODS -----------------------
@@ -27,11 +32,16 @@ void	CGI::CGIError(string error_msg)
 ** ----------------------- PRIVATE METHODS -----------------------
 */
 
+// void	CGI::setEnv(void)
+// {
+// 	vector<string>	prepare_env;
+
+// 	prepare_env.push_back("SERVER_PROTOCOL=HTTP/1.1");
+// 	prepare_env.push_back("SERVER_PORT=" + )
+// }
+
 // string	CGI::executeCGI(void)
 // {
-// 	string	compile_cmd;
-
-// 	compile_cmd = "gcc ./cgi-bin/" + _program_name + " -o cgi_prg";
 // 	int pid;
 // 	int	pp[2];
 // 	if (pipe(pp) == -1)
@@ -59,7 +69,6 @@ void	CGI::CGIError(string error_msg)
 // 		close(fd[0]);
 // 	}
 // 	return (temp);
-// 	}
 // }
 
 /*
@@ -70,8 +79,14 @@ CGI::CGI(const HttpAction& http)
 {
 	//change later!!!
 	(void)http;
-	_program_name = "telephone.c";
-	_cgi_extension = ".c";
+	_program_name = "telephone.cgi";
+	_cgi_extension = ".cgi";
+}
+
+CGI::CGI()
+{
+	_program_name = "telephone.cgi";
+	_cgi_extension = ".cgi";
 }
 
 /*
@@ -85,7 +100,7 @@ bool	CGI::isCGI(const string& filename, const vector<string>& allowed_cgi_for_ro
 	if (filename.rfind('.') == string::npos)
 		return false;
 	string file_extension = filename.substr(filename.rfind('.'));
-	for (vector<string>::const_iterator i = allowed_cgi_for_route.cbegin(); i != allowed_cgi_for_route.end(); i++)
+	for (vector<string>::const_iterator i = allowed_cgi_for_route.begin(); i != allowed_cgi_for_route.end(); i++)
 	{
 		if (file_extension == *i)
 			return true;
