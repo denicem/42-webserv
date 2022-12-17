@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/17 16:48:01 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/17 17:02:34 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) {
 		std::cout << "File from server." << std::endl;
 		this->path = server.getRoot() + "/";
 		if (req.getURI() == "/")
-			this->path.append("index.html"); // TODO: replace "index.html" with server.getIndexFile() when it is available.
+			// this->path.append("index.html"); // TODO: replace "index.html" with server.getIndexFile() when it is available.
+			this->path.append(server.getIndexFile());
 		else if (req.getURI().find("favicon.ico") != std::string::npos)
 			this->path.append("favicon.ico");
 		else
