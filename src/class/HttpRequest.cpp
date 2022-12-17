@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/06 17:01:39 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2022/12/17 16:51:48 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ void HttpRequest::setRestEndpoint(const std::string& restEndpoint)
 std::ostream& operator<<(std::ostream& stream, const HttpRequest& req)
 {
 	stream << "***** REQUEST *****" << std::endl;
+	stream << "Request Line: " << req.firstLine << std::endl;
 	stream << "HTTP ver: " << req.httpVer << std::endl;
 	stream << "HTTP method: ";
 	switch (req.httpMethod) {
