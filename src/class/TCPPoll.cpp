@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/16 17:35:00 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/17 13:38:10 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,23 @@ TCPPoll::TCPPoll() {
 }
 
 void TCPPoll::add_fds(Server server) {
+	static int i = 0;
+	std::cout << "server " << i << "is being added to the list" << std::endl;
 	this->sfds.push_back(server);
+	if(i == 0)
+		this->setMaxConnection(1);
+	else
+		this->setMaxConnection(i);
+	i++;
 }
 
 void TCPPoll::status_check()
 {
+	std::cout << "status_check is starting: " << std::endl;
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
-	for(int i = 0; i < MAX_CONN; i++)
+	for(int i = 0; i < getMaxConnection(); i++)
 	{
 		//clean pollfd stuct
 		memset(&connection_poll[i], 0, sizeof(pollfd));
@@ -50,9 +58,9 @@ void TCPPoll::status_check()
 		if (listen(this->sfds[i].getServerSocketFD(), 10) < 0)
 			throw NoListenException();
 	}
-	
+	std::cout << "Poll struct about to inizialised" << std::endl;
 	//init poll struct
-	for(int i = 0; i < MAX_CONN; i++)
+	for(int i = 0; i < getMaxConnection(); i++)
 	{
 		std::cout << "server filedescriptor: " << sfds[i].getServerSocketFD() << std::endl;
 		connection_poll[i].fd = sfds[i].getServerSocketFD();
@@ -61,7 +69,7 @@ void TCPPoll::status_check()
 	//mainloop 
 	while(1)
 	{
-		pollStatus = poll(connection_poll, (unsigned int) MAX_CONN, TIMEOUT);
+		pollStatus = poll(connection_poll, (unsigned int) getMaxConnection(), TIMEOUT);
 		switch (pollStatus)
 		{
 			case POLL_EXPIRE:
@@ -70,7 +78,7 @@ void TCPPoll::status_check()
 			case POLL_ERR:
 				cout << "Error on poll" << endl;
 			default:
-				for (index = 0; index < MAX_CONN; index++)
+				for (index = 0; index < getMaxConnection(); index++)
 				{
 					if (connection_poll[index].revents & POLL_IN)
 					{
@@ -97,6 +105,14 @@ void TCPPoll::status_check()
 				}
 		}
 	}
+}
+
+int TCPPoll::getMaxConnection(){
+	return (this->maxConnection);
+}
+
+void TCPPoll::setMaxConnection(int connectionAmount){
+	this->maxConnection = connectionAmount;
 }
 
 const char* TCPPoll::NoBindException::what() const throw()

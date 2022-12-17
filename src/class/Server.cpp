@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 19:55:51 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/15 20:02:07 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,16 +91,8 @@ void Server::setLocations(map<string, struct RouteConfig> routs){
 	// Location locTmp;
 	//!DONT NO IF WORKS
 	for(;it != routs.end(); it++){
-		if((*it).second.alias.empty())
-		{	
-			Location locTmp((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), false);
-			this->locations.push_back(locTmp);
-		}
-		else {
-			Location locTmp((*it).first, (*it).second.alias, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), true);
-			this->locations.push_back(locTmp);
-		}
-		
+		Location locTmp((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), (*it).second.directory_listing);
+		this->locations.push_back(locTmp);	
 	}
 }
 
