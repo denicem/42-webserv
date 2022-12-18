@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/17 16:28:40 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/18 18:25:41 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "TCPPoll.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
+#include "ListingExcuter.hpp"
 #include "File.hpp"
 
 TCPPoll::TCPPoll() {
@@ -101,6 +102,7 @@ void TCPPoll::status_check()
 						// std::cout << req << std::endl;
 						HttpAction act(req, this->sfds[index]);
 						// HttpResponse resp(req, this->sfds[i]);
+						ListingExecuter listeningEx(this->sfds[index]);
 						HttpResponse resp(act);
 						std::string respMsg(resp.genHttpResponseMsg(act));
 						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
