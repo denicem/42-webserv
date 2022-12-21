@@ -42,7 +42,7 @@ $(NAME): $(OBJ)
 	@$(CC) $(CC_FLAGS) $(INCLUDE) $^ -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 	@printf $(GREEN)$(BOLD)"\t\tCOMPLETE!\n\n"$(RESET)
-	@printf $(MAGENTA)"\t\tName of executable: "$(BOLD)$(MAGENTA_BG)" $(NAME) "$(RESET)"\n\n"
+	@printf $(MAGENTA)"\t\tName of executable: "$(RESET)$(BOLD)$(MAGENTA_BG)" $(NAME) "$(RESET)"\n\n"
 
 $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 	@mkdir -p $(dir $@)
