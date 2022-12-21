@@ -77,6 +77,7 @@ void TCPPoll::status_check()
 				break;
 			case POLL_ERR:
 				cout << "Error on poll" << endl;
+				break ;
 			default:
 				for (index = 0; index < getMaxConnection(); index++)
 				{
