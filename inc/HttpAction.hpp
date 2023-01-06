@@ -46,6 +46,8 @@ class HttpAction: public HttpMessage {
 		HttpMethod getHttpMethod() const;
 		int getStatusCode() const;
 		File getFile() const;
+
+		void doAction();
 };
 
 #endif

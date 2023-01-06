@@ -88,17 +88,17 @@ HttpAction::HttpAction(const HttpRequest& req, const Server& server) {
 	std::cout << "Path: " << this->path << std::endl;
 	std::cout << "Destination: " << this->dest << std::endl;
 	std::cout << "METHOD: " << getHttpMethodStr(req.getHttpMethod()) << std::endl;
-	if (this->method == GET) // TODO: move this to a seperate func called doAction() ???
-	{
-		try {
-			this->file = File(this->path, this->dest);
-			this->statusCode = 200;
-		}
-		catch (File::FileNotFoundException& e) {
-			this->file = File("/404/404.html");
-			this->statusCode = 404;
-		}
-	}
+	// if (this->method == GET) // TODO: move this to a seperate func called doAction() ???
+	// {
+	// 	try {
+	// 		this->file = File(this->path, this->dest);
+	// 		this->statusCode = 200;
+	// 	}
+	// 	catch (File::FileNotFoundException& e) {
+	// 		this->file = File("/404/404.html");
+	// 		this->statusCode = 404;
+	// 	}
+	// }
 }
 
 HttpAction::~HttpAction() {}
@@ -126,6 +126,28 @@ File HttpAction::getFile() const {
 /*
 ** ----------------------- METHODS -----------------------
 */
+
+void HttpAction::doAction() {
+	std::cout << "doAction() called mofo." << std::endl;
+	if (this->method == GET)
+	{
+		try {
+			this->file = File(this->path, this->dest);
+			this->statusCode = 200;
+		}
+		catch (File::FileNotFoundException& e) {
+			this->file = File("/404/404.html");
+			this->statusCode = 404;
+		}
+	}
+	if (this->method == POST)
+	{
+		std::ofstream outfile("upload/test.txt");
+		outfile << this->msgBody;
+		this->statusCode = 201;
+		outfile.close();
+	}
+}
 
 /*
 ** ----------------------- EXCEPTIONS -----------------------

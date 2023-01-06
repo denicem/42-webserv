@@ -101,6 +101,7 @@ void TCPPoll::status_check()
 						std::cout << LIGHTBLUE << req << RESET << std::endl;
 						// std::cout << req << std::endl;
 						HttpAction act(req, this->sfds[index]);
+						act.doAction();
 						// HttpResponse resp(req, this->sfds[i]);
 						HttpResponse resp(act);
 						std::string respMsg(resp.genHttpResponseMsg(act));

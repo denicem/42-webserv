@@ -22,6 +22,7 @@
 std::string HttpResponse::getStatusMsg() const {
 	switch (this->statusCode) {
 		case 200: return ("OK");
+		case 201: return ("Created");
 		case 404: return ("Not Found");
 		case 405: return ("Method Not Allowed");
 		default: return ("undefined");
@@ -38,7 +39,9 @@ HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), statu
 HttpResponse::HttpResponse(const HttpAction& act) {
 	this->httpVer = act.getHttpVer();
 	this->msgBody = act.getMsgBody();
+
 	this->statusCode = act.getStatusCode();
+	this->file = act.getFile();
 }
 
 HttpResponse::~HttpResponse() {}
@@ -79,11 +82,20 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	std::stringstream stream;
 
 	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
-	if (act.getHttpMethod() == GET && act.getStatusCode() != 405) {
-		stream << "Content-Type: text/html\nContent-Length: " << act.getFile().getFileSize() << std::endl;
+	if (act.getStatusCode() != 405) {
+		stream << "Content-Type: text/";
+		// std::cout << req.getURI() << ": " << req.getRestEndpoint() << std::endl;
+		if (this->file.getFilename().find(".css") != std::string::npos)
+			stream << "css";
+		else if (this->file.getFilename().find(".html") != std::string::npos)
+			stream << "html";
 		stream << std::endl;
-		stream << act.getFile().getContent();
+		stream << "Content-Length: " << this->file.getFileSize() << std::endl;
+		stream << std::endl;
+		if (act.getHttpMethod() == GET)
+			stream << this->file.getContent();
 	}
+
 	return (stream.str());
 }
 
