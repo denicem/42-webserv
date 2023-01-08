@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   TCPPoll.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:23:50 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/16 17:34:11 by shaas            ###   ########.fr       */
+/*   Updated: 2022/12/17 13:32:25 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,16 @@ class TCPPoll
 		int pollStatus, index, acceptedFd;
 		size_t len;
 		char buffer[30000];
+		int maxConnection;
 		
 	public:
 		TCPPoll();
 		void add_fds(Server);
 		void status_check();
 		
+
+		int getMaxConnection();
+		void setMaxConnection(int);
 
 		class NoBindException: public exception
 		{

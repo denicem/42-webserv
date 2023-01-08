@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 20:15:11 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/08 23:46:57 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ Server::Server(const ServerConfig& config) {
 	this->ports.push_back(config.port);
 	this->clientMaxBody = config.max_client_body_size;
 	this->serverNames = config.server_names;
-	// this->indexFile = config.IndexFile; //TODO:
+	this->root = config.root;
+	this->indexFile = "index.html"; // TODO: should be replaced with the name from Config file.
 	setLocations(config.routes);
 }
 
@@ -45,10 +46,9 @@ string Server::getServerName() const {
 	return(this->serverName);
 }
 
-//TODO: mach dies getter für Dnice
-// string Server::getIndexFile() const{
-// 	return this.
-// }
+string Server::getIndexFile() const {
+	return (this->indexFile);
+}
 
 string Server::getRoot() const {
 	return(this->root);
@@ -86,13 +86,13 @@ void Server::setLocation(const Location &location){
 	this->locations.push_back(location);
 }
 
-void Server::setLocations(map<string, struct RouteConfig> routs){
+void Server::setLocations(map<string, struct RouteConfig> routs) {
 	map<string, RouteConfig>::iterator it = routs.begin();
-	// Location locTmp;
-	//!DONT NO IF WORKS
-	for(;it != routs.end(); it++){
-		Location locTmp((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), false);
-		this->locations.push_back(locTmp);
+	for (; it != routs.end(); ++it) {
+		// Location locTmp((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), (*it).second.directory_listing);
+		// this->locations.push_back(locTmp);
+
+		this->locations.push_back(Location((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), (*it).second.directory_listing));
 	}
 }
 

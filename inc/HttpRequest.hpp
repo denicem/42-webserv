@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:32:40 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/02 17:57:24 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/17 21:36:48 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ class HttpRequest: public HttpMessage {
 	private:
 		HttpMethod httpMethod;
 		std::string uri;
+		std::string path;
+		std::string query;
 		std::string restEndpoint;
 
 	public:
@@ -36,6 +38,8 @@ class HttpRequest: public HttpMessage {
 
 		HttpMethod getHttpMethod() const;
 		std::string getURI() const;
+		std::string getPath() const;
+		std::string getQuery() const;
 		std::string getRestEndpoint() const;
 
 		void setHttpMethod(const HttpMethod&);

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:30:29 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/12 22:44:41 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/17 16:56:16 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-Location::Location(const std::string& name, const std::string& root, const std::string& index, const std::vector<HttpMethod>& allowedMethods, bool isAlias = false)
-	: name(name), root(root), index(index), allowedMethods(allowedMethods), isAlias(isAlias)
+Location::Location(const std::string& name, const std::string& root, const std::string& index, const std::vector<HttpMethod>& allowedMethods, bool directoryListing = false)
+	: name(name), root(root), index(index), allowedMethods(allowedMethods), directoryListing(directoryListing)
 {
-	this->path = !this->isAlias ? root + name : root;
+	std::cout << this->directoryListing << std::endl;
 }
 
 /*
@@ -41,8 +41,8 @@ std::string Location::getName() const {
 	return (this->name);
 }
 
-std::string Location::getPath() const {
-	return (this->path);
+std::string Location::getRoot() const {
+	return (this->root);
 }
 
 std::string Location::getIndex() const {
@@ -76,7 +76,6 @@ std::ostream& operator<<(std::ostream& stream, const Location& loc)
 	stream << "***** LOCATION *****" << std::endl;
 	stream << "Name: " << loc.name << std::endl;
 	stream << "Root: " << loc.root << std::endl;
-	stream << "Path: " << loc.path << (loc.isAlias ? "(Alias)" : "") << std::endl;
 	stream << "Index/Default file: " << loc.index << std::endl;
 	stream << "Allowed Methods: ";
 	if (loc.allowedMethods.empty())

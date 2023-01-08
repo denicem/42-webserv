@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 01:20:57 by dmontema         ###   ########.fr       */
+/*   Updated: 2022/12/17 17:02:34 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,19 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) {
 
 		if (req.getURI().find(tmp.getName()) != std::string::npos && req.getURI().find(".") == std::string::npos) { // if URI has no specific destination, route to index file
 			std::cout << "index file for location " << tmp.getName() << std::endl;
-			this->path = tmp.getPath() + "/" + tmp.getIndex();
+			this->path = tmp.getRoot() + "/" + tmp.getIndex();
 		}
 		else {
 			std::cout << "Destination file for location " << tmp.getName() << std::endl;
-			this->path = tmp.getPath() + "/" + req.getURI().substr(tmp.getName().size() + 1);
+			this->path = tmp.getRoot() + "/" + req.getURI().substr(tmp.getName().size() + 1);
 		}
 	}
 	else {
 		std::cout << "File from server." << std::endl;
 		this->path = server.getRoot() + "/";
 		if (req.getURI() == "/")
-			this->path.append("index.html"); // TODO: replace "index.html" with server.getIndexFile() when it is available.
+			// this->path.append("index.html"); // TODO: replace "index.html" with server.getIndexFile() when it is available.
+			this->path.append(server.getIndexFile());
 		else if (req.getURI().find("favicon.ico") != std::string::npos)
 			this->path.append("favicon.ico");
 		else
