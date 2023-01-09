@@ -29,6 +29,7 @@ int main(int argc, char** argv, char** env)
 	if (name.empty())
 		name = "<Unknown>";
 
+	printf("Content-type: text/plain\n\n");
 	printf("\n");
 	printf("   //\\\n");
 	printf("  | \\/ ~~ Hello %s, CPP-written CGI speaking?\n", name.c_str());

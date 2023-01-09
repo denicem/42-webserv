@@ -23,8 +23,12 @@ class Server;
 
 /* for Docker: define macros */
 #ifdef __linux__
-	#define POLL_IN POLLIN
-	#define POLL_ERR POLLERR
+	#ifndef POLL_IN 
+		#define POLL_IN POLLIN 
+	#endif
+	#ifndef POLL_ERR
+		#define POLL_ERR POLLERR
+	#endif
 #endif
 
 /* MODIFIABLE FEATURES */

@@ -6,13 +6,18 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 17:24:27 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/16 20:19:28 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/09 05:22:32 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Webserv.hpp"
+#include <cstring>
+#include <sys/wait.h>
+
+#define WRITE 1
+#define READ 0
 
 extern string g_cgi_dir;
 
@@ -23,6 +28,7 @@ class CGI
 	private:
 		string	_program_name;
 		string	_cgi_extension;
+		string	_input_content;
 
 		/* ENV FOR CGI */
 		string	_server_name;
@@ -45,7 +51,7 @@ class CGI
 		CGI(); // for testing
 		/* assumes the request has already been established as valid for CGI */
 		CGI(const HttpAction& http);
-		~CGI() {}
+		~CGI();
 
 		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method);
 		string		executeCGI(void);
