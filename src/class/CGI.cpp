@@ -134,8 +134,9 @@ CGI::CGI(const HttpAction& http)
 
 CGI::CGI()
 {
-	_program_name = "telephone.cgi";
-	_cgi_extension = ".cgi";
+	_program_name = "telephone.py";
+	_cgi_extension = ".py";
+	_query_string = "name=Maja";
 	this->setEnv(); // temporary
 }
 
