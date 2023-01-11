@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2022/12/17 16:28:40 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/11 19:15:14 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void TCPPoll::status_check()
 						std::cout << LIGHTBLUE << req << RESET << std::endl;
 						// std::cout << req << std::endl;
 						HttpAction act(req, this->sfds[index]);
-						act.doAction();
+						act.doAction(this->sfds[index]);
 						// HttpResponse resp(req, this->sfds[i]);
 						HttpResponse resp(act);
 						std::string respMsg(resp.genHttpResponseMsg(act));

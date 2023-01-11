@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpAction.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 21:22:59 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/11 17:31:09 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class HttpAction: public HttpMessage {
 		int getStatusCode() const;
 		File getFile() const;
 
-		void doAction();
+		void doAction(const Server&);
 };
 
 #endif

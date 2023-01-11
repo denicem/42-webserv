@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   File.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/16 17:26:20 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/11 17:55:26 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,7 @@ File::File(const File& other): filename(other.filename), path(other.path), conte
 
 File::File(const std::string& path): path(path)
 {
-	this->changeToRootOrFavicon();
-	std::ifstream file (("html" + this->path).c_str());
+	std::ifstream file (this->path.c_str());
 	if (!file.is_open())
 		throw FileNotFoundException();
 	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
