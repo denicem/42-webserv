@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/11 19:25:14 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/11 20:19:18 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void HttpAction::initVars(const HttpRequest& req, const Server& server) {
 
 void HttpAction::setPath(const HttpRequest& req, const Server& server) {
 	int locIndex = getLocationIndex(req.getURI(), server);
+	this->location = locIndex;
 
 	if (locIndex >= 0) {
 		Location tmp(server.getLocation(locIndex));
@@ -128,24 +129,31 @@ File HttpAction::getFile() const {
 
 void HttpAction::doAction(const Server& server) {
 	std::cout << "doAction() called mofo." << std::endl;
-
-	if (this->method == GET)
+	if (isMethodAllowed(this->method, server.getLocation(location)))
 	{
-		try {
-			this->file = File(this->path, this->dest);
-			this->statusCode = 200;
+		if (this->method == GET)
+		{
+			try {
+				this->file = File(this->path, this->dest);
+				this->statusCode = 200;
+			}
+			catch (File::FileNotFoundException& e) {
+				this->statusCode = 404;
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
 		}
-		catch (File::FileNotFoundException& e) {
-			this->statusCode = 404;
-			this->file = File(server.getErrorPage(this->statusCode));
+		if (this->method == POST)
+		{
+			std::ofstream outfile("upload/test.txt");
+			outfile << this->msgBody;
+			this->statusCode = 201;
+			outfile.close();
 		}
 	}
-	if (this->method == POST)
+	else
 	{
-		std::ofstream outfile("upload/test.txt");
-		outfile << this->msgBody;
-		this->statusCode = 201;
-		outfile.close();
+		this->statusCode = 405;
+		this->file = File(server.getErrorPage(405));
 	}
 }
 

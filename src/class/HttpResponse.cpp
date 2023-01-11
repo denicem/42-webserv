@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/03 18:17:32 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/11 20:10:18 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	std::stringstream stream;
 
 	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
-	if (act.getStatusCode() != 405) {
+	// if (act.getStatusCode() != 405) {
 		stream << "Content-Type: text/";
 		// std::cout << req.getURI() << ": " << req.getRestEndpoint() << std::endl;
 		if (this->file.getFilename().find(".css") != std::string::npos)
@@ -94,7 +94,7 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 		stream << std::endl;
 		if (act.getHttpMethod() == GET)
 			stream << this->file.getContent();
-	}
+	// }
 
 	return (stream.str());
 }

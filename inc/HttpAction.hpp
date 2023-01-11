@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/11 17:31:09 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/11 19:49:27 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class HttpAction: public HttpMessage {
 		int statusCode;
 		File file;
 
+		int location;
 		std::string path;
 		std::string dest;
 
