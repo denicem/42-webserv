@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/11 20:19:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/12 00:26:02 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,31 +129,31 @@ File HttpAction::getFile() const {
 
 void HttpAction::doAction(const Server& server) {
 	std::cout << "doAction() called mofo." << std::endl;
-	if (isMethodAllowed(this->method, server.getLocation(location)))
-	{
-		if (this->method == GET)
-		{
-			try {
-				this->file = File(this->path, this->dest);
-				this->statusCode = 200;
-			}
-			catch (File::FileNotFoundException& e) {
-				this->statusCode = 404;
-				this->file = File(server.getErrorPage(this->statusCode));
-			}
-		}
-		if (this->method == POST)
-		{
-			std::ofstream outfile("upload/test.txt");
-			outfile << this->msgBody;
-			this->statusCode = 201;
-			outfile.close();
+
+	if (this->location >= 0) {
+		if (!isMethodAllowed(this->method, server.getLocation(this->location))) {
+			this->statusCode = 405;
+			this->file = File(server.getErrorPage(404));
+			return ;
 		}
 	}
-	else
+	if (this->method == GET)
 	{
-		this->statusCode = 405;
-		this->file = File(server.getErrorPage(405));
+		try {
+			this->file = File(this->path, this->dest);
+			this->statusCode = 200;
+		}
+		catch (File::FileNotFoundException& e) {
+			this->statusCode = 404;
+			this->file = File(server.getErrorPage(this->statusCode));
+		}
+	}
+	if (this->method == POST)
+	{
+		std::ofstream outfile("upload/test.txt");
+		outfile << this->msgBody;
+		this->statusCode = 201;
+		outfile.close();
 	}
 }
 
