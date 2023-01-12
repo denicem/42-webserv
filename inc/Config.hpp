@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2023/01/12 18:47:05 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/12 19:21:34 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ struct ServerConfig
 	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page. path from webserv root, not server root
 	map<string, RouteConfig>	routes; // "string" element of map is name of route
 
-	ServerConfig(): max_client_body_size(0) {}
+	ServerConfig(): max_client_body_size(-1) {}
 	ServerConfig(const ServerConfig& orig);
 };
 

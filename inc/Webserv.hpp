@@ -22,10 +22,14 @@ using namespace std;
 class Server;
 
 /* for Docker: define macros */
-#ifdef __linux__
-	#define POLL_IN POLLIN
-	#define POLL_ERR POLLERR
-#endif
+//#ifdef __linux__
+//	#ifndef POLL_IN 
+//		#define POLL_IN POLLIN 
+//	#endif
+//	#ifndef POLL_ERR
+//		#define POLL_ERR POLLERR
+//	#endif
+//#endif
 
 /* MODIFIABLE FEATURES */
 
