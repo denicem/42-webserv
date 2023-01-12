@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/11 17:39:27 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/12 18:58:41 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ Server::Server(const ServerConfig& config) {
 	this->clientMaxBody = config.max_client_body_size;
 	this->serverNames = config.server_names;
 	this->root = config.root;
-	this->indexFile = "index.html"; // TODO: should be replaced with the name from Config file.
+	this->indexFile = config.default_file;
 	setLocations(config.routes);
 	this->error_pages = config.error_pages;
 }
