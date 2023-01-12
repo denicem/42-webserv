@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/11 17:32:19 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/12 23:20:21 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,12 @@
 #include <string>
 #include <vector>
 
-
 #include "Webserv.hpp"
 #include "Location.hpp"
 #include "Config.hpp"
 #include "HttpMethod.hpp"
 
 #define SCK_ADDR sockaddr_in
-
-#define PORT 8080
 
 class Location;
 
@@ -40,19 +37,16 @@ class Server
 	private:
 		string serverName;
 		vector<string> serverNames;
-		// int onePort;
 		int clientMaxBody;
 		string root;
 		string indexFile;
-		//string index/default_file -> TODO:
 		vector<int> ports;
-		vector<Location> locations;
+		vector<Location> locations; // NOTE: Locations as a map<string, Location> with location name as Key??
 		map<int, string> error_pages;
-		// NOTE: Locations as a map<string, Location> with location name as Key
+		
 
 		/* for TCP */
 		int serverSocketFD;
-		// size_t len;	
 	public:
 		SCK_ADDR _address;
 		Server(const string&, const string&, const vector<Location> &);

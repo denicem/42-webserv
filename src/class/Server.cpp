@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/08 23:46:57 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/13 00:06:01 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,10 @@ void Server::setLocation(const Location &location){
 	this->locations.push_back(location);
 }
 
-void Server::setLocations(map<string, struct RouteConfig> routs) {
-	map<string, RouteConfig>::iterator it = routs.begin();
-	for (; it != routs.end(); ++it) {
-		// Location locTmp((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), (*it).second.directory_listing);
-		// this->locations.push_back(locTmp);
-
+void Server::setLocations(map<string, struct RouteConfig> routes) {
+	map<string, RouteConfig>::iterator it = routes.begin();
+	for (; it != routes.end(); ++it)
 		this->locations.push_back(Location((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), (*it).second.directory_listing));
-	}
 }
 
 /*
@@ -107,9 +103,7 @@ void Server::setLocations(map<string, struct RouteConfig> routs) {
 */
 
 void Server::initSockAddr(int len, int index) {
-	// std::cout << "len: " << len << "index: " << index << std::endl;
 	this->serverSocketFD = socket(AF_INET, SOCK_STREAM, 0);
-	// std::cout << "HEHEHEH" << std::endl;
 	if (this->serverSocketFD == 0)
 		throw NoSocketException();
 	memset(&this->_address, 0, sizeof(SCK_ADDR));
