@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/15 17:31:44 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2023/01/11 17:32:19 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Server
 		//string index/default_file -> TODO:
 		vector<int> ports;
 		vector<Location> locations;
+		map<int, string> error_pages;
 		// NOTE: Locations as a map<string, Location> with location name as Key
 
 		/* for TCP */
@@ -63,6 +64,7 @@ class Server
 		Location						getLocation(const int) const;
 		const std::vector<Location>&	getLocations() const;
 		int 							getServerSocketFD() const;
+		string							getErrorPage(int) const;
 
 		void	setServerName(string&);
 		void	setPort(int);

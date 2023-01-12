@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/17 17:02:34 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/12 20:00:22 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void HttpAction::initVars(const HttpRequest& req, const Server& server) {
 
 void HttpAction::setPath(const HttpRequest& req, const Server& server) {
 	int locIndex = getLocationIndex(req.getURI(), server);
+	this->location = locIndex;
 
 	if (locIndex >= 0) {
 		Location tmp(server.getLocation(locIndex));
@@ -50,7 +51,6 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) {
 		std::cout << "File from server." << std::endl;
 		this->path = server.getRoot() + "/";
 		if (req.getURI() == "/")
-			// this->path.append("index.html"); // TODO: replace "index.html" with server.getIndexFile() when it is available.
 			this->path.append(server.getIndexFile());
 		else if (req.getURI().find("favicon.ico") != std::string::npos)
 			this->path.append("favicon.ico");
@@ -78,6 +78,15 @@ int HttpAction::getLocationIndex(const string& uri, const Server& server) const 
 	return (-1);
 }
 
+std::string HttpAction::getDefaultErrorPage(int err_code) const {
+	switch(err_code) {
+		case 404: return (ERROR_PAGE_404);
+		case 405: return (ERROR_PAGE_405);
+		case 501: return (ERROR_PAGE_501);
+		default: return ("");
+	}
+}
+
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
@@ -88,17 +97,6 @@ HttpAction::HttpAction(const HttpRequest& req, const Server& server) {
 	std::cout << "Path: " << this->path << std::endl;
 	std::cout << "Destination: " << this->dest << std::endl;
 	std::cout << "METHOD: " << getHttpMethodStr(req.getHttpMethod()) << std::endl;
-	if (this->method == GET) // TODO: move this to a seperate func called doAction() ???
-	{
-		try {
-			this->file = File(this->path, this->dest);
-			this->statusCode = 200;
-		}
-		catch (File::FileNotFoundException& e) {
-			this->file = File("/404/404.html");
-			this->statusCode = 404;
-		}
-	}
 }
 
 HttpAction::~HttpAction() {}
@@ -126,6 +124,46 @@ File HttpAction::getFile() const {
 /*
 ** ----------------------- METHODS -----------------------
 */
+
+void HttpAction::doAction(const Server& server) {
+	std::cout << "doAction() called mofo." << std::endl;
+
+	if (this->location >= 0) {
+		if (!isMethodAllowed(this->method, server.getLocation(this->location))) {
+			this->statusCode = 405;
+			try {
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
+			catch (std::out_of_range &e) {
+				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			}
+			return ;
+		}
+	}
+	if (this->method == GET)
+	{
+		try {
+			this->file = File(this->path, this->dest);
+			this->statusCode = 200;
+		}
+		catch (File::FileNotFoundException& e) {
+			this->statusCode = 404;
+			try {
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
+			catch (std::out_of_range &e) {
+				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			}
+		}
+	}
+	if (this->method == POST)
+	{
+		std::ofstream outfile("upload/test.txt");
+		outfile << this->msgBody;
+		this->statusCode = 201;
+		outfile.close();
+	}
+}
 
 /*
 ** ----------------------- EXCEPTIONS -----------------------

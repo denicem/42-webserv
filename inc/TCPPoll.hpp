@@ -59,7 +59,7 @@ class TCPPoll
 		
 
 		int getMaxConnection();
-		void setMaxConnection(int);
+		void setMaxConnection();
 
 		class NoBindException: public exception
 		{

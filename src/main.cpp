@@ -79,17 +79,20 @@ std::cout << "\e[31m servers are being inizialised\e[0m" << std::endl;
 			servers.push_back(s);
 			dmsServer.addServer(servers[i]);
 		}
-		// for(size_t i = 0; i < servers.size(); i++)
-		// 	std::cout << "Server: " << servers.at(i).getPort(0) << std::endl;
-		// std::cout << "server name: " << *dmsServer.getServer(0).getServernameList().begin() << std::endl;
+		for(size_t i = 0; i < servers.size(); i++) {
+			std::cout << "Server: " << servers.at(i).getPort(0) << std::endl;
+			std::cout << "server name: " << *dmsServer.getServer(i).getServernameList().begin() << std::endl;
+
+		}
 
 std::cout << "\e[31m server fds being added to poll\e[0m" << std::endl;
 		for (size_t i = 0; i < server_data.size(); i++)
 		{
 			std::cout << "i in Loop is: " << i << std::endl;
 			tcpPoll.add_fds(dmsServer.getServer(i));
-			// std::cout << "server port: " << dmsServer.getServer(i) << std::endl;
+			// std::cout << "server port: " << dmsServer.getServer(i).getServerName() << std::endl;
 		}
+		tcpPoll.setMaxConnection();
 		// 	tcpPoll.add_fds(Server(PORT + i, "simple"));
 std::cout << "\e[31m status check is being called\e[0m" << std::endl;
 		

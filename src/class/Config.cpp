@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2022/12/15 19:53:43 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/12 18:50:15 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,12 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 			configError(_line_num, "Cannot access root directory");
 		server->root = _line;
 		
+	}
+	else if (setting == "default_file")
+	{
+		if (settingHasMultipleValues(_line))
+			configError(_line_num, "default_file can only have one value");
+		server->default_file = _line;
 	}
 	else if (setting == "max_client_body_size")
 	{
@@ -410,6 +416,7 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 	this->_server_settings["server_names"] = Setting(false);
 	this->_server_settings["port"] = Setting(true);
 	this->_server_settings["root"] = Setting(true);
+	this->_server_settings["default_file"] = Setting(true);
 	this->_server_settings["max_client_body_size"] = Setting(false);
 	this->_server_settings["error_pages"] = Setting(false);
 
@@ -430,7 +437,8 @@ Config::Config(string filePath): _config_stream(filePath.c_str()), _file_locatio
 }
 
 ServerConfig::ServerConfig(const ServerConfig& orig): server_names(orig.server_names), port(orig.port), root(orig.root),
-		max_client_body_size(orig.max_client_body_size), error_pages(orig.error_pages), routes(orig.routes) { }
+		default_file(orig.default_file), max_client_body_size(orig.max_client_body_size),
+		error_pages(orig.error_pages), routes(orig.routes) { }
 
 RouteConfig::RouteConfig(const RouteConfig& orig): http_redirect(orig.http_redirect), http_methods(orig.http_methods),
 		root(orig.root), directory_listing(orig.directory_listing), default_file(orig.default_file),
@@ -468,6 +476,7 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 		}
 		cout << "\n\n" << BLUE << "Port:	" << RESET << server->port << "\n\n";
 		cout << BLUE << "Root:	" << RESET << server->root << "\n\n";
+		cout << BLUE << "Default file:	" << RESET << server->default_file << "\n\n";
 		cout << BLUE << "Max client body size: " << RESET << server->max_client_body_size << "\n\n";
 		cout << BLUE_BG << "Error Pages" << RESET << '\n';
 		for (map<int, string>::const_iterator page = server->error_pages.begin(); page != server->error_pages.end(); page++) {

@@ -72,6 +72,7 @@ struct ServerConfig
 	vector<string>				server_names; // can be empty, then no server names
 	int							port;
 	string						root; // root dir for this server
+	string						default_file; // relative to root.
 	int							max_client_body_size; //in bytes. if 0, allow infinite size
 	map<int, string>			error_pages; // "int" is error code, "string" is the corresponding page. path from webserv root, not server root
 	map<string, RouteConfig>	routes; // "string" element of map is name of route
