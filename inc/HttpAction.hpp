@@ -6,12 +6,16 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/11 19:49:27 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/12 18:25:19 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HTTP_ACTION_HPP
 #define HTTP_ACTION_HPP
+
+#define ERROR_PAGE_404 "./error/404.html"
+#define ERROR_PAGE_405 "./error/405.html"
+#define ERROR_PAGE_501 "./error/501.html"
 
 #include "File.hpp"
 #include "HttpMessage.hpp"
@@ -35,6 +39,7 @@ class HttpAction: public HttpMessage {
 		bool isMethodAllowed(const int, const Location&) const;
 		int getLocationIndex(const std::string&, const Server&) const;
 		bool isDestination(const std::string&) const;
+		std::string getDefaultErrorPage(int) const;
 
 	public:
 		HttpAction();

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/11 20:10:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/12 18:25:05 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ std::string HttpResponse::getStatusMsg() const {
 		case 201: return ("Created");
 		case 404: return ("Not Found");
 		case 405: return ("Method Not Allowed");
+		case 501: return ("Not Implemented.");
 		default: return ("undefined");
 	}
 }
