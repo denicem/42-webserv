@@ -135,10 +135,8 @@ CGI::CGI(const HttpAction& http)
 
 CGI::CGI()
 {
-	_program_name = "ubuntu_cgi_tester.cgi";
-	_cgi_extension = ".cgi";
-	_query_string = "name=Maja";
-	_request_method = "GET";
+	_program_name = "webscrap_mal.py";
+	_cgi_extension = ".py";
 	this->setEnv(); // temporary
 }
 

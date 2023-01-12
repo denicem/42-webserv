@@ -6,7 +6,7 @@
 #    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2023/01/12 19:03:51 by shaas            ###   ########.fr        #
+#    Updated: 2023/01/12 20:16:06 by shaas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ ifeq ( , $(findstring .dockerenv, $(ISDOCKER)))
 else
 	CC = g++
 endif
+BS4INSTALLED := $(shell pip3 show bs4 | grep Name)
 
 CC_FLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
@@ -43,7 +44,7 @@ INCLUDE := -I./inc/
 #	RULES																	   #
 # **************************************************************************** #
 
-all: $(CGI_OBJ) $(NAME)
+all: bs4 $(CGI_OBJ) $(NAME)
 
 $(NAME): $(OBJ)
 	@printf $(BLUE)"Linking objects to a binary file\r"$(RESET)
@@ -63,6 +64,12 @@ $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
 	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
 	@$(CC) -c $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
+
+bs4:
+ifeq ( , $(BS4INSTALLED))
+	@pip install bs4
+	@printf $(CYAN)$(BOLD)"Required Python packages for CGI installed [✓]\n"$(RESET)
+endif
 
 clean:
 	@printf $(MAGENTA)"Removing object files...\r"$(RESET)
