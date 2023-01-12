@@ -47,6 +47,7 @@ void	CGI::setEnv(void)
 	prepare_env.push_back("SERVER_NAME=" + _server_name);
 	prepare_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
 	prepare_env.push_back("SERVER_PORT=" + intToString(_server_port));
+	prepare_env.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	prepare_env.push_back("REQUEST_METHOD=" + _request_method);
 	prepare_env.push_back("PATH_INFO=" + _path_info);
 	prepare_env.push_back("PATH_TRANSLATED=" + _path_info);
@@ -134,9 +135,10 @@ CGI::CGI(const HttpAction& http)
 
 CGI::CGI()
 {
-	_program_name = "telephone.py";
-	_cgi_extension = ".py";
+	_program_name = "ubuntu_cgi_tester.cgi";
+	_cgi_extension = ".cgi";
 	_query_string = "name=Maja";
+	_request_method = "GET";
 	this->setEnv(); // temporary
 }
 
