@@ -12,6 +12,11 @@
 
 # Object files
 *.o
+*.cgi
+
+# CGI tester
+!cgi_tester.cgi
+!ubuntu_cgi_tester.cgi
 
 # Executables
 *.out

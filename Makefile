@@ -6,7 +6,7 @@
 #    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2022/12/06 16:18:57 by shaas            ###   ########.fr        #
+#    Updated: 2023/01/12 19:03:51 by shaas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,9 +25,17 @@ DIR_OBJ = obj/
 
 DIR_SRC = src/
 
+DIR_CGI_SRC = cgi-bin/cgi-src/
+
+DIR_CGI_OBJ = cgi-bin/
+
 SRC := $(shell find $(DIR_SRC) -name "*.cpp")
 
 OBJ := $(patsubst $(DIR_SRC)%.cpp, $(DIR_OBJ)%.o, $(SRC))
+
+CGI_SRC := $(shell find $(DIR_CGI_SRC) -name "*.cpp")
+
+CGI_OBJ := $(patsubst $(DIR_CGI_SRC)%.cpp, $(DIR_CGI_OBJ)%.cgi, $(CGI_SRC))
 
 INCLUDE := -I./inc/
 
@@ -35,7 +43,7 @@ INCLUDE := -I./inc/
 #	RULES																	   #
 # **************************************************************************** #
 
-all: $(NAME)
+all: $(CGI_OBJ) $(NAME)
 
 $(NAME): $(OBJ)
 	@printf $(BLUE)"Linking objects to a binary file\r"$(RESET)
@@ -50,6 +58,12 @@ $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 	@$(CC) $(CC_FLAGS) $(INCLUDE) -c $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
+$(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
+	@mkdir -p $(dir $@)
+	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
+	@$(CC) -c $< -o $@
+	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
+
 clean:
 	@printf $(MAGENTA)"Removing object files...\r"$(RESET)
 	@rm -rf $(DIR_OBJ)
@@ -58,6 +72,7 @@ clean:
 fclean: clean
 	@printf $(MAGENTA)"Removing binary file...\r"$(RESET)
 	@rm -rf $(NAME)
+	@rm -rf $(CGI_OBJ)
 	@printf $(SPACE)$(GREEN)"[✓]\n\n"$(RESET)
 
 re: fclean all
