@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
+#    By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2023/01/12 20:16:06 by shaas            ###   ########.fr        #
+#    Updated: 2023/01/12 20:39:16 by dmontema         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
 
 bs4:
 ifeq ( , $(BS4INSTALLED))
-	@pip install bs4
+	@pip3 --disable-pip-version-check install bs4 > /dev/null
 	@printf $(CYAN)$(BOLD)"Required Python packages for CGI installed [✓]\n"$(RESET)
 endif
 
