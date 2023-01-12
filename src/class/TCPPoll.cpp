@@ -22,19 +22,22 @@ TCPPoll::TCPPoll() {
 }
 
 void TCPPoll::add_fds(Server server) {
-	static int i = 0;
-	std::cout << "server " << i << "is being added to the list" << std::endl;
+	// static int i = 0;
+	// std::cout << BLUE << "server " << i << " is being added to the list" << RESET << std::endl;
+	// std::cout << BLUE << "sever Name: " << server.getServernameList()[0] << RESET << std::endl;
 	this->sfds.push_back(server);
-	if(i == 0)
-		this->setMaxConnection(1);
-	else
-		this->setMaxConnection(i);
-	i++;
+	// if(i == 0)
+		// this->setMaxConnection(1);
+	// else {
+		// this->setMaxConnection();
+	// }
+	// i++;
 }
 
 void TCPPoll::status_check()
 {
 	std::cout << "status_check is starting: " << std::endl;
+	std::cout << BLUE << "Max Connection are: " << getMaxConnection() << RESET << std::endl;
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
@@ -119,8 +122,14 @@ int TCPPoll::getMaxConnection(){
 	return (this->maxConnection);
 }
 
-void TCPPoll::setMaxConnection(int connectionAmount){
-	this->maxConnection = connectionAmount;
+void TCPPoll::setMaxConnection(){
+	int connectionAmount = 1;
+
+	for(size_t i = 0; i < sfds.size(); i++, connectionAmount++)
+	{
+		std::cout << "i: " << i << std::endl;
+		this->maxConnection = connectionAmount;
+	}
 }
 
 const char* TCPPoll::NoBindException::what() const throw()
