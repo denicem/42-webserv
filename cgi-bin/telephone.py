@@ -2,7 +2,7 @@ import os
 import sys
 
 def print_phone(the_name):
-	print("Content-type: text/plain\n\n")
+	print("Content-type: text/plain\r\n\r\n")
 	print("")
 	print("   //\\")
 	print("  | \\/ ~~ Hello " + the_name + ", Python CGI speaking?")

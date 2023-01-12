@@ -3,6 +3,8 @@ import requests, csv
 
 url_link = "https://myanimelist.net/topanime.php?type=tv&limit="
 
+print("Content-type: text/plain\r\n\r\n")
+
 with open("myAnimeList.csv", "w") as file:
 	header = ["Rank", "Title", "Episodes", "Airing Time", "Score"]
 	w = csv.writer(file, delimiter=',')
