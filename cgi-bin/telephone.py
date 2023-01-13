@@ -21,6 +21,7 @@ if QUERY_STRING is None:
 	sys.exit(0)
 
 if QUERY_STRING.find('name') == -1:
+	print_phone("<Unknown>")
 	sys.exit(1)
 
 array = QUERY_STRING.split('=')
