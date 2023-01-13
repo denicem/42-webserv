@@ -6,19 +6,19 @@
 #    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2023/01/12 22:52:38 by shaas            ###   ########.fr        #
+#    Updated: 2023/01/13 19:20:10 by shaas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = webserv
 
+BS4INSTALLED := $(shell pip3 show bs4 | grep Name)
 ISDOCKER := $(shell ls -a /)
 ifeq ( , $(findstring .dockerenv, $(ISDOCKER)))
 	CC = c++
 else
 	CC = g++
 endif
-BS4INSTALLED := $(shell pip3 show bs4 | grep Name)
 
 CC_FLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
@@ -61,8 +61,7 @@ $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 
 $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
 	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
-	@$(CC) -c $< -o $@
-	@chmod 777 $(DIR_CGI_OBJ)*
+	@$(CC) $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 bs4:

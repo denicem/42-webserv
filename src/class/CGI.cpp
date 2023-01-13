@@ -98,8 +98,8 @@ string	CGI::executeCGI(void)
 				CGIError("Could not execute binary CGI program");
 		}
 		else if (_cgi_extension == ".py") {
-			if (execle("/usr/bin/python3", "python3", ("./cgi-bin/" + _program_name).c_str(), (char*)NULL, _env) == -1 )
-				std::cerr << "Could not execute Python CGI program\n";
+			if (execle("/usr/bin/python3", "python3", ("./cgi-bin/" + _program_name).c_str(), (char*)NULL, _env) == -1)
+				CGIError("Could not execute Python CGI program");
 		}
 		else
 			CGIError("Invalid CGI extension");
@@ -135,8 +135,8 @@ CGI::CGI(const HttpAction& http)
 
 CGI::CGI()
 {
-	_program_name = "webscrap_mal.py";
-	_cgi_extension = ".py";
+	_program_name = "telephone.cgi";
+	_cgi_extension = ".cgi";
 	this->setEnv(); // temporary
 }
 
