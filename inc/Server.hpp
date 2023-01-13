@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 01:03:13 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/13 17:27:14 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ class Server
 		string indexFile;
 		vector<int> ports;
 		vector<Location> locations; // NOTE: Locations as a map<string, Location> with location name as Key??
-		map<string, Route> routes;
+		vector<Route> routes;
 		map<int, string> error_pages;
 		
 

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 00:23:37 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 01:36:45 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/13 17:30:27 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 
 Route::Route() {}
 
-Route::Route(const RouteConfig& r_conf):
+Route::Route(const std::string& name, const RouteConfig& r_conf):
+	name(name),
 	http_redirect(r_conf.http_redirect),
 	root(r_conf.root),
 	dir_list(r_conf.directory_listing),
@@ -65,6 +66,7 @@ Route::Route(const RouteConfig& r_conf):
 std::ostream& operator<<(std::ostream& stream, const Route& r) {
 	stream << "***** Route *****" << std::endl;
 
+	stream << "Name: " << r.name << std::endl;
 	stream << "Allowed Methods: ";
 	for (std::vector<HttpMethod>::size_type i = 0; i < r.http_methods.size(); ++i) {
 		if (i) stream << " ";

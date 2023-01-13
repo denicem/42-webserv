@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 00:09:17 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 01:28:43 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/13 17:26:10 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ struct RouteConfig;
 
 class Route {
 	private:
+		std::string name;
 		std::vector<HttpMethod> http_methods;
 		std::string http_redirect;
 		std::string root;
@@ -34,7 +35,7 @@ class Route {
 
 	public:
 		Route();
-		Route(const RouteConfig&);
+		Route(const std::string&, const RouteConfig&);
 
 		friend std::ostream& operator<<(std::ostream&, const Route&);
 };
