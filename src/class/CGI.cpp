@@ -135,8 +135,8 @@ CGI::CGI(const HttpAction& http)
 
 CGI::CGI()
 {
-	_program_name = "webscrap_mal.py";
-	_cgi_extension = ".py";
+	_program_name = "telephone.cgi";
+	_cgi_extension = ".cgi";
 	this->setEnv(); // temporary
 }
 

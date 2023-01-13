@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/12 20:48:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/13 18:44:30 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,9 @@ int main(int argc, char* argv[])
 
 		logo();
 
-		// CGI	cgi;
-		// cout << cgi.executeCGI();
-		// return (0);
-		//cgi.executeCGI();
+		CGI	cgi;
+		cout << cgi.executeCGI();
+		return (0);
 
 		//TODO: parsing muss ausgeführt werden
 		Webserv dmsServer;
