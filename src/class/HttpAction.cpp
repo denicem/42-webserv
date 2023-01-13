@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/12 20:00:22 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/12 23:06:23 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,6 @@ File HttpAction::getFile() const {
 */
 
 void HttpAction::doAction(const Server& server) {
-	std::cout << "doAction() called mofo." << std::endl;
-
 	if (this->location >= 0) {
 		if (!isMethodAllowed(this->method, server.getLocation(this->location))) {
 			this->statusCode = 405;
