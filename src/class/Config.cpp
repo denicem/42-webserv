@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 17:36:32 by shaas             #+#    #+#             */
-/*   Updated: 2023/01/12 18:50:15 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/13 18:32:55 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig*
 {
 	if (route_settings["http_methods"].setting_is_set == false)
 		route->http_methods = g_http_methods;
-	if (route_settings["cgi_extensions"].setting_is_set == false)
-		route->cgi_extensions = g_cgi_extensions;
+	//if (route_settings["cgi_extensions"].setting_is_set == false)
+	//	route->cgi_extensions = g_cgi_extensions; // right now, we want to keep it empty if not set
 	if (route_settings["root"].setting_is_set == false && route_settings["alias"].setting_is_set == false)
 	{
 		if (access(('.' + route_name).c_str(), F_OK) == -1)
