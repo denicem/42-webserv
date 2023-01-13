@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 00:06:01 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/13 01:30:51 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,12 @@ void Server::setLocation(const Location &location){
 void Server::setLocations(map<string, struct RouteConfig> routes) {
 	map<string, RouteConfig>::iterator it = routes.begin();
 	for (; it != routes.end(); ++it)
+	{
 		this->locations.push_back(Location((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), (*it).second.directory_listing));
+		this->routes[(*it).first] = Route((*it).second);
+		std::cout << "\t" << (*it).first << std::endl;
+		std::cout << this->routes[(*it).first];
+	}
 }
 
 /*
