@@ -6,7 +6,7 @@
 #    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2023/01/13 18:52:16 by shaas            ###   ########.fr        #
+#    Updated: 2023/01/13 19:20:10 by shaas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,7 @@ $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 
 $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
 	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
-	@$(CC) -c $< -o $@
+	@$(CC) $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 bs4:
