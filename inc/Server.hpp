@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 17:27:14 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 01:43:34 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ class Server
 		string							getRoot() const;
 		int								getPort(const int) const;
 		Location						getLocation(const int) const;
+		Route							getRoute(const int) const;
+		int								getRouteCount() const;
 		const std::vector<Location>&	getLocations() const;
 		int 							getServerSocketFD() const;
 		string							getErrorPage(int) const;

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 00:23:37 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 17:30:27 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 01:02:11 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,22 @@ Route::Route(const std::string& name, const RouteConfig& r_conf):
 /*
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
+
+std::string Route::getName() const {
+	return (this->name);
+}
+
+const std::vector<HttpMethod>& Route::getHttpMethods() const {
+	return (this->http_methods);
+}
+
+std::string Route::getRoot() const {
+	return (this->root);
+}
+
+std::string Route::getDefaultFile() const {
+	return (this->default_file);
+}
 
 /*
 ** ----------------------- METHODS -----------------------

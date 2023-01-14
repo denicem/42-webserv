@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 18:29:06 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 01:44:05 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,14 @@ int Server::getPort(const int index) const {
 
 Location Server::getLocation(const int index) const {
 	return (this->locations[index]);
+}
+
+Route Server::getRoute(const int index) const {
+	return (this->routes[index]);
+}
+
+int Server::getRouteCount() const {
+	return (this->routes.size());
 }
 
 const std::vector<Location>& Server::getLocations() const {
