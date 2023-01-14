@@ -87,6 +87,13 @@ extern vector<string>	g_cgi_extensions;
 # define LIGHTMAGENTA_BG	"\e[105m"
 # define LIGHTCYAN_BG		"\e[106m"
 
+/*--- DEBUG PRINTER ---*/
+# define PRINT_W_COLOR(color, text) \
+{ \
+	std::cout << color << text << RESET << std::endl; \
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////
 
 class Webserv {
