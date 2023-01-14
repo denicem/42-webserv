@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 03:20:07 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:24:11 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,9 +153,9 @@ void HttpAction::doAction(const Server& server) {
 			}
 		}
 	}
-	if (this->method == POST)
+	if (this->method == POST && this->route_index >= 0)
 	{
-		std::ofstream outfile("upload/test.txt");
+		std::ofstream outfile((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
 		outfile << this->msgBody;
 		this->statusCode = 201;
 		outfile.close();

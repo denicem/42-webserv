@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2023/01/14 03:57:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:10:26 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ void TCPPoll::status_check()
 						std::cout << MAGENTA << "Port " << this->sfds[index].getPort(0) << " connected to client." << RESET << std::endl;	
 						// PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
 						// PRINT_W_COLOR(BOLD, buffer)
+
+						this->sfds[index].printRoutes();
 
 						HttpRequest req(this->buffer);
 						PRINT_W_COLOR(LIGHTBLUE, "HTTP Request")

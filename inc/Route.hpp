@@ -6,12 +6,14 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 00:09:17 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 21:46:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:15:08 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ROUTE_HPP
 #define ROUTE_HPP
+
+#define DEF_UPLOAD_DIR "./upload"
 
 #include <string>
 #include <vector>
@@ -42,6 +44,7 @@ class Route {
 		std::string getRoot() const;
 		bool getDirList() const;
 		std::string getDefaultFile() const;
+		std::string getUploadDir() const;
 
 		friend std::ostream& operator<<(std::ostream&, const Route&);
 };
