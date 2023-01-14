@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 00:23:37 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 01:02:11 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 21:47:13 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,10 @@ const std::vector<HttpMethod>& Route::getHttpMethods() const {
 
 std::string Route::getRoot() const {
 	return (this->root);
+}
+
+bool Route::getDirList() const {
+	return (this->dir_list);
 }
 
 std::string Route::getDefaultFile() const {

@@ -7,13 +7,13 @@ std::string dirListing::generateDirOutput(int index, const Server& server) {
     if(index == -1)
         index = 0;
     std::cout << "Index: " << index << "Listing output" << std::endl;
-    std::cout << "server location: " << server.getLocation(index).getName() << std::endl;
-    std::cout << "Get root file: " << server.getLocation(index).getRoot() << std::endl;
-    std::cout << "Is Listing on?: " << server.getLocation(index).getListing() << std::endl;
+    std::cout << "server location: " << server.getRoute(index).getName() << std::endl;
+    std::cout << "Get root file: " << server.getRoute(index).getRoot() << std::endl;
+    std::cout << "Is Listing on?: " << server.getRoute(index).getDirList() << std::endl;
 
     //anhand dieser Informationenen muss jetzt eine Listing funktion geschrieben werden.
-    std::string dirName = server.getLocation(index).getName();
-    DIR *dir = opendir(server.getLocation(index).getRoot().c_str());
+    std::string dirName = server.getRoute(index).getName();
+    DIR *dir = opendir(server.getRoute(index).getRoot().c_str());
     std::string page =\
     "<!DOCTYPE html>\n\
     <html>\n\
@@ -25,7 +25,7 @@ std::string dirListing::generateDirOutput(int index, const Server& server) {
     <p>\n";
 
     if (dir == NULL) {
-        std::cerr << RED << "Error: could not open [" << server.getLocation(index).getRoot() << "]" << RESET << std::endl;
+        std::cerr << RED << "Error: could not open [" << server.getRoute(index).getRoot() << "]" << RESET << std::endl;
         return "";
     }
     if (dirName[0] != '/')
