@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2023/01/11 19:15:14 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 01:14:37 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,6 @@ void TCPPoll::status_check()
 						// std::cout << this->buffer << std::endl;
 						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
 						HttpRequest req(this->buffer);
-						std::cout << MAGENTA;
-						for (size_t i = 0; i < sfds[index].getLocations().size(); ++i) {
-							std::cout << sfds[index].getLocation(i) << std::endl;
-						}
-						std::cout << RESET << std::endl;
 						std::cout << LIGHTBLUE << req << RESET << std::endl;
 						// std::cout << req << std::endl;
 						HttpAction act(req, this->sfds[index]);

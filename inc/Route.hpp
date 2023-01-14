@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 00:09:17 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 17:26:10 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 01:01:31 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ class Route {
 	public:
 		Route();
 		Route(const std::string&, const RouteConfig&);
+
+		std::string getName() const;
+		const std::vector<HttpMethod>& getHttpMethods() const;
+		std::string getRoot() const;
+		std::string getDefaultFile() const;
 
 		friend std::ostream& operator<<(std::ostream&, const Route&);
 };

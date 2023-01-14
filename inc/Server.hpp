@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 17:27:14 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 02:13:35 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,12 @@
 #include <vector>
 
 #include "Webserv.hpp"
-#include "Location.hpp"
 #include "Route.hpp"
 #include "Config.hpp"
 #include "HttpMethod.hpp"
 
 #define SCK_ADDR sockaddr_in
 
-class Location;
 class Route;
 
 class Server
@@ -43,36 +41,35 @@ class Server
 		string root;
 		string indexFile;
 		vector<int> ports;
-		vector<Location> locations; // NOTE: Locations as a map<string, Location> with location name as Key??
 		vector<Route> routes;
 		map<int, string> error_pages;
-		
 
 		/* for TCP */
 		int serverSocketFD;
+
 	public:
 		SCK_ADDR _address;
-		Server(const string&, const string&, const vector<Location> &);
+
+	public:
 		Server(const struct ServerConfig& config);
 	
+		string getIndexFile() const;
 		string							getServerName() const;
 		string							getRoot() const;
 		int								getPort(const int) const;
-		Location						getLocation(const int) const;
-		const std::vector<Location>&	getLocations() const;
+		Route							getRoute(const int) const;
+		int								getRouteCount() const;
 		int 							getServerSocketFD() const;
 		string							getErrorPage(int) const;
+		vector<string> getServernameList();
 
 		void	setServerName(string&);
 		void	setPort(int);
-		void	setLocation(const Location&);
+		void 	setRoutes(map<string, struct RouteConfig>);
 
-		void setLocations(map<string, struct RouteConfig>);
 		void initSockAddr(int, int);
-	
-		string getIndexFile() const;
-		vector<HttpMethod> genarateAllowedMethods(vector<string>methods);
-		vector<string> getServernameList();
+		vector<HttpMethod> genarateAllowedMethods(vector<string>methods);	
+
 		class NoSocketException: public exception
 		{
 			const char* what() const throw();

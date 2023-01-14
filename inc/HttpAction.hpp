@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 16:07:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/12 18:25:19 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 02:21:12 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,16 @@ class HttpAction: public HttpMessage {
 		File file;
 
 		int location;
+		int route_index;
 		std::string path;
 		std::string dest;
 
 	private:
 		void initVars(const HttpRequest&, const Server&);
 		void setPath(const HttpRequest&, const Server&);
-		bool isMethodAllowed(const int, const Location&) const;
+		bool isMethodAllowed(const int, const Route&) const;
 		int getLocationIndex(const std::string&, const Server&) const;
+		int getRouteIndex(const std::string&, const Server&) const;
 		bool isDestination(const std::string&) const;
 		std::string getDefaultErrorPage(int) const;
 

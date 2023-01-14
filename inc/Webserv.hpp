@@ -11,7 +11,7 @@ using namespace std;
 #include "TCPPoll.hpp"
 #include "Config.hpp"
 #include "Server.hpp"
-#include "Location.hpp"
+#include "Route.hpp"
 
 // #include "HttpMessage.hpp"
 #include "HttpMethod.hpp"

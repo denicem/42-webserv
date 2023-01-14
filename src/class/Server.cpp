@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 18:29:06 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 02:11:56 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,13 @@
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-Server::Server(const string& serverName, const string &root, const vector<Location> &locations)
-: serverName(serverName), root(root), locations(locations){}
-
 Server::Server(const ServerConfig& config) {
 	this->ports.push_back(config.port);
 	this->clientMaxBody = config.max_client_body_size;
 	this->serverNames = config.server_names;
 	this->root = config.root;
 	this->indexFile = config.default_file;
-	setLocations(config.routes);
+	setRoutes(config.routes);
 	this->error_pages = config.error_pages;
 }
 
@@ -59,12 +56,12 @@ int Server::getPort(const int index) const {
 	return (this->ports[index]);
 }
 
-Location Server::getLocation(const int index) const {
-	return (this->locations[index]);
+Route Server::getRoute(const int index) const {
+	return (this->routes[index]);
 }
 
-const std::vector<Location>& Server::getLocations() const {
-	return (this->locations);
+int Server::getRouteCount() const {
+	return (this->routes.size());
 }
 
 int Server::getServerSocketFD() const {
@@ -88,18 +85,10 @@ void Server::setPort(int port){
 	this->ports.push_back(port);
 }
 
-void Server::setLocation(const Location &location){
-	this->locations.push_back(location);
-}
-
-void Server::setLocations(map<string, struct RouteConfig> routes) {
+void Server::setRoutes(map<string, struct RouteConfig> routes) {
 	map<string, RouteConfig>::iterator it = routes.begin();
-	for (int i = 0; it != routes.end(); ++it, ++i)
-	{
-		this->locations.push_back(Location((*it).first, (*it).second.root, (*it).second.default_file, genarateAllowedMethods((*it).second.http_methods ), (*it).second.directory_listing));
+	for (; it != routes.end(); ++it)
 		this->routes.push_back(Route((*it).first, (*it).second));
-		std::cout << this->routes[i] << std::endl;
-	}
 }
 
 /*
@@ -128,7 +117,9 @@ void Server::initSockAddr(int len, int index) {
 /*
 ** ----------------------- EXCEPTIONS -----------------------
 */
-const char* Server::NoSocketException::what() const throw(){return ("\033[31;1mCannot create socket.\033[0m");}
+const char* Server::NoSocketException::what() const throw() {
+	return ("\033[31;1mCannot create socket.\033[0m");
+}
 
 /*
 ** ----------------------- FUNCS -----------------------
