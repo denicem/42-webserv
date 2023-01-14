@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 19:14:46 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 03:25:07 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 21:55:52 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,14 @@ File::File(): filename(""), path(""), content(""), file_size(0) {}
 File::File(const File& other): filename(other.filename), path(other.path), content(other.content), file_size(other.file_size) {}
 
 File::File(const std::string& path): path(path) {
+	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
 	std::ifstream file (this->path.c_str());
 	if (!file.is_open())
 		throw FileNotFoundException();
-	this->filename= this->path.substr(this->path.find_last_of('/') + 1);
+	if (this->filename.find('.') == std::string::npos) { // TODO: find another solution
+		file.close();
+		throw FileNotFoundException();
+	}
 	this->calcFileSize(file);
 	this->getContentFromFile(file);
 	file.close();
