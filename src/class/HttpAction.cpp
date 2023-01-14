@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 22:24:11 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:52:17 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ int HttpAction::getRouteIndex(const string& uri, const Server& server) const {
 
 std::string HttpAction::getDefaultErrorPage(int err_code) const {
 	switch(err_code) {
+		case 400: return (ERROR_PAGE_400);
 		case 404: return (ERROR_PAGE_404);
 		case 405: return (ERROR_PAGE_405);
 		case 501: return (ERROR_PAGE_501);
@@ -155,10 +156,22 @@ void HttpAction::doAction(const Server& server) {
 	}
 	if (this->method == POST && this->route_index >= 0)
 	{
-		std::ofstream outfile((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
-		outfile << this->msgBody;
-		this->statusCode = 201;
-		outfile.close();
+		if ((int) this->msgBody.size() > server.getClientMaxBody()) {
+			std::cout << "too big!" << std::endl;
+			this->statusCode = 400;
+			try {
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
+			catch (std::out_of_range &e) {
+				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			}
+		}
+		else {
+			std::ofstream outfile((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
+			outfile << this->msgBody;
+			this->statusCode = 201;
+			outfile.close();
+		}
 	}
 }
 

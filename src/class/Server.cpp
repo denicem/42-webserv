@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 22:09:57 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:32:49 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ Server::Server(const ServerConfig& config) {
 
 string Server::getServerName() const {
 	return(this->serverName);
+}
+
+int Server::getClientMaxBody() const {
+	return (this->clientMaxBody);
 }
 
 string Server::getIndexFile() const {

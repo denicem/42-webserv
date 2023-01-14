@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/12 18:25:05 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:59:12 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ std::string HttpResponse::getStatusMsg() const {
 	switch (this->statusCode) {
 		case 200: return ("OK");
 		case 201: return ("Created");
+		case 400: return ("Bad Request");
 		case 404: return ("Not Found");
 		case 405: return ("Method Not Allowed");
 		case 501: return ("Not Implemented.");
@@ -81,6 +82,7 @@ void HttpResponse::setStatusCode(const int& statusCode) {
 
 std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	std::stringstream stream;
+	(void) act;
 
 	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
 	// if (act.getStatusCode() != 405) {
@@ -93,8 +95,8 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 		stream << std::endl;
 		stream << "Content-Length: " << this->file.getFileSize() << std::endl;
 		stream << std::endl;
-		if (act.getHttpMethod() == GET)
-			stream << this->file.getContent();
+		// if (act.getHttpMethod() == GET)
+		stream << this->file.getContent();
 	// }
 
 	return (stream.str());

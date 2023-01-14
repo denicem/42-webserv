@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 22:05:05 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:32:10 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ class Server
 	
 		string getIndexFile() const;
 		string							getServerName() const;
+		int 							getClientMaxBody() const;
 		string							getRoot() const;
 		int								getPort(const int) const;
 		Route							getRoute(const int) const;
