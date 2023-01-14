@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/13 19:15:51 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/14 03:15:14 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ int main(int argc, char* argv[])
 
 		logo();
 
-		CGI	cgi;
-		cout << cgi.executeCGI();
-		return (0);
+		// CGI	cgi;
+		// cout << cgi.executeCGI();
+		// return (0);
 		//return (0);
 
 		//TODO: parsing muss ausgeführt werden
