@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:41:54 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/12 20:48:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 03:41:12 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,33 +59,30 @@ int main(int argc, char* argv[])
 		config->extractConfigData(server_data);
 		delete config;
 		Config::printServerConfig(server_data);
-		// const vector<ServerConfig>& server_data = *config.getConfigData();
 
 		logo();
 
 		// CGI	cgi;
 		// cout << cgi.executeCGI();
 		// return (0);
-		//cgi.executeCGI();
+		//return (0);
 
-		//TODO: parsing muss ausgeführt werden
 		Webserv dmsServer;
 		TCPPoll tcpPoll;
 		vector<Server> servers;
 		
-std::cout << "\e[31m servers are being inizialised\e[0m" << std::endl;
-		for(size_t i = 0; i < server_data.size(); i++) {
+		PRINT_W_COLOR(LIGHTGREEN, "Servers are being initialized.")
+		for(size_t i = 0; i < server_data.size(); ++i) {
 			Server s(server_data[i]);
 			servers.push_back(s);
 			dmsServer.addServer(servers[i]);
 		}
-		for(size_t i = 0; i < servers.size(); i++) {
+		for(size_t i = 0; i < servers.size(); ++i) {
 			std::cout << "Server: " << servers.at(i).getPort(0) << std::endl;
 			std::cout << "server name: " << *dmsServer.getServer(i).getServernameList().begin() << std::endl;
-
 		}
 
-std::cout << "\e[31m server fds being added to poll\e[0m" << std::endl;
+		PRINT_W_COLOR(LIGHTGREEN, "Server fds being added to poll");
 		for (size_t i = 0; i < server_data.size(); i++)
 		{
 			std::cout << "i in Loop is: " << i << std::endl;
@@ -94,9 +91,9 @@ std::cout << "\e[31m server fds being added to poll\e[0m" << std::endl;
 		}
 		tcpPoll.setMaxConnection();
 		// 	tcpPoll.add_fds(Server(PORT + i, "simple"));
-std::cout << "\e[31m status check is being called\e[0m" << std::endl;
-		
-		tcpPoll.status_check(); 
+		PRINT_W_COLOR(LIGHTGREEN, "Status check is being called");
+
+		tcpPoll.status_check();
 	}
 	catch (exception& e) {
 		cerr << e.what() << "\nERRNO: " << errno << '\n';

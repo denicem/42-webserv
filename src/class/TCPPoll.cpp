@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 20:33:54 by mjeyavat          #+#    #+#             */
-/*   Updated: 2023/01/11 19:15:14 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 03:57:16 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ void TCPPoll::add_fds(Server server) {
 
 void TCPPoll::status_check()
 {
-	std::cout << "status_check is starting: " << std::endl;
-	std::cout << BLUE << "Max Connection are: " << getMaxConnection() << RESET << std::endl;
+	PRINT_W_COLOR(LIGHTGREEN, "status_check is starting:")
+	PRINT_W_COLOR(BLUE, ("Max connection are: " + std::to_string(getMaxConnection())))
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
@@ -61,7 +61,7 @@ void TCPPoll::status_check()
 		if (listen(this->sfds[i].getServerSocketFD(), 10) < 0)
 			throw NoListenException();
 	}
-	std::cout << "Poll struct about to inizialised" << std::endl;
+	PRINT_W_COLOR(LIGHTGREEN, "Poll struct about to inizialised")
 	//init poll struct
 	for(int i = 0; i < getMaxConnection(); i++)
 	{
@@ -70,6 +70,7 @@ void TCPPoll::status_check()
 		connection_poll[i].events = POLL_IN;
 	}
 	//mainloop 
+	PRINT_W_COLOR(LIGHTCYAN, "HTTP PART")
 	while(1)
 	{
 		pollStatus = poll(connection_poll, (unsigned int) getMaxConnection(), TIMEOUT);
@@ -91,26 +92,25 @@ void TCPPoll::status_check()
 						//read and write to client
 						if (recv(acceptedFd, this->buffer, MAXBUFF, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
-						std::cout << "Port " << this->sfds[index].getPort(0) << " connected to client." << std::endl;	
-						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
-						// std::cout << this->buffer << std::endl;
-						// std::cout << "$$$$$$$$$$$$$$$$$$$$" << std::endl;
+						std::cout << MAGENTA << "Port " << this->sfds[index].getPort(0) << " connected to client." << RESET << std::endl;	
+						// PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
+						// PRINT_W_COLOR(BOLD, buffer)
+
 						HttpRequest req(this->buffer);
-						std::cout << MAGENTA;
-						for (size_t i = 0; i < sfds[index].getLocations().size(); ++i) {
-							std::cout << sfds[index].getLocation(i) << std::endl;
-						}
-						std::cout << RESET << std::endl;
-						std::cout << LIGHTBLUE << req << RESET << std::endl;
-						// std::cout << req << std::endl;
+						PRINT_W_COLOR(LIGHTBLUE, "HTTP Request")
+						PRINT_W_COLOR(BOLD, req)
+
 						HttpAction act(req, this->sfds[index]);
 						act.doAction(this->sfds[index]);
-						// HttpResponse resp(req, this->sfds[i]);
+
 						HttpResponse resp(act);
-						std::string respMsg(resp.genHttpResponseMsg(act));
-						send(acceptedFd, respMsg.c_str(), respMsg.length(), 0);
+						std::string resp_msg(resp.genHttpResponseMsg(act));
+						// PRINT_W_COLOR(LIGHTBLUE, "HTTP Response")
+						// PRINT_W_COLOR(BOLD, resp_msg)
+
+						send(acceptedFd, resp_msg.c_str(), resp_msg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";
-						memset(this->buffer, 0, MAXBUFF); // NOTE: resets everything to zero for the next loop to read into the buffer.
+						memset(this->buffer, 0, MAXBUFF);
 						close(acceptedFd);
 					}
 				}

@@ -11,7 +11,7 @@ using namespace std;
 #include "TCPPoll.hpp"
 #include "Config.hpp"
 #include "Server.hpp"
-#include "Location.hpp"
+#include "Route.hpp"
 
 // #include "HttpMessage.hpp"
 #include "HttpMethod.hpp"
@@ -86,6 +86,13 @@ extern vector<string>	g_cgi_extensions;
 # define LIGHTBLUE_BG		"\e[104m"
 # define LIGHTMAGENTA_BG	"\e[105m"
 # define LIGHTCYAN_BG		"\e[106m"
+
+/*--- DEBUG PRINTER ---*/
+# define PRINT_W_COLOR(color, text) \
+{ \
+	std::cout << color << text << RESET << std::endl; \
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

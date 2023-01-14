@@ -3,22 +3,22 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+         #
+#    By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 22:02:51 by shaas             #+#    #+#              #
-#    Updated: 2023/01/12 20:39:16 by dmontema         ###   ########.fr        #
+#    Updated: 2023/01/13 19:20:10 by shaas            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = webserv
 
+BS4INSTALLED := $(shell pip3 show bs4 | grep Name)
 ISDOCKER := $(shell ls -a /)
 ifeq ( , $(findstring .dockerenv, $(ISDOCKER)))
 	CC = c++
 else
 	CC = g++
 endif
-BS4INSTALLED := $(shell pip3 show bs4 | grep Name)
 
 CC_FLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
@@ -60,9 +60,8 @@ $(DIR_OBJ)%.o:	$(DIR_SRC)%.cpp
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
-	@mkdir -p $(dir $@)
 	@printf $(BLUE)$(BOLD)"\rCompiling: "$(CYAN)"$(notdir $<)\r"
-	@$(CC) -c $< -o $@
+	@$(CC) $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 bs4:

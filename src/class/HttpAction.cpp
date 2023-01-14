@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/12 23:06:23 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 03:20:07 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,16 @@ void HttpAction::initVars(const HttpRequest& req, const Server& server) {
 }
 
 void HttpAction::setPath(const HttpRequest& req, const Server& server) {
-	int locIndex = getLocationIndex(req.getURI(), server);
-	this->location = locIndex;
+	this->route_index = getRouteIndex(req.getURI(), server);
 
-	if (locIndex >= 0) {
-		Location tmp(server.getLocation(locIndex));
-
+	if (route_index >= 0) {
+		Route tmp(server.getRoute(this->route_index));
 		if (req.getURI().find(tmp.getName()) != std::string::npos && req.getURI().find(".") == std::string::npos) { // if URI has no specific destination, route to index file
-			std::cout << "index file for location " << tmp.getName() << std::endl;
-			this->path = tmp.getRoot() + "/" + tmp.getIndex();
+			std::cout << "index file for route " << tmp.getName() << std::endl;
+			this->path = tmp.getRoot() + "/" + tmp.getDefaultFile();
 		}
 		else {
-			std::cout << "Destination file for location " << tmp.getName() << std::endl;
+			std::cout << "Destination file for route " << tmp.getName() << std::endl;
 			this->path = tmp.getRoot() + "/" + req.getURI().substr(tmp.getName().size() + 1);
 		}
 	}
@@ -60,19 +58,19 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) {
 	this->dest = this->path.substr(this->path.find_last_of('/') + 1);
 }
 
-bool HttpAction::isMethodAllowed(const int method, const Location& location) const {
-	for (unsigned long i = 0; i < location.getAllowedMethods().size(); ++i) {
-		if (location.getAllowedMethods().at(i) == method)
+bool HttpAction::isMethodAllowed(const int method, const Route& route) const {
+	for (unsigned long i = 0; i < route.getHttpMethods().size(); ++i) {
+		if (route.getHttpMethods().at(i) == method)
 			return (true);
 	}
 	return (false);
 }
 
-int HttpAction::getLocationIndex(const string& uri, const Server& server) const {
-	size_t res;
+int HttpAction::getRouteIndex(const string& uri, const Server& server) const {
+	int res;
 
-	for (res = 0; res < server.getLocations().size(); ++res) {
-		if (uri.find(server.getLocation(res).getName()) != std::string::npos)
+	for (res = 0; res < server.getRouteCount(); ++res) {
+		if (uri.find(server.getRoute(res).getName()) != std::string::npos)
 			return (res);
 	}
 	return (-1);
@@ -126,8 +124,9 @@ File HttpAction::getFile() const {
 */
 
 void HttpAction::doAction(const Server& server) {
-	if (this->location >= 0) {
-		if (!isMethodAllowed(this->method, server.getLocation(this->location))) {
+
+	if (this->route_index >= 0) {
+		if (!isMethodAllowed(this->method, server.getRoute(this->route_index))) {
 			this->statusCode = 405;
 			try {
 				this->file = File(server.getErrorPage(this->statusCode));
@@ -141,7 +140,7 @@ void HttpAction::doAction(const Server& server) {
 	if (this->method == GET)
 	{
 		try {
-			this->file = File(this->path, this->dest);
+			this->file = File(this->path);
 			this->statusCode = 200;
 		}
 		catch (File::FileNotFoundException& e) {
