@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 01:43:34 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 02:01:24 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,17 @@ class Server
 		vector<Location> locations; // NOTE: Locations as a map<string, Location> with location name as Key??
 		vector<Route> routes;
 		map<int, string> error_pages;
-		
 
 		/* for TCP */
 		int serverSocketFD;
+
 	public:
 		SCK_ADDR _address;
-		Server(const string&, const string&, const vector<Location> &);
+
+	public:
 		Server(const struct ServerConfig& config);
 	
+		string getIndexFile() const;
 		string							getServerName() const;
 		string							getRoot() const;
 		int								getPort(const int) const;
@@ -64,17 +66,15 @@ class Server
 		const std::vector<Location>&	getLocations() const;
 		int 							getServerSocketFD() const;
 		string							getErrorPage(int) const;
+		vector<string> getServernameList();
 
 		void	setServerName(string&);
 		void	setPort(int);
-		void	setLocation(const Location&);
+		void 	setRoutes(map<string, struct RouteConfig>);
 
-		void setLocations(map<string, struct RouteConfig>);
 		void initSockAddr(int, int);
-	
-		string getIndexFile() const;
-		vector<HttpMethod> genarateAllowedMethods(vector<string>methods);
-		vector<string> getServernameList();
+		vector<HttpMethod> genarateAllowedMethods(vector<string>methods);	
+
 		class NoSocketException: public exception
 		{
 			const char* what() const throw();
