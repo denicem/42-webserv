@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 01:51:46 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 03:20:07 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void HttpAction::doAction(const Server& server) {
 	if (this->method == GET)
 	{
 		try {
-			this->file = File(this->path, this->dest);
+			this->file = File(this->path);
 			this->statusCode = 200;
 		}
 		catch (File::FileNotFoundException& e) {

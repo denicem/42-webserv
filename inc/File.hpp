@@ -6,15 +6,12 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 18:53:54 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/06 22:10:24 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 03:24:37 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FILE_HPP
 #define FILE_HPP
-
-#include "HttpRequest.hpp"
-#include "Server.hpp"
 
 #include <string>
 #include <fstream>
@@ -25,19 +22,16 @@ class File {
 		std::string filename;
 		std::string path;
 		std::string content;
-		int fileSize;
-		bool isLocation;
+		int file_size;
 
 	private:
-		void getContentFromFile(std::ifstream&);
 		void calcFileSize(std::ifstream&);
-		void changeToRootOrFavicon();
+		void getContentFromFile(std::ifstream&);
 
 	public:
 		File();
 		File(const File&);
 		File(const std::string&);
-		File(const std::string&, const std::string&);
 		~File();
 
 		File& operator=(const File&);
