@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 22:59:12 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 04:39:09 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,17 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 */
 
 std::ostream& operator<<(std::ostream& stream, const HttpResponse& resp) {
-	stream << "***** RESPONSE *****" << std::endl;
-	stream << "HTTP ver: " << resp.httpVer << std::endl;
+	stream << "***** Respone *****" << std::endl;
 	stream << "Status code: " << resp.statusCode <<  std::endl;
+	stream << "Response Body: ";
+	if (resp.file.getFileSize() == 0 && resp.file.getContent().empty())
+		stream << "Empty body!";
+	else {
+		stream << resp.file.getFilename() << ": " << resp.file.getFileSize() << " bytes.";
+		stream << " Path: " << resp.file.getPath();
+	}
+	stream << std::endl;
 	stream << "********************" << std::endl;
+	
 	return (stream);
 }
