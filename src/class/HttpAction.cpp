@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 22:52:17 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 02:37:27 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,15 @@ std::string HttpAction::getDefaultErrorPage(int err_code) const {
 */
 
 HttpAction::HttpAction(const HttpRequest& req, const Server& server) {
+	if (req.getHttpMethod() == METHOD_UNDEFINED) {
+		this->statusCode = 400;
+			try {
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
+			catch (std::out_of_range &e) {
+				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			}
+	}
 	this->initVars(req, server);
 	// std::cout << "URI: " <<  this->uri << std::endl;
 	std::cout << "Path: " << this->path << std::endl;

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/17 21:46:38 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 02:33:08 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void HttpRequest::setHttpMethod(std::stringstream& stream)
 	else if (tmp == "DELETE")
 		this->httpMethod = DELETE;
 	else
-		throw std::exception(); // no http method found.
+		this->httpMethod = METHOD_UNDEFINED;
 }
 
 void HttpRequest::setURI(std::stringstream& stream)
