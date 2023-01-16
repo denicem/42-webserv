@@ -61,6 +61,7 @@ File::File(const std::string& path): path(path) {
 	file.close();
 }
 
+File::File(const std::string& filename, const std::string& content): filename(filename), content(content), file_size(filename.size()) {}
 File::~File() {}
 
 /*

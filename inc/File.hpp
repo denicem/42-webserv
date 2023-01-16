@@ -32,6 +32,7 @@ class File {
 		File();
 		File(const File&);
 		File(const std::string&);
+		File(const std::string&, const std::string&);
 		~File();
 
 		File& operator=(const File&);
