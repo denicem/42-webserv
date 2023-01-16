@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/13 00:23:37 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 01:02:11 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:20:20 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ Route::Route(const std::string& name, const RouteConfig& r_conf):
 		else if (r_conf.http_methods[i] == "DELETE")
 			this->http_methods.push_back(DELETE);
 	}
+	if (this->upload_dir.empty())
+		this->upload_dir = DEF_UPLOAD_DIR;
 }
 
 /*
@@ -59,12 +61,24 @@ const std::vector<HttpMethod>& Route::getHttpMethods() const {
 	return (this->http_methods);
 }
 
+std::string Route::getHttpRedirect() const {
+	return (this->http_redirect);
+}
+
 std::string Route::getRoot() const {
 	return (this->root);
 }
 
+bool Route::getDirList() const {
+	return (this->dir_list);
+}
+
 std::string Route::getDefaultFile() const {
 	return (this->default_file);
+}
+
+std::string Route::getUploadDir() const {
+	return (this->upload_dir);
 }
 
 /*
@@ -93,7 +107,7 @@ std::ostream& operator<<(std::ostream& stream, const Route& r) {
 	stream << "Root: " << r.root << std::endl;
 	stream << "Directory Listing? " << (r.dir_list ? "on" : "off") << std::endl;
 	stream << "Default file: " << r.default_file << std::endl;
-	stream << "Upload directory: " << (r.upload_dir.empty() ? "default" : r.upload_dir) << std::endl;
+	stream << "Upload directory: " << r.upload_dir << (r.upload_dir == DEF_UPLOAD_DIR ? " (default)" : "" ) << std::endl;
 	stream << "CGI extensions: ";
 	if (r.cgi_exts.empty())
 		stream << "No extensions." << std::endl;

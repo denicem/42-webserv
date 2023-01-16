@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 03:20:07 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 05:51:16 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** ----------------------- PRIVATE METHODS -----------------------
 */
 
-void HttpAction::initVars(const HttpRequest& req, const Server& server) {
+void HttpAction::initVars(HttpRequest& req, const Server& server) {
 	this->httpVer = req.getHttpVer();
 
 	// NOTE: deep copy map
@@ -31,10 +31,20 @@ void HttpAction::initVars(const HttpRequest& req, const Server& server) {
 	this->setPath(req, server);
 }
 
-void HttpAction::setPath(const HttpRequest& req, const Server& server) {
+void HttpAction::setPath(HttpRequest& req, const Server& server) {
 	this->route_index = getRouteIndex(req.getURI(), server);
 
 	if (route_index >= 0) {
+		std::string redirect = server.getRoute(this->route_index).getHttpRedirect();
+		if (!redirect.empty()) // TODO: optimize by seperating and adding another attribute to HttpAction
+		{
+			
+			std::cout << "REDIRECT YESSIR!" << std::endl;
+			std::cout << route_index << std::endl;
+			this->route_index = getRouteIndex(redirect, server);
+			req.setURI(redirect);
+			std::cout << route_index << std::endl;
+		}
 		Route tmp(server.getRoute(this->route_index));
 		if (req.getURI().find(tmp.getName()) != std::string::npos && req.getURI().find(".") == std::string::npos) { // if URI has no specific destination, route to index file
 			std::cout << "index file for route " << tmp.getName() << std::endl;
@@ -43,6 +53,7 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) {
 		else {
 			std::cout << "Destination file for route " << tmp.getName() << std::endl;
 			this->path = tmp.getRoot() + "/" + req.getURI().substr(tmp.getName().size() + 1);
+			std::cout << this->path << std::endl;
 		}
 	}
 	else {
@@ -78,6 +89,7 @@ int HttpAction::getRouteIndex(const string& uri, const Server& server) const {
 
 std::string HttpAction::getDefaultErrorPage(int err_code) const {
 	switch(err_code) {
+		case 400: return (ERROR_PAGE_400);
 		case 404: return (ERROR_PAGE_404);
 		case 405: return (ERROR_PAGE_405);
 		case 501: return (ERROR_PAGE_501);
@@ -89,7 +101,16 @@ std::string HttpAction::getDefaultErrorPage(int err_code) const {
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-HttpAction::HttpAction(const HttpRequest& req, const Server& server) {
+HttpAction::HttpAction(HttpRequest& req, const Server& server) {
+	if (req.getHttpMethod() == METHOD_UNDEFINED) {
+		this->statusCode = 400;
+			try {
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
+			catch (std::out_of_range &e) {
+				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			}
+	}
 	this->initVars(req, server);
 	// std::cout << "URI: " <<  this->uri << std::endl;
 	std::cout << "Path: " << this->path << std::endl;
@@ -153,12 +174,24 @@ void HttpAction::doAction(const Server& server) {
 			}
 		}
 	}
-	if (this->method == POST)
+	if (this->method == POST && this->route_index >= 0)
 	{
-		std::ofstream outfile("upload/test.txt");
-		outfile << this->msgBody;
-		this->statusCode = 201;
-		outfile.close();
+		if ((int) this->msgBody.size() > server.getClientMaxBody()) {
+			std::cout << "too big!" << std::endl;
+			this->statusCode = 400;
+			try {
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
+			catch (std::out_of_range &e) {
+				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			}
+		}
+		else {
+			std::ofstream outfile((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
+			outfile << this->msgBody;
+			this->statusCode = 201;
+			outfile.close();
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/12 18:25:05 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 04:56:45 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ std::string HttpResponse::getStatusMsg() const {
 	switch (this->statusCode) {
 		case 200: return ("OK");
 		case 201: return ("Created");
+		case 400: return ("Bad Request");
 		case 404: return ("Not Found");
 		case 405: return ("Method Not Allowed");
 		case 501: return ("Not Implemented.");
@@ -81,6 +82,7 @@ void HttpResponse::setStatusCode(const int& statusCode) {
 
 std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	std::stringstream stream;
+	(void) act;
 
 	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
 	// if (act.getStatusCode() != 405) {
@@ -93,8 +95,8 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 		stream << std::endl;
 		stream << "Content-Length: " << this->file.getFileSize() << std::endl;
 		stream << std::endl;
-		if (act.getHttpMethod() == GET)
-			stream << this->file.getContent();
+		// if (act.getHttpMethod() == GET)
+		stream << this->file.getContent();
 	// }
 
 	return (stream.str());
@@ -105,9 +107,17 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 */
 
 std::ostream& operator<<(std::ostream& stream, const HttpResponse& resp) {
-	stream << "***** RESPONSE *****" << std::endl;
-	stream << "HTTP ver: " << resp.httpVer << std::endl;
+	stream << "***** Respone *****" << std::endl;
 	stream << "Status code: " << resp.statusCode <<  std::endl;
+	stream << "Response Body: ";
+	if (resp.file.getFileSize() == 0 && resp.file.getContent().empty())
+		stream << "Empty body!";
+	else {
+		stream << resp.file.getFilename() << ": " << resp.file.getFileSize() << " bytes.";
+		stream << " Path: " << resp.file.getPath();
+	}
+	stream << std::endl;
 	stream << "********************" << std::endl;
+	
 	return (stream);
 }

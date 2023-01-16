@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:09:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 02:11:56 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:32:49 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,10 @@ Server::Server(const ServerConfig& config) {
 
 string Server::getServerName() const {
 	return(this->serverName);
+}
+
+int Server::getClientMaxBody() const {
+	return (this->clientMaxBody);
 }
 
 string Server::getIndexFile() const {
@@ -112,6 +116,13 @@ void Server::initSockAddr(int len, int index) {
 		}
 	}
 	memset(&this->_address.sin_addr, len, sizeof(SCK_ADDR));
+}
+
+void Server::printRoutes() const {
+	PRINT_W_COLOR(LIGHTYELLOW, "ROUTES")
+	for (std::vector<Route>::size_type i = 0; i < this->routes.size(); ++i) {
+		PRINT_W_COLOR(BOLD, this->routes[i])
+	}
 }
 
 /*

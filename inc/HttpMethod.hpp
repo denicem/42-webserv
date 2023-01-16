@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 01:35:14 by dmontema          #+#    #+#             */
-/*   Updated: 2022/12/13 15:16:39 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 04:56:35 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <string>
 
 enum HttpMethod {
+	METHOD_UNDEFINED = -1,
 	GET,
 	POST,
 	DELETE

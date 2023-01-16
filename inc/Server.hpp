@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 19:08:03 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/14 02:13:35 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/14 22:32:10 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ class Server
 	
 		string getIndexFile() const;
 		string							getServerName() const;
+		int 							getClientMaxBody() const;
 		string							getRoot() const;
 		int								getPort(const int) const;
 		Route							getRoute(const int) const;
@@ -68,7 +69,8 @@ class Server
 		void 	setRoutes(map<string, struct RouteConfig>);
 
 		void initSockAddr(int, int);
-		vector<HttpMethod> genarateAllowedMethods(vector<string>methods);	
+		vector<HttpMethod> genarateAllowedMethods(vector<string>methods);
+		void printRoutes() const;
 
 		class NoSocketException: public exception
 		{
