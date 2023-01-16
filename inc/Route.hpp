@@ -41,7 +41,8 @@ class Route {
 
 		std::string getName() const;
 		const std::vector<HttpMethod>& getHttpMethods() const;
-		std::string getRoot() const;
+		std::string getHttpRedirect() const;
+		std::string getRoot() const; 
 		bool getDirList() const;
 		std::string getDefaultFile() const;
 		std::string getUploadDir() const;

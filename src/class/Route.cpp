@@ -61,6 +61,10 @@ const std::vector<HttpMethod>& Route::getHttpMethods() const {
 	return (this->http_methods);
 }
 
+std::string Route::getHttpRedirect() const {
+	return (this->http_redirect);
+}
+
 std::string Route::getRoot() const {
 	return (this->root);
 }

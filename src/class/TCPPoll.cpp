@@ -37,7 +37,7 @@ void TCPPoll::add_fds(Server server) {
 void TCPPoll::status_check()
 {
 	PRINT_W_COLOR(LIGHTGREEN, "status_check is starting:")
-	PRINT_W_COLOR(BLUE, ("Max connection are: " + std::to_string(getMaxConnection())))
+	// PRINT_W_COLOR(BLUE, ("Max connection are: " + std::to_string(getMaxConnection())))
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
@@ -93,8 +93,8 @@ void TCPPoll::status_check()
 						if (recv(acceptedFd, this->buffer, MAXBUFF, 0) < 0)
 							std::cout << "No bytes are there to read.\n";
 						std::cout << MAGENTA << "Port " << this->sfds[index].getPort(0) << " connected to client." << RESET << std::endl;	
-						// PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
-						// PRINT_W_COLOR(BOLD, buffer)
+						PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
+						PRINT_W_COLOR(BOLD, buffer)
 
 						this->sfds[index].printRoutes();
 
