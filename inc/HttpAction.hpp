@@ -36,8 +36,8 @@ class HttpAction: public HttpMessage {
 		std::string dest;
 
 	private:
-		void initVars(const HttpRequest&, const Server&);
-		void setPath(const HttpRequest&, const Server&);
+		void initVars(HttpRequest&, const Server&);
+		void setPath(HttpRequest&, const Server&);
 		bool isMethodAllowed(const int, const Route&) const;
 		int getLocationIndex(const std::string&, const Server&) const;
 		int getRouteIndex(const std::string&, const Server&) const;
@@ -47,7 +47,7 @@ class HttpAction: public HttpMessage {
 	public:
 		HttpAction();
 		HttpAction(const HttpAction&);
-		HttpAction(const HttpRequest&, const Server&);
+		HttpAction(HttpRequest&, const Server&);
 		~HttpAction();
 
 		HttpAction& operator=(const HttpAction&);
