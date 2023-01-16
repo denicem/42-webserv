@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 22:03:17 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 22:33:39 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,6 @@ void HttpAction::setPath(HttpRequest& req, const Server& server) {
 		std::string redirect = server.getRoute(this->route_index).getHttpRedirect();
 		if (!redirect.empty()) // TODO: optimize by seperating and adding another attribute to HttpAction
 		{
-			
-			std::cout << "REDIRECT YESSIR!" << std::endl;
-			std::cout << route_index << std::endl;
 			this->route_index = getRouteIndex(redirect, server);
 			req.setURI(redirect);
 			std::cout << route_index << std::endl;
@@ -112,10 +109,6 @@ HttpAction::HttpAction(HttpRequest& req, const Server& server) {
 			}
 	}
 	this->initVars(req, server);
-	// std::cout << "URI: " <<  this->uri << std::endl;
-	std::cout << "Path: " << this->path << std::endl;
-	std::cout << "Destination: " << this->dest << std::endl;
-	std::cout << "METHOD: " << getHttpMethodStr(req.getHttpMethod()) << std::endl;
 }
 
 HttpAction::~HttpAction() {}
@@ -168,12 +161,7 @@ void HttpAction::doAction(const Server& server) {
 			if (this->route_index >= 0 && server.getRoute(this->route_index).getDirList()) {
 				this->statusCode = 404;
 				std::string tmp = this->dir_list.generateDirOutput(this->route_index, server);
-				PRINT_W_COLOR(YELLOW, "DIR_LIST")
-				PRINT_W_COLOR(BOLD, tmp)
 				this->file = File("dir_list.html", tmp);
-				PRINT_W_COLOR(YELLOW, "FILE")
-				PRINT_W_COLOR(BOLD, this->file.getContent())
-				PRINT_W_COLOR(BLUE, this->file.getFileSize())
 			}
 			else {
 				this->statusCode = 404;
@@ -189,7 +177,6 @@ void HttpAction::doAction(const Server& server) {
 	if (this->method == POST && this->route_index >= 0)
 	{
 		if ((int) this->msg_body.size() > server.getClientMaxBody()) {
-			std::cout << "too big!" << std::endl;
 			this->statusCode = 400;
 			try {
 				this->file = File(server.getErrorPage(this->statusCode));
@@ -203,6 +190,22 @@ void HttpAction::doAction(const Server& server) {
 			outfile << this->msg_body;
 			this->statusCode = 201;
 			outfile.close();
+		}
+	}
+	if (this->method == DELETE && this->route_index >= 0) {
+		try {
+			this->file = File((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
+			std::remove((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
+			this->statusCode = 204;
+		}
+		catch (File::FileNotFoundException& e) {
+			this->statusCode = 400;
+			try {
+				this->file = File(server.getErrorPage(this->statusCode));
+			}
+			catch (std::out_of_range &e) {
+				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			}
 		}
 	}
 }

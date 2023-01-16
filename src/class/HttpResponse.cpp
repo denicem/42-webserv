@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 22:03:17 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 22:29:50 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ std::string HttpResponse::getStatusMsg() const {
 	switch (this->statusCode) {
 		case 200: return ("OK");
 		case 201: return ("Created");
+		case 204: return ("No Content");
 		case 400: return ("Bad Request");
 		case 404: return ("Not Found");
 		case 405: return ("Method Not Allowed");
