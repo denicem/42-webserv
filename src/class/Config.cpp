@@ -133,8 +133,8 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 		if (_line.find_first_not_of("0123456789") != string::npos)
 			configError(_line_num, "Port is not a positive integer, which it should be");
 		server->port = stringToInt(_line, 0, USHRT_MAX, _line_num);
-		if (portIsDuplicate(server->port, _config))
-			configError(_line_num, "Two servers cannot have the same port");
+		//if (portIsDuplicate(server->port, _config)) // multiple ports allowed right now
+		//	configError(_line_num, "Two servers cannot have the same port");
 	}
 	else if (setting == "root")
 	{
@@ -143,7 +143,6 @@ void	Config::setSetting(const string& setting, ServerConfig* server)
 		if (access(_line.c_str(), F_OK) == -1)
 			configError(_line_num, "Cannot access root directory");
 		server->root = _line;
-		
 	}
 	else if (setting == "default_file")
 	{
