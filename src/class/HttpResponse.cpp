@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 04:56:45 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 18:21:56 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,21 @@ std::string HttpResponse::getStatusMsg() const {
 	}
 }
 
+void HttpResponse::addHeaders() {
+	if (!this->file.getContent().empty()) {
+		std::string file_name = this->file.getFilename();
+		std::string file_ext = file_name.substr(file_name.find('.') + 1);
+
+		if (file_ext == "html" || file_ext == "css" || file_ext == "txt") {
+			this->headers["Content-Type"] = "text/" + file_ext;
+		}
+		else if (file_ext == "jpeg" || file_ext == "gif") {
+			this->headers["Content-Type"] = "image/" + file_ext;
+		}
+		this->headers["Content-Length"] = CGI::intToString(this->file.getFileSize());
+	}
+}
+
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
@@ -44,6 +59,7 @@ HttpResponse::HttpResponse(const HttpAction& act) {
 
 	this->statusCode = act.getStatusCode();
 	this->file = act.getFile();
+	this->addHeaders();
 }
 
 HttpResponse::~HttpResponse() {}
@@ -85,19 +101,24 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	(void) act;
 
 	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
-	// if (act.getStatusCode() != 405) {
-		stream << "Content-Type: text/";
-		// std::cout << req.getURI() << ": " << req.getRestEndpoint() << std::endl;
-		if (this->file.getFilename().find(".css") != std::string::npos)
-			stream << "css";
-		else if (this->file.getFilename().find(".html") != std::string::npos)
-			stream << "html";
-		stream << std::endl;
-		stream << "Content-Length: " << this->file.getFileSize() << std::endl;
-		stream << std::endl;
-		// if (act.getHttpMethod() == GET)
+	if (!this->headers.empty()) {
+		std::map<std::string, std::string>::const_iterator it = this->headers.begin();
+		std::map<std::string, std::string>::const_iterator ite = this->headers.end();
+		for (; it != ite; ++it) {
+			stream << (*it).first << ": " << (*it).second << std::endl;
+		}
+	}
+	// stream << "Content-Type: text/";
+	// // std::cout << req.getURI() << ": " << req.getRestEndpoint() << std::endl;
+	// if (this->file.getFilename().find(".css") != std::string::npos)
+	// 	stream << "css";
+	// else if (this->file.getFilename().find(".html") != std::string::npos)
+	// 	stream << "html";
+	// stream << std::endl;
+	// stream << "Content-Length: " << this->file.getFileSize() << std::endl;
+	stream << std::endl;
+	if (!this->file.getContent().empty())
 		stream << this->file.getContent();
-	// }
 
 	return (stream.str());
 }
@@ -108,7 +129,8 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 
 std::ostream& operator<<(std::ostream& stream, const HttpResponse& resp) {
 	stream << "***** Respone *****" << std::endl;
-	stream << "Status code: " << resp.statusCode <<  std::endl;
+	stream << "Status code: " << resp.statusCode << std::endl;
+	stream << "Status message: " << resp.getStatusMsg() << std::endl;
 	stream << "Response Body: ";
 	if (resp.file.getFileSize() == 0 && resp.file.getContent().empty())
 		stream << "Empty body!";

@@ -107,8 +107,8 @@ void TCPPoll::status_check()
 
 						HttpResponse resp(act);
 						std::string resp_msg(resp.genHttpResponseMsg(act));
-						// PRINT_W_COLOR(LIGHTBLUE, "HTTP Response")
-						// PRINT_W_COLOR(BOLD, resp_msg)
+						PRINT_W_COLOR(LIGHTBLUE, "HTTP Response")
+						PRINT_W_COLOR(BOLD, resp)
 
 						send(acceptedFd, resp_msg.c_str(), resp_msg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";

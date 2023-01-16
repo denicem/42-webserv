@@ -13,6 +13,8 @@
 #ifndef HTTP_RESPONSE_HPP
 #define HTTP_RESPONSE_HPP
 
+#include <map>
+
 #include "HttpMessage.hpp"
 #include "HttpRequest.hpp"
 #include "HttpAction.hpp"
@@ -23,9 +25,11 @@ class HttpResponse: public HttpMessage {
 	private:
 		int statusCode;
 		File file;
+		std::map<std::string, std::string> headers;
 
 	private:
 		std::string getStatusMsg() const;
+		void addHeaders(); 
 
 	public:
 		HttpResponse();
