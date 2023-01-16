@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 05:51:16 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 19:01:29 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,12 +165,24 @@ void HttpAction::doAction(const Server& server) {
 			this->statusCode = 200;
 		}
 		catch (File::FileNotFoundException& e) {
-			this->statusCode = 404;
-			try {
-				this->file = File(server.getErrorPage(this->statusCode));
+			if (this->route_index >= 0 && server.getRoute(this->route_index).getDirList()) {
+				this->statusCode = 404;
+				std::string tmp = this->dir_list.generateDirOutput(this->route_index, server);
+				PRINT_W_COLOR(YELLOW, "DIR_LIST")
+				PRINT_W_COLOR(BOLD, tmp)
+				this->file = File("dir_list.html", tmp);
+				PRINT_W_COLOR(YELLOW, "FILE")
+				PRINT_W_COLOR(BOLD, this->file.getContent())
+				PRINT_W_COLOR(BLUE, this->file.getFileSize())
 			}
-			catch (std::out_of_range &e) {
-				this->file = File(this->getDefaultErrorPage(this->statusCode));
+			else {
+				this->statusCode = 404;
+				try {
+					this->file = File(server.getErrorPage(this->statusCode));
+				}
+				catch (std::out_of_range &e) {
+					this->file = File(this->getDefaultErrorPage(this->statusCode));
+				}
 			}
 		}
 	}

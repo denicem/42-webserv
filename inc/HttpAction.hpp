@@ -23,6 +23,7 @@
 #include "HttpMethod.hpp"
 #include "HttpRequest.hpp"
 #include "Server.hpp"
+#include "dirListing.hpp"
 
 class HttpAction: public HttpMessage {
 	private:
@@ -34,6 +35,7 @@ class HttpAction: public HttpMessage {
 		int route_index;
 		std::string path;
 		std::string dest;
+		dirListing dir_list;
 
 	private:
 		void initVars(HttpRequest&, const Server&);
