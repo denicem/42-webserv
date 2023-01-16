@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 04:56:43 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 22:03:17 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 
 void HttpRequest::initVars(std::stringstream& stream)
 {
-	std::stringstream firstLineStream(this->firstLine);
-	this->setHttpMethod(firstLineStream);
-	this->setURI(firstLineStream);
-	this->setHttpVer(firstLineStream);
+	std::stringstream request_line_stream(this->request_line);
+	this->setHttpMethod(request_line_stream);
+	this->setURI(request_line_stream);
+	this->setHttpVer(request_line_stream);
 	this->setHeaders(stream);
 	if (this->httpMethod == POST)
 		this->setMsgBody(stream);
@@ -60,7 +60,7 @@ void HttpRequest::setURI(std::stringstream& stream)
 
 void HttpRequest::setHttpVer(std::stringstream& stream)
 {
-	stream >> this->httpVer;
+	stream >> this->http_ver;
 }
 
 void HttpRequest::setHeaders(std::stringstream& stream)
@@ -84,9 +84,9 @@ void HttpRequest::setMsgBody(std::stringstream& stream)
 	while (!stream.eof()) // TODO: find out what to extract exactly
 	{
 		std::getline(stream, tmp);
-		this->msgBody.append(tmp);
+		this->msg_body.append(tmp);
 		if (!stream.eof())
-			this->msgBody.append("\n");
+			this->msg_body.append("\n");
 	}
 }
 
@@ -100,7 +100,7 @@ HttpRequest::HttpRequest(const HttpRequest& other): HttpMessage(other), httpMeth
 HttpRequest::HttpRequest(void* buff)
 {
 	std::stringstream stream(std::string((const char*) buff));
-	std::getline(stream, this->firstLine);
+	std::getline(stream, this->request_line);
 	this->initVars(stream);
 	// print map headers
 	// std::cout << "Headers size: " << this->headers.size() << std::endl;
@@ -118,10 +118,10 @@ HttpRequest& HttpRequest::operator=(const HttpRequest& other)
 {
 	if (this != &other)
 	{
-		// this->firstLine = other.firstLine;
-		// this->httpVer = other.httpVer;
+		// this->request_line = other.request_line;
+		// this->http_ver = other.http_ver;
 		// this->headers = other.headers;
-		// this->msgBody = other.msgBody; // NOTE: will the operator=() method from the Base class called first?
+		// this->msg_body = other.msg_body; // NOTE: will the operator=() method from the Base class called first?
 		this->httpMethod = other.httpMethod;
 		this->uri = other.uri;
 		this->restEndpoint = other.restEndpoint;
@@ -185,8 +185,8 @@ void HttpRequest::setRestEndpoint(const std::string& restEndpoint)
 std::ostream& operator<<(std::ostream& stream, const HttpRequest& req)
 {
 	stream << "***** REQUEST *****" << std::endl;
-	stream <<  "Request Line: " << req.firstLine << std::endl;
-	stream << "HTTP ver: " << req.httpVer << std::endl;
+	stream <<  "Request Line: " << req.request_line << std::endl;
+	stream << "HTTP ver: " << req.http_ver << std::endl;
 	stream << "HTTP method: " << getHttpMethodStr(req.httpMethod) << std::endl;
 	stream << "HTTP URI: " << req.uri << std::endl;
 	stream << "HTTP PATH: " << req.path << std::endl;
@@ -198,7 +198,7 @@ std::ostream& operator<<(std::ostream& stream, const HttpRequest& req)
 	// 	stream << (*it).first << ": " << (*it).second << std::endl;
 	// }
 	// stream << std::endl;
-	// stream << (req.msgBody.empty() ? "EMPTY BODY" : req.msgBody) << std::endl;
+	// stream << (req.msg_body.empty() ? "EMPTY BODY" : req.msg_body) << std::endl;
 	// stream << "*******************" << std::endl;
 	return (stream);
 }

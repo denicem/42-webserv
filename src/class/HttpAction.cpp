@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 19:01:29 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 22:03:17 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 */
 
 void HttpAction::initVars(HttpRequest& req, const Server& server) {
-	this->httpVer = req.getHttpVer();
+	this->http_ver = req.getHttpVer();
 
 	// NOTE: deep copy map
 	typedef std::map<std::string, std::string>::const_iterator str_map_iter;
@@ -26,7 +26,7 @@ void HttpAction::initVars(HttpRequest& req, const Server& server) {
 	for (; it != ite; ++it)
 		this->headers[(*it).first] = (*it).second;
 
-	this->msgBody = req.getMsgBody();
+	this->msg_body = req.getMsgBody();
 	this->method = req.getHttpMethod();
 	this->setPath(req, server);
 }
@@ -188,7 +188,7 @@ void HttpAction::doAction(const Server& server) {
 	}
 	if (this->method == POST && this->route_index >= 0)
 	{
-		if ((int) this->msgBody.size() > server.getClientMaxBody()) {
+		if ((int) this->msg_body.size() > server.getClientMaxBody()) {
 			std::cout << "too big!" << std::endl;
 			this->statusCode = 400;
 			try {
@@ -200,7 +200,7 @@ void HttpAction::doAction(const Server& server) {
 		}
 		else {
 			std::ofstream outfile((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
-			outfile << this->msgBody;
+			outfile << this->msg_body;
 			this->statusCode = 201;
 			outfile.close();
 		}

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 18:21:56 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/16 22:03:17 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ HttpResponse::HttpResponse() {}
 HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), statusCode(other.statusCode) {}
 
 HttpResponse::HttpResponse(const HttpAction& act) {
-	this->httpVer = act.getHttpVer();
-	this->msgBody = act.getMsgBody();
+	this->http_ver = act.getHttpVer();
+	this->msg_body = act.getMsgBody();
 
 	this->statusCode = act.getStatusCode();
 	this->file = act.getFile();
@@ -70,10 +70,10 @@ HttpResponse::~HttpResponse() {}
 
 HttpResponse& HttpResponse::operator=(const HttpResponse& other) {
 	if (this != &other) {
-		// this->firstLine = other.firstLine;
-		// this->httpVer = other.httpVer;
+		// this->request_line = other.request_line;
+		// this->http_ver = other.http_ver;
 		// this->headers = other.headers;
-		// this->msgBody = other.msgBody; // NOTE: will the operator=() method from the Base class called first?
+		// this->msg_body = other.msg_body; // NOTE: will the operator=() method from the Base class called first?
 		this->statusCode = other.statusCode;
 	}
 	return (*this);
@@ -100,7 +100,7 @@ std::string HttpResponse::genHttpResponseMsg(const HttpAction& act) const {
 	std::stringstream stream;
 	(void) act;
 
-	stream << this->httpVer << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
+	stream << this->http_ver << " " << this->statusCode << " " << this->getStatusMsg() << std::endl;
 	if (!this->headers.empty()) {
 		std::map<std::string, std::string>::const_iterator it = this->headers.begin();
 		std::map<std::string, std::string>::const_iterator ite = this->headers.end();
