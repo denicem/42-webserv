@@ -19,19 +19,16 @@
 
 class File {
 	private:
-		std::string filename;
+		std::string file_name;
 		std::string path;
 		std::string content;
 		int file_size;
-
-	private:
-		void calcFileSize(std::ifstream&);
-		void getContentFromFile(std::ifstream&);
 
 	public:
 		File();
 		File(const File&);
 		File(const std::string&);
+		File(const std::string&, const std::string&);
 		~File();
 
 		File& operator=(const File&);
@@ -46,6 +43,11 @@ class File {
 		void setContent(const std::string&);
 		void setFileSize(const int&);
 
+	private:
+		void calcFileSize(std::ifstream&);
+		void getContentFromFile(std::ifstream&);
+
+	public:
 		class FileNotFoundException: public std::exception {};
 };
 

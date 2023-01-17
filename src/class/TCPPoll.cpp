@@ -37,7 +37,7 @@ void TCPPoll::add_fds(Server server) {
 void TCPPoll::status_check()
 {
 	PRINT_W_COLOR(LIGHTGREEN, "status_check is starting:")
-	// PRINT_W_COLOR(BLUE, ("Max connection are: " + std::to_string(getMaxConnection())))
+	PRINT_W_COLOR(BLUE, ("Max connection are: " + CGI::intToString(getMaxConnection())))
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
@@ -106,9 +106,9 @@ void TCPPoll::status_check()
 						act.doAction(this->sfds[index]);
 
 						HttpResponse resp(act);
-						std::string resp_msg(resp.genHttpResponseMsg(act));
-						// PRINT_W_COLOR(LIGHTBLUE, "HTTP Response")
-						// PRINT_W_COLOR(BOLD, resp_msg)
+						std::string resp_msg(resp.genHttpResponseMsg());
+						PRINT_W_COLOR(LIGHTBLUE, "HTTP Response")
+						PRINT_W_COLOR(BOLD, resp)
 
 						send(acceptedFd, resp_msg.c_str(), resp_msg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";

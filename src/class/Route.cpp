@@ -95,7 +95,6 @@ std::string Route::getUploadDir() const {
 
 std::ostream& operator<<(std::ostream& stream, const Route& r) {
 	stream << "***** Route *****" << std::endl;
-
 	stream << "Name: " << r.name << std::endl;
 	stream << "Allowed Methods: ";
 	for (std::vector<HttpMethod>::size_type i = 0; i < r.http_methods.size(); ++i) {

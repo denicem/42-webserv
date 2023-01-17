@@ -13,29 +13,23 @@
 #include "HttpMessage.hpp"
 
 /*
-** ----------------------- PRIVATE METHODS -----------------------
-*/
-
-/*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
 HttpMessage::HttpMessage() {}
-HttpMessage::HttpMessage(const HttpMessage& other): firstLine(other.firstLine), httpVer(other.httpVer), headers(other.headers), msgBody(other.msgBody) {}
+HttpMessage::HttpMessage(const HttpMessage& other): request_line(other.request_line), http_ver(other.http_ver), headers(other.headers), msg_body(other.msg_body) {}
 HttpMessage::~HttpMessage() {}
 
 /*
 ** ----------------------- OPERATOR OVERLOADS -----------------------
 */
 
-HttpMessage& HttpMessage::operator=(const HttpMessage& other)
-{
-	if (this != &other)
-	{
-		this->firstLine = other.firstLine;
-		this->httpVer = other.httpVer;
+HttpMessage& HttpMessage::operator=(const HttpMessage& other) {
+	if (this != &other) {
+		this->request_line = other.request_line;
+		this->http_ver = other.http_ver;
 		this->headers = other.headers;
-		this->msgBody = other.msgBody;
+		this->msg_body = other.msg_body;
 	}
 	return (*this);
 }
@@ -44,35 +38,20 @@ HttpMessage& HttpMessage::operator=(const HttpMessage& other)
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
 
-std::string HttpMessage::getHttpVer() const
-{
-	return (this->httpVer);
+std::string HttpMessage::getRequestLine() const {
+	return (this->request_line);
 }
 
-const std::map<std::string, std::string>& HttpMessage::getHeaders() const
-{
+std::string HttpMessage::getHttpVer() const {
+	return (this->http_ver);
+}
+
+const std::map<std::string, std::string>& HttpMessage::getHeaders() const {
 	return (this->headers);
 }
 
-std::string HttpMessage::getMsgBody() const
-{
-	return (this->msgBody);
-}
-
-
-void HttpMessage::setHttpVer(const std::string& httpVer)
-{
-	this->httpVer = httpVer;
-}
-
-// void HttpMessage::setHeaders(const std::string& headers)
-// {
-// 	this->headers = headers;
-// }
-
-void HttpMessage::setMsgBody(const std::string& msgBody)
-{
-	this->msgBody = msgBody;
+std::string HttpMessage::getMsgBody() const {
+	return (this->msg_body);
 }
 
 /*
@@ -80,11 +59,7 @@ void HttpMessage::setMsgBody(const std::string& msgBody)
 */
 
 /*
-** ----------------------- CLASS ATTRIBUTES -----------------------
-*/
-
-/*
-** ----------------------- CLASS METHODS -----------------------
+** ----------------------- PRIVATE METHODS -----------------------
 */
 
 /*

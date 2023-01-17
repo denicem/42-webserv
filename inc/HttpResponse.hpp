@@ -19,13 +19,13 @@
 #include "File.hpp"
 #include "Server.hpp"
 
+#include <map>
+
 class HttpResponse: public HttpMessage {
 	private:
-		int statusCode;
+		int status_code;
 		File file;
-
-	private:
-		std::string getStatusMsg() const;
+		std::map<std::string, std::string> headers;
 
 	public:
 		HttpResponse();
@@ -35,11 +35,11 @@ class HttpResponse: public HttpMessage {
 
 		HttpResponse& operator=(const HttpResponse&);
 
-		int getStatusCode() const;
+		std::string genHttpResponseMsg() const;
 
-		void setStatusCode(const int&);
-
-		std::string genHttpResponseMsg(const HttpAction&) const;
+	private:
+		std::string getStatusMsg() const;
+		void addHeaders(); 
 
 		friend std::ostream& operator<<(std::ostream&, const HttpResponse&);
 };

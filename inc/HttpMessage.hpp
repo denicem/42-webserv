@@ -18,10 +18,10 @@
 
 class HttpMessage {
 	protected:
-		std::string firstLine;
-		std::string httpVer;
+		std::string request_line;
+		std::string http_ver;
 		std::map<std::string, std::string> headers;
-		std::string msgBody;
+		std::string msg_body;
 
 	public:
 		HttpMessage();
@@ -30,13 +30,11 @@ class HttpMessage {
 
 		HttpMessage& operator=(const HttpMessage&);
 
+		std::string getRequestLine() const;
 		std::string getHttpVer() const;
 		const std::map<std::string, std::string>& getHeaders() const;
 		std::string getMsgBody() const;
 
-		void setHttpVer(const std::string&);
-		// void setHeaders(const std::string&);
-		void setMsgBody(const std::string&);
 };
 
 #endif

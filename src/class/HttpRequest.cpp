@@ -6,106 +6,27 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/16 04:56:43 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/17 03:26:18 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpRequest.hpp"
 
+#include <iostream>
 #include <sstream>
 #include <string>
-#include <iostream>
-#include <exception>
-
-/*
-** ----------------------- PRIVATE METHODS -----------------------
-*/
-
-void HttpRequest::initVars(std::stringstream& stream)
-{
-	std::stringstream firstLineStream(this->firstLine);
-	this->setHttpMethod(firstLineStream);
-	this->setURI(firstLineStream);
-	this->setHttpVer(firstLineStream);
-	this->setHeaders(stream);
-	if (this->httpMethod == POST)
-		this->setMsgBody(stream);
-}
-
-void HttpRequest::setHttpMethod(std::stringstream& stream)
-{
-	std::string tmp;
-
-	stream >> tmp;
-	if (tmp == "GET")
-		this->httpMethod = GET;
-	else if (tmp == "POST")
-		this->httpMethod = POST;
-	else if (tmp == "DELETE")
-		this->httpMethod = DELETE;
-	else
-		this->httpMethod = METHOD_UNDEFINED;
-}
-
-void HttpRequest::setURI(std::stringstream& stream)
-{
-	stream >> this->uri;
-	this->restEndpoint = this->uri.substr(this->uri.find_last_of('/') + 1);
-	if (this->uri.find('?') != std::string::npos) {
-		this->query = this->uri.substr(this->uri.find_first_of('?'));
-		this->path = this->uri.substr(0, this->uri.find_first_of('?'));
-		this->uri = this->path;
-	}
-}
-
-void HttpRequest::setHttpVer(std::stringstream& stream)
-{
-	stream >> this->httpVer;
-}
-
-void HttpRequest::setHeaders(std::stringstream& stream)
-{
-	std::string tmp;
-
-	while (!stream.eof() && tmp != "\r") // NOTE: "\r" identifies if HTTP headers end; NOTE: what about CRLF??
-	{
-		std::getline(stream, tmp);
-		// if (tmp.find(":") == std::string::npos)
-		// 	std::cout << "ERROR: " << tmp << std::endl;
-		if (tmp != "\r") // TODO: should only do if right syntax!
-			this->headers[tmp.substr(0, tmp.find(":"))] = tmp.substr(tmp.find(":") + 2, tmp.find("\r") - (tmp.find(":") + 2));
-	}
-}
-
-void HttpRequest::setMsgBody(std::stringstream& stream)
-{
-	std::string tmp;
-
-	while (!stream.eof()) // TODO: find out what to extract exactly
-	{
-		std::getline(stream, tmp);
-		this->msgBody.append(tmp);
-		if (!stream.eof())
-			this->msgBody.append("\n");
-	}
-}
 
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
 HttpRequest::HttpRequest() {}
-HttpRequest::HttpRequest(const HttpRequest& other): HttpMessage(other), httpMethod(other.httpMethod), uri(other.uri), restEndpoint(other.restEndpoint) {}
+HttpRequest::HttpRequest(const HttpRequest& other): HttpMessage(other), http_method(other.http_method), uri(other.uri), path(other.path), query(other.query) {}
 
-HttpRequest::HttpRequest(void* buff)
-{
-	std::stringstream stream(std::string((const char*) buff));
-	std::getline(stream, this->firstLine);
-	this->initVars(stream);
-	// print map headers
-	// std::cout << "Headers size: " << this->headers.size() << std::endl;
-	// for (std::map<std::string, std::string>::iterator it = this->headers.begin(); it != this->headers.end(); ++it)
-	// 	std::cout << "|" << (*it).first << "_" << (*it).second << "|" << std::endl;
+HttpRequest::HttpRequest(void* buff) {
+	std::stringstream req_buff(std::string((const char*) buff));
+	std::getline(req_buff, this->request_line);
+	this->fetchRequestBuffer(req_buff);
 }
 
 HttpRequest::~HttpRequest() {}
@@ -114,17 +35,17 @@ HttpRequest::~HttpRequest() {}
 ** ----------------------- OPERATOR OVERLOADS -----------------------
 */
 
-HttpRequest& HttpRequest::operator=(const HttpRequest& other)
-{
-	if (this != &other)
-	{
-		// this->firstLine = other.firstLine;
-		// this->httpVer = other.httpVer;
-		// this->headers = other.headers;
-		// this->msgBody = other.msgBody; // NOTE: will the operator=() method from the Base class called first?
-		this->httpMethod = other.httpMethod;
+HttpRequest& HttpRequest::operator=(const HttpRequest& other) {
+	if (this != &other) {
+		this->request_line = other.request_line;
+		this->http_ver = other.http_ver;
+		this->headers = other.headers;
+		this->msg_body = other.msg_body;
+
+		this->http_method = other.http_method;
 		this->uri = other.uri;
-		this->restEndpoint = other.restEndpoint;
+		this->path = other.path;
+		this->query = other.query;
 	}
 	return (*this);
 }
@@ -133,45 +54,29 @@ HttpRequest& HttpRequest::operator=(const HttpRequest& other)
 ** ----------------------- GETTER AND SETTER METHODS -----------------------
 */
 
-HttpMethod HttpRequest::getHttpMethod() const
-{
-	return (this->httpMethod);
+HttpMethod HttpRequest::getHttpMethod() const {
+	return (this->http_method);
 }
 
-std::string HttpRequest::getURI() const
-{
+std::string HttpRequest::getURI() const {
 	return (this->uri);
 }
 
-std::string HttpRequest::getPath() const
-{
+std::string HttpRequest::getPath() const {
 	return (this->path);
 }
 
-std::string HttpRequest::getQuery() const
-{
+std::string HttpRequest::getQuery() const {
 	return (this->query);
 }
 
-std::string HttpRequest::getRestEndpoint() const
-{
-	return (this->restEndpoint);
-}
 
-
-void HttpRequest::setHttpMethod(const HttpMethod& httpMethod)
-{
-	this->httpMethod = httpMethod;
-}
-
-void HttpRequest::setURI(const std::string& uri)
-{
+void HttpRequest::setURI(const std::string& uri) {
 	this->uri = uri;
 }
 
-void HttpRequest::setRestEndpoint(const std::string& restEndpoint)
-{
-	this->restEndpoint = restEndpoint;
+void HttpRequest::setPath(const std::string& path) {
+	this->path = path;
 }
 
 /*
@@ -179,26 +84,86 @@ void HttpRequest::setRestEndpoint(const std::string& restEndpoint)
 */
 
 /*
+** ----------------------- PRIVATE METHODS -----------------------
+*/
+
+void HttpRequest::fetchRequestBuffer(std::stringstream& req_buff) {
+	std::stringstream request_line_stream(this->request_line);
+	this->fetchHttpMethod(request_line_stream);
+	this->fetchURI(request_line_stream);
+	this->fetchHttpVer(request_line_stream);
+
+	this->fetchHeaders(req_buff);
+	if (this->http_method == POST)
+		this->fetchMsgBody(req_buff);
+}
+
+void HttpRequest::fetchHttpMethod(std::stringstream& stream) {
+	std::string tmp;
+
+	stream >> tmp;
+	if (tmp == "GET")
+		this->http_method = GET;
+	else if (tmp == "POST")
+		this->http_method = POST;
+	else if (tmp == "DELETE")
+		this->http_method = DELETE;
+	else
+		this->http_method = METHOD_UNDEFINED;
+}
+
+void HttpRequest::fetchURI(std::stringstream& stream) {
+	stream >> this->uri;
+	this->path = this->uri.substr(0, this->uri.find_first_of('?'));
+	if (this->uri.find('?') != std::string::npos) {
+		this->query = this->uri.substr(this->uri.find_first_of('?') + 1);
+	}
+}
+
+void HttpRequest::fetchHttpVer(std::stringstream& stream) {
+	stream >> this->http_ver;
+}
+
+void HttpRequest::fetchHeaders(std::stringstream& stream) {
+	std::string tmp;
+
+	while (!stream.eof() && tmp != "\r") {
+		std::getline(stream, tmp); // TODO: instead of getline, use cin?!? -> maybe will be simpler?
+		if (tmp != "\r")
+			this->headers[tmp.substr(0, tmp.find(":"))] = tmp.substr(tmp.find(":") + 2, tmp.find("\r") - (tmp.find(":") + 2));
+	}
+}
+
+void HttpRequest::fetchMsgBody(std::stringstream& stream) {
+	std::string tmp;
+
+	while (!stream.eof()) {
+		std::getline(stream, tmp);
+		this->msg_body.append(tmp);
+		if (!stream.eof())
+			this->msg_body.append("\n");
+	}
+}
+
+/*
 ** ----------------------- FUNCS -----------------------
 */
 
-std::ostream& operator<<(std::ostream& stream, const HttpRequest& req)
-{
+std::ostream& operator<<(std::ostream& stream, const HttpRequest& req) {
 	stream << "***** REQUEST *****" << std::endl;
-	stream <<  "Request Line: " << req.firstLine << std::endl;
-	stream << "HTTP ver: " << req.httpVer << std::endl;
-	stream << "HTTP method: " << getHttpMethodStr(req.httpMethod) << std::endl;
+	stream <<  "Request line: " << req.request_line << std::endl;
+	stream << "HTTP ver: " << req.http_ver << std::endl;
+	stream << "HTTP method: " << getHttpMethodStr(req.http_method) << std::endl;
 	stream << "HTTP URI: " << req.uri << std::endl;
-	stream << "HTTP PATH: " << req.path << std::endl;
-	stream << "HTTP QUERY: " << req.query << std::endl;
-	stream << "HTTP Restendpoint: " << req.restEndpoint << std::endl;
-	// stream << std::endl << "HTTP HEADERS: " << std::endl;
+	stream << "HTTP path: " << req.path << std::endl;
+	stream << "HTTP query: " << req.query << std::endl;
+	// stream << std::endl << "HTTP Headers: " << std::endl;
 	// for (std::map<std::string, std::string>::const_iterator it = req.headers.begin(); it != req.headers.end(); ++it)
-	// {
 	// 	stream << (*it).first << ": " << (*it).second << std::endl;
-	// }
 	// stream << std::endl;
-	// stream << (req.msgBody.empty() ? "EMPTY BODY" : req.msgBody) << std::endl;
-	// stream << "*******************" << std::endl;
+	stream << "HTTP body:" << std::endl;
+	stream << (req.msg_body.empty() ? "Empty body" : req.msg_body) << std::endl;
+	stream << "*******************" << std::endl;
+
 	return (stream);
 }

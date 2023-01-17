@@ -45,7 +45,6 @@ class CGI
 		void			setEnv(void);
 
 		static void		CGIError(string error_msg);
-		static string	intToString(int i);
 
 	public:
 		CGI(); // for testing
@@ -55,6 +54,7 @@ class CGI
 
 		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method);
 		string		executeCGI(void);
+		static string	intToString(int i);
 		
 		struct CGIException: public exception
 		{
