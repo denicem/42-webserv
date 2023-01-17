@@ -15,10 +15,6 @@
 #include <sstream>
 
 /*
-** ----------------------- PRIVATE METHODS -----------------------
-*/
-
-/*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
@@ -124,6 +120,10 @@ void Server::printRoutes() const {
 		PRINT_W_COLOR(BOLD, this->routes[i])
 	}
 }
+
+/*
+** ----------------------- PRIVATE METHODS -----------------------
+*/
 
 /*
 ** ----------------------- EXCEPTIONS -----------------------

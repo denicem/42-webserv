@@ -13,10 +13,6 @@
 #include "HttpMessage.hpp"
 
 /*
-** ----------------------- PRIVATE METHODS -----------------------
-*/
-
-/*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
@@ -28,10 +24,8 @@ HttpMessage::~HttpMessage() {}
 ** ----------------------- OPERATOR OVERLOADS -----------------------
 */
 
-HttpMessage& HttpMessage::operator=(const HttpMessage& other)
-{
-	if (this != &other)
-	{
+HttpMessage& HttpMessage::operator=(const HttpMessage& other) {
+	if (this != &other) {
 		this->request_line = other.request_line;
 		this->http_ver = other.http_ver;
 		this->headers = other.headers;
@@ -48,18 +42,15 @@ std::string HttpMessage::getRequestLine() const {
 	return (this->request_line);
 }
 
-std::string HttpMessage::getHttpVer() const
-{
+std::string HttpMessage::getHttpVer() const {
 	return (this->http_ver);
 }
 
-const std::map<std::string, std::string>& HttpMessage::getHeaders() const
-{
+const std::map<std::string, std::string>& HttpMessage::getHeaders() const {
 	return (this->headers);
 }
 
-std::string HttpMessage::getMsgBody() const
-{
+std::string HttpMessage::getMsgBody() const {
 	return (this->msg_body);
 }
 
@@ -68,11 +59,7 @@ std::string HttpMessage::getMsgBody() const
 */
 
 /*
-** ----------------------- CLASS ATTRIBUTES -----------------------
-*/
-
-/*
-** ----------------------- CLASS METHODS -----------------------
+** ----------------------- PRIVATE METHODS -----------------------
 */
 
 /*

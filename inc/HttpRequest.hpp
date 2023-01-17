@@ -22,11 +22,10 @@
 
 class HttpRequest: public HttpMessage {
 	private:
-		HttpMethod httpMethod;
+		HttpMethod http_method;
 		std::string uri;
 		std::string path;
 		std::string query;
-		std::string restEndpoint;
 
 	public:
 		HttpRequest();
@@ -40,19 +39,17 @@ class HttpRequest: public HttpMessage {
 		std::string getURI() const;
 		std::string getPath() const;
 		std::string getQuery() const;
-		std::string getRestEndpoint() const;
 
-		void setHttpMethod(const HttpMethod&);
 		void setURI(const std::string&);
-		void setRestEndpoint(const std::string&);
+		void setPath(const std::string&);
 
 	private:
-		void initVars(std::stringstream&);
-		void setHttpMethod(std::stringstream&);
-		void setURI(std::stringstream&);
-		void setHttpVer(std::stringstream&);
-		void setHeaders(std::stringstream&);
-		void setMsgBody(std::stringstream&);
+		void fetchRequestBuffer(std::stringstream&);
+		void fetchHttpMethod(std::stringstream&);
+		void fetchURI(std::stringstream&);
+		void fetchHttpVer(std::stringstream&);
+		void fetchHeaders(std::stringstream&);
+		void fetchMsgBody(std::stringstream&);
 
 	public:
 		friend std::ostream& operator<<(std::ostream&, const HttpRequest&);

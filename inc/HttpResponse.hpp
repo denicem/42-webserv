@@ -13,23 +13,19 @@
 #ifndef HTTP_RESPONSE_HPP
 #define HTTP_RESPONSE_HPP
 
-#include <map>
-
 #include "HttpMessage.hpp"
 #include "HttpRequest.hpp"
 #include "HttpAction.hpp"
 #include "File.hpp"
 #include "Server.hpp"
 
+#include <map>
+
 class HttpResponse: public HttpMessage {
 	private:
-		int statusCode;
+		int status_code;
 		File file;
 		std::map<std::string, std::string> headers;
-
-	private:
-		std::string getStatusMsg() const;
-		void addHeaders(); 
 
 	public:
 		HttpResponse();
@@ -39,11 +35,11 @@ class HttpResponse: public HttpMessage {
 
 		HttpResponse& operator=(const HttpResponse&);
 
-		int getStatusCode() const;
+		std::string genHttpResponseMsg() const;
 
-		void setStatusCode(const int&);
-
-		std::string genHttpResponseMsg(const HttpAction&) const;
+	private:
+		std::string getStatusMsg() const;
+		void addHeaders(); 
 
 		friend std::ostream& operator<<(std::ostream&, const HttpResponse&);
 };

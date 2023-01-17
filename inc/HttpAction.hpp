@@ -13,10 +13,10 @@
 #ifndef HTTP_ACTION_HPP
 #define HTTP_ACTION_HPP
 
-#define ERROR_PAGE_400 "./error/400.html"
-#define ERROR_PAGE_404 "./error/404.html"
-#define ERROR_PAGE_405 "./error/405.html"
-#define ERROR_PAGE_501 "./error/501.html"
+#define DEF_ERROR_PAGE_400 "./error/400.html"
+#define DEF_ERROR_PAGE_404 "./error/404.html"
+#define DEF_ERROR_PAGE_405 "./error/405.html"
+#define DEF_ERROR_PAGE_501 "./error/501.html"
 
 #include "File.hpp"
 #include "HttpMessage.hpp"
@@ -27,24 +27,14 @@
 
 class HttpAction: public HttpMessage {
 	private:
-		HttpMethod method;
-		int statusCode;
+		HttpMethod http_method;
+		int status_code;
 		File file;
 
-		int location;
+		std::string path_req, path, dest;
 		int route_index;
-		std::string path;
-		std::string dest;
+		std::string http_redirect;
 		dirListing dir_list;
-
-	private:
-		void initVars(HttpRequest&, const Server&);
-		void setPath(HttpRequest&, const Server&);
-		bool isMethodAllowed(const int, const Route&) const;
-		int getLocationIndex(const std::string&, const Server&) const;
-		int getRouteIndex(const std::string&, const Server&) const;
-		bool isDestination(const std::string&) const;
-		std::string getDefaultErrorPage(int) const;
 
 	public:
 		HttpAction();
@@ -59,6 +49,16 @@ class HttpAction: public HttpMessage {
 		File getFile() const;
 
 		void doAction(const Server&);
+
+	private:
+		void setupErrorPage(int status_code, const Server&);
+		std::string getDefaultErrorPage(int) const;
+
+		void setPath(const HttpRequest&, const Server&);
+		int getRouteIndex(const std::string&, const Server&) const;
+		void checkHttpRedirection(const Server&);
+
+		bool isMethodAllowed(const int, const Route&) const;
 };
 
 #endif
