@@ -46,6 +46,7 @@ class Route {
 		bool getDirList() const;
 		std::string getDefaultFile() const;
 		std::string getUploadDir() const;
+		const std::vector<std::string>& getCgiExts() const;
 
 		friend std::ostream& operator<<(std::ostream&, const Route&);
 };

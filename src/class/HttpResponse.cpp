@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/17 03:41:36 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/17 23:55:23 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ HttpResponse::HttpResponse(const HttpResponse& other): HttpMessage(other), statu
 HttpResponse::HttpResponse(const HttpAction& act) {
 	this->request_line = act.getRequestLine();
 	this->http_ver = act.getHttpVer();
-	this->headers = act.getHeaders();
+	this->HttpMessage::headers = act.getHeaders();
 	this->msg_body = act.getMsgBody();
 
 	this->status_code = act.getStatusCode();
@@ -43,7 +43,7 @@ HttpResponse& HttpResponse::operator=(const HttpResponse& other) {
 	if (this != &other) {
 		this->request_line = other.request_line;
 		this->http_ver = other.http_ver;
-		this->headers = other.headers;
+		this->HttpMessage::headers = other.HttpMessage::headers;
 		this->msg_body = other.msg_body;
 
 		this->status_code = other.status_code;
@@ -92,6 +92,7 @@ std::string HttpResponse::getStatusMsg() const {
 		case 404: return ("Not Found");
 		case 405: return ("Method Not Allowed");
 		case 501: return ("Not Implemented.");
+		case 542: return ("Internal CGI Error.");
 		default: return ("undefined");
 	}
 }
@@ -101,8 +102,8 @@ void HttpResponse::addHeaders() { // NOTE: maybe a vector would be more effecien
 		std::string file_name = this->file.getFilename();
 		std::string file_ext = file_name.substr(file_name.find('.') + 1);
 
-		if (file_ext == "html" || file_ext == "css" || file_ext == "txt")
-			this->headers["Content-Type"] = "text/" + file_ext;
+		if (file_ext == "html" || file_ext == "css" || file_ext == "txt" || file_ext == "plain")
+			this->headers["Content-Type"] = "text/" + (file_ext == "txt" ? "plain" : file_ext);
 		else if (file_ext == "jpeg" || file_ext == "png" || file_ext == "gif")
 			this->headers["Content-Type"] = "image/" + file_ext;
 		this->headers["Content-Length"] = CGI::intToString(this->file.getFileSize());

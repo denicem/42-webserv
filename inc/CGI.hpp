@@ -21,8 +21,6 @@
 
 extern string g_cgi_dir;
 
-class HttpAction;
-
 class CGI
 {
 	private:
@@ -41,6 +39,10 @@ class CGI
 		string	_content_length;
 		char**	_env;
 
+		/* CGI response */
+		string	_response_type;
+		string	_response_body;
+
 		//set enviroment
 		void			setEnv(void);
 
@@ -49,11 +51,14 @@ class CGI
 	public:
 		CGI(); // for testing
 		/* assumes the request has already been established as valid for CGI */
-		CGI(const HttpAction& http);
+		CGI(const map<string, string>& request_headers, const string& query_string, const string& cgi_file, const string& http_version);
 		~CGI();
 
+		string			executeCGI(void);
+		const string&	getResponseType(void) { return this->_response_type; }
+		const string&	getResponseBody(void) { return this->_response_body; }
+
 		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method);
-		string		executeCGI(void);
 		static string	intToString(int i);
 		
 		struct CGIException: public exception
