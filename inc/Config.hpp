@@ -106,6 +106,7 @@ class Config
 		void	handleSetting(size_t colon_pos);
 		void	setSetting(const string& setting, ServerConfig* server);
 		void	setSetting(const string& setting, RouteConfig* route);
+		void	setDefaultValues(void);
 
 		static bool	lineHasBrackets(string& line);
 		static void	configError(int line_num, string error_msg);
@@ -116,7 +117,6 @@ class Config
 		static int	stringToInt(string& string, int lower_limit, int upper_limit, int line_num);
 		static bool	portIsDuplicate(int port, const vector<ServerConfig>& servers);
 		static bool	settingHasMultipleValues(string& line);
-		static void	setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route, string route_name, int line_num);
 		static bool	invalidHttpRedirect(ServerConfig* server);
 
 	public:

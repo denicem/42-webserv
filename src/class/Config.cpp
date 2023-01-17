@@ -100,17 +100,17 @@ bool	Config::settingHasMultipleValues(string& line)
 	return true;
 }
 
-void	Config::setDefaultValues(map<string, Setting>& route_settings, RouteConfig* route, string route_name, int line_num)
+void	Config:: setDefaultValues(void)
 {
-	if (route_settings["http_methods"].setting_is_set == false)
-		route->http_methods = g_http_methods;
+	if (_route_settings["http_methods"].setting_is_set == false)
+		_curr_route->http_methods = g_http_methods;
 	//if (route_settings["cgi_extensions"].setting_is_set == false)
 	//	route->cgi_extensions = g_cgi_extensions; // right now, we want to keep it empty if not set
-	if (route_settings["root"].setting_is_set == false && route_settings["alias"].setting_is_set == false)
+	if (_route_settings["root"].setting_is_set == false && _route_settings["alias"].setting_is_set == false)
 	{
-		if (access(('.' + route_name).c_str(), F_OK) == -1)
-			configError(line_num, "Cannot access route directory");
-		route->root = '.' + route_name;
+		if (access((_curr_server->root + _curr_route_name).c_str(), F_OK) == -1)
+			configError(_line_num, "Cannot access route directory");
+		_curr_route->root = _curr_server->root + _curr_route_name;
 	}
 }
 
@@ -317,6 +317,8 @@ void	Config::parseConfigFile(void)
 						_file_location = SERVER;
 						break;
 					case SERVER:
+						if (_server_settings["root"].setting_is_set == false)
+							configError(_line_num, "Server root must be set before any routes");
 						if (_line == "error_pages")
 						{
 							if (this->_server_settings["error_pages"].setting_is_set)
@@ -356,7 +358,7 @@ void	Config::parseConfigFile(void)
 					case ROUTE:
 						if (mandatorySettingsAreSet(_route_settings) == false)
 							configError(_line_num, "All mandatory settings for this route were not set");
-						setDefaultValues(_route_settings, _curr_route, _curr_route_name, _line_num);
+						setDefaultValues();
 						_file_location = SERVER;
 						break;
 					case ERROR_PAGES:
@@ -470,7 +472,7 @@ void	Config::printServerConfig(const vector<ServerConfig>& config)
 		cout << BLUE << "Server Names:	" << RESET;
 		for (vector<string>::const_iterator name = server->server_names.begin(); name != server->server_names.end(); name++) {
 			cout << *name;
-			if (name != server->server_names.end()-1)
+			if (name != (server->server_names.end() - 1))
 				cout << " | ";
 		}
 		cout << "\n\n" << BLUE << "Port:	" << RESET << server->port << "\n\n";
