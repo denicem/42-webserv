@@ -81,6 +81,10 @@ std::string Route::getUploadDir() const {
 	return (this->upload_dir);
 }
 
+const std::vector<std::string>& Route::getCgiExts() const{
+	return (this->cgi_exts);
+}
+
 /*
 ** ----------------------- METHODS -----------------------
 */

@@ -17,6 +17,7 @@
 #define DEF_ERROR_PAGE_404 "./error/404.html"
 #define DEF_ERROR_PAGE_405 "./error/405.html"
 #define DEF_ERROR_PAGE_501 "./error/501.html"
+#define DEF_ERROR_PAGE_542 "./error/542.html"
 
 #include "File.hpp"
 #include "HttpMessage.hpp"
@@ -24,6 +25,9 @@
 #include "HttpRequest.hpp"
 #include "Server.hpp"
 #include "dirListing.hpp"
+#include "CGI.hpp"
+
+class CGI;
 
 class HttpAction: public HttpMessage {
 	private:
@@ -35,6 +39,13 @@ class HttpAction: public HttpMessage {
 		int route_index;
 		std::string http_redirect;
 		dirListing dir_list;
+
+		/* for cgi */
+		bool is_cgi;
+		CGI cgi;
+		std::string	cgi_response;
+		std::string query;
+		/* */
 
 	public:
 		HttpAction();

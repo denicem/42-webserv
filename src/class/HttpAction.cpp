@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/17 03:45:20 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/17 23:58:28 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ HttpAction::HttpAction(HttpRequest& req, const Server& server): http_method(req.
 		this->setupErrorPage(400, server);
 		return ;
 	}
+	this->query = req.getQuery();
 	this->setPath(req, server);
 }
 
@@ -68,8 +69,23 @@ void HttpAction::doAction(const Server& server) {
 
 	if (this->http_method == GET)
 	{
+		if (this->route_index >= 0) {
+			this->is_cgi = CGI::isCGI(this->dest, server.getRoute(this->route_index).getCgiExts(), getHttpMethodStr(this->http_method));
+		}
+		else if (this->route_index < 0) {
+			this->is_cgi = CGI::isCGI(this->dest, g_cgi_extensions, getHttpMethodStr(this->http_method));
+		}
+
 		try {
-			this->file = File(this->path);
+			if (this->is_cgi) {
+				// this->cgi = CGI(this->headers, this->query, this->dest, this->http_ver);
+				// this->cgi_response = this->cgi.executeCGI();
+				// this->file = File("cgi." + cgi.getResponseType(), cgi.getResponseBody());
+				std::cout << "CGI!!!" << std::endl;
+				this->file = File(this->path);
+			}
+			else
+				this->file = File(this->path);
 			this->status_code = 200;
 		}
 		catch (File::FileNotFoundException& e) {
@@ -80,6 +96,9 @@ void HttpAction::doAction(const Server& server) {
 			}
 			else
 				this->setupErrorPage(404, server);
+		}
+		catch (CGI::CGIException &e) {
+			this->setupErrorPage(542, server);
 		}
 	}
 
@@ -127,6 +146,7 @@ std::string HttpAction::getDefaultErrorPage(int err_code) const {
 		case 404: return (DEF_ERROR_PAGE_404);
 		case 405: return (DEF_ERROR_PAGE_405);
 		case 501: return (DEF_ERROR_PAGE_501);
+		case 542: return (DEF_ERROR_PAGE_542);
 		default: return ("");
 	}
 }

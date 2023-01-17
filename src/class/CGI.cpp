@@ -125,14 +125,6 @@ string	CGI::executeCGI(void)
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
 */
 
-CGI::CGI(const HttpAction& http)
-{
-	//change later!!!
-	(void)http;
-	_program_name = "telephone.cgi";
-	_cgi_extension = ".cgi";
-}
-
 CGI::CGI()
 {
 	_program_name = "telephone.cgi";
@@ -155,7 +147,7 @@ CGI::~CGI() // TEST!!
 
 bool	CGI::isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method)
 {
-	if (method != "GET" && method != "POST") // hardcoded.. if we were to add more methods, need to change
+	if (method != "GET") // hardcoded.. if we were to add more methods, need to change
 		return false;
 	if (filename.rfind('.') == string::npos)
 		return false;
