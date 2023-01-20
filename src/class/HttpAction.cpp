@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/17 23:58:28 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/20 17:25:26 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,16 +102,22 @@ void HttpAction::doAction(const Server& server) {
 		}
 	}
 
-	if (this->http_method == POST && this->route_index >= 0) { // NOTE: only works if the route is requested
-		if ((int) this->msg_body.size() > server.getClientMaxBody()) { // NOTE: Limited bodysize
+	if (this->http_method == POST) {
+		if (server.getClientMaxBody() >= 0 && (int) this->msg_body.size() > server.getClientMaxBody()) { // NOTE: Limited bodysize
 			this->setupErrorPage(400, server);
+			return ;
 		}
-		else {
-			std::ofstream outfile((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
-			outfile << this->msg_body;
-			this->status_code = 201;
-			outfile.close();
-		}
+		std::string upload_dir;
+
+		if (this->route_index < 0 || server.getRoute(this->route_index).getUploadDir().empty())
+			upload_dir = DEF_UPLOAD_DIR;
+		else
+			upload_dir = server.getRoute(this->route_index).getUploadDir();
+		upload_dir.append("/file.txt");
+		std::ofstream outfile(upload_dir.c_str());
+		outfile << this->msg_body;
+		this->status_code = 201;
+		outfile.close();
 	}
 
 	if (this->http_method == DELETE && this->route_index >= 0) { // NOTE: only works if the route is requested

@@ -41,8 +41,6 @@ Route::Route(const std::string& name, const RouteConfig& r_conf):
 		else if (r_conf.http_methods[i] == "DELETE")
 			this->http_methods.push_back(DELETE);
 	}
-	if (this->upload_dir.empty())
-		this->upload_dir = DEF_UPLOAD_DIR;
 }
 
 /*
