@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+ 
+<html>
+    <head>
+        <title>
+            [Analog Server] - from DMS
+        </title>
+		<link rel="icon" href="favicon.ico">
+		<link rel="stylesheet" href="blue.css">
+    </head>
+ 
+    <body style="text-align: left;
+        background-color: #7d91f0;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
+        >
+        <h1 style="text-align: center;">Welcome to the CGI!</h1>
+		<p style="text-align: center;">Here you will have a list of cgi programs to try.</p>
+		
+        
+		<img id="rnd_img" style="float:right" src="./img/buttons.jpg" alt="Index picture" />
+        <form action="http://localhost:6060/telephone.cgi" method="GET">
+            <div>
+              <label for="name">What would you like to be called?</label>
+              <input name="name" id="name" value="Unknown" />
+            <div>
+              <button>Say hello to the C++ program</button>
+            </div>
+        </form> <br> <br>
+		<form action="http://localhost:6060/telephone.py" method="GET">
+            <div>
+              <label for="name">What would you like to be called?</label>
+              <input name="name" id="name" value="Unknown" />
+              <div>
+                  <button>Say hello to the Python program</button>
+            </div>
+        </form> <br> <br>
+        <form action="http://localhost:6060/fancy_telephone.py" method="GET">
+            <div>
+              <label for="name">What would you like to be called?</label>
+              <input name="name" id="name" value="Unknown" />
+            <div>
+              <button>Say hello to the *fancy* Python program</button>
+            </div>
+        </form> <br> <br>
+        <form action="http://localhost:6060/webscrap_mal.py" method="GET">
+            <div>
+              <button>Find out what the Top rated 100 anime are! Can you guess number 1?</button>
+            </div>
+        </form> <br> <br>
+		
+    </body>
+</html>
