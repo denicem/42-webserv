@@ -64,8 +64,7 @@ string	CGI::intToString(int i)
 
 void	CGI::setEnv(void)
 {
-	vector<string>	_env;
-	string			buf;
+	string	buf;
 
 	_env.push_back("SERVER_SOFTWARE=DMS-Server/1.0");
 	_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
@@ -93,13 +92,6 @@ void	CGI::setEnv(void)
 		}
 		_env.push_back("HTTP_" +buf + '=' + i->second);
 	}
-
-	cout << LIGHTCYAN << "ENV\n" << RESET; 
-	for (vector<string>::iterator i = _env.begin();i != _env.end(); i++)
-	{
-		cout << *i << '\n';
-	}
-	cout << LIGHTBLUE << "ENV END\n\n" << RESET; 
 }
 
 void	CGI::executeCGI(void)
@@ -165,8 +157,8 @@ void	CGI::executeCGI(void)
 				_response_type = "plain";
 			else {
 				_response_type = _response_type.substr(_response_type.find("Content-type:")+13);
-				_response_type = _response_type.substr(_response_type.find("/")+1); //
-				_response_type = _response_type.substr(0, _response_type.find("\n")+1);
+				_response_type = _response_type.substr(_response_type.find("/") == string::npos ? 0 : _response_type.find("/")+1); //
+				_response_type = _response_type.substr(0, _response_type.find("\n") == string::npos ? INT_MAX : _response_type.find("\n")+1);
 			}
 			_response_body = cgi_out_str.substr(cgi_out_str.find("\r\n\r\n")+4);
 		}
