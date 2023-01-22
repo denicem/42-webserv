@@ -100,19 +100,36 @@ void HttpAction::doAction(const Server& server) {
 		}
 	}
 
-	if (this->http_method == POST && this->route_index >= 0) { // NOTE: only works if the route is requested
-		if ((int) this->msg_body.size() > server.getClientMaxBody()) { // NOTE: Limited bodysize
+	if (this->http_method == POST) {
+		if (server.getClientMaxBody() >= 0 && (int) this->msg_body.size() > server.getClientMaxBody()) { // NOTE: Limited bodysize
 			this->setupErrorPage(400, server);
+			return ;
 		}
-		else {
-			std::ofstream outfile((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
-			outfile << this->msg_body;
-			this->status_code = 201;
+		std::string upload_dir;
+		if (this->route_index < 0 || server.getRoute(this->route_index).getUploadDir().empty())
+			upload_dir = DEF_UPLOAD_DIR;
+		else
+			upload_dir = server.getRoute(this->route_index).getUploadDir();
+
+		if (extractMsgBody()) {
+			upload_dir.append("/").append(this->upload_filename);
+
+			std::ofstream outfile(upload_dir.c_str());
+			outfile << this->upload_body;
 			outfile.close();
 		}
+		else {
+			upload_dir.append("/").append(this->randomNameGen());
+			std::ofstream outfile(upload_dir.c_str());
+			outfile << this->msg_body;
+			outfile.close();
+		}
+		this->status_code = 201;
 	}
 
 	if (this->http_method == DELETE && this->route_index >= 0) { // NOTE: only works if the route is requested
+		std::cout << "ROOT: " << server.getRoot() << std::endl;
+		std::cout << "PATH:" << this->path << std::endl;
 		try {
 			this->file = File((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
 			std::remove((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
@@ -203,6 +220,64 @@ bool HttpAction::isMethodAllowed(const int http_method, const Route& route) cons
 			return (true);
 	}
 	return (false);
+}
+
+bool HttpAction::extractMsgBody() {
+	std::stringstream sstream (this->msg_body.c_str());
+	std::string tmp;
+	std::string boundary;
+
+	if (this->msg_body.find("Content-Disposition") == std::string::npos)
+		return (false);
+
+	this->upload_body = "";
+
+	std::getline(sstream, tmp);
+	boundary = tmp;
+	boundary.erase(tmp.find('\r'));
+	boundary.append("--");
+
+	while (!tmp.empty())
+	{
+		if (tmp.find('\r') != std::string::npos)
+			tmp.erase(tmp.find(('\r')));
+		if (tmp.empty())
+			break ;
+		if (tmp.find("Content-Disposition") != std::string::npos)
+		{
+			this->upload_filename = tmp.substr(tmp.find("filename"));
+			this->upload_filename = this->upload_filename.substr(this->upload_filename.find('\"') + 1);
+			this->upload_filename = this->upload_filename.erase(this->upload_filename.find('\"'));
+		}
+		std::getline(sstream, tmp);
+	}
+	while (!sstream.eof()) {
+		std::getline(sstream, tmp);
+		if (tmp.find('\r') != std::string::npos)
+			tmp.erase(tmp.find(('\r')));
+		if (boundary == tmp)
+			break ;
+		this->upload_body.append(tmp).append("\n");
+	}
+	this->upload_body.erase(this->upload_body.find_last_of('\n'));
+	return (true);
+}
+
+std::string HttpAction::randomNameGen() const {
+	std::stringstream res;
+	std::srand(time(NULL));
+
+	for (int i = 0; i < 6; ++i) {
+		int rdm = std::rand() % 26;
+		int upper_case = (rdm * std::rand()) % 2;
+		char c;
+		if (upper_case)
+			c = rdm + 'A';
+		else
+			c = rdm + 'a';
+		res << c;
+	}
+	return (res.str());
 }
 
 /*

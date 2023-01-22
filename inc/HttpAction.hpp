@@ -47,6 +47,8 @@ class HttpAction: public HttpMessage {
 		std::string query;
 		/* */
 
+		std::string upload_filename, upload_body;
+
 	public:
 		HttpAction();
 		HttpAction(const HttpAction&);
@@ -70,6 +72,9 @@ class HttpAction: public HttpMessage {
 		void checkHttpRedirection(const Server&);
 
 		bool isMethodAllowed(const int, const Route&) const;
+
+		bool extractMsgBody();
+		std::string randomNameGen() const;
 };
 
 #endif
