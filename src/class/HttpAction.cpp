@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/22 03:04:21 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/22 04:26:53 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void HttpAction::doAction(const Server& server) {
 			outfile.close();
 		}
 		else {
-			upload_dir.append("/file.txt");
+			upload_dir.append("/").append(this->randomNameGen());
 			std::ofstream outfile(upload_dir.c_str());
 			outfile << this->msg_body;
 			outfile.close();
@@ -263,6 +263,23 @@ bool HttpAction::extractMsgBody() {
 	}
 	this->upload_body.erase(this->upload_body.find_last_of('\n'));
 	return (true);
+}
+
+std::string HttpAction::randomNameGen() const {
+	std::stringstream res;
+	std::srand(time(NULL));
+
+	for (int i = 0; i < 6; ++i) {
+		int rdm = std::rand() % 26;
+		int upper_case = (rdm * std::rand()) % 2;
+		char c;
+		if (upper_case)
+			c = rdm + 'A';
+		else
+			c = rdm + 'a';
+		res << c;
+	}
+	return (res.str());
 }
 
 /*
