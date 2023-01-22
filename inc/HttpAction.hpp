@@ -73,7 +73,7 @@ class HttpAction: public HttpMessage {
 
 		bool isMethodAllowed(const int, const Route&) const;
 
-		bool extractMsgBody();
+		void extractMsgBody();
 		std::string randomNameGen() const;
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpAction.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/19 20:26:48 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/22 21:47:25 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,38 +101,42 @@ void HttpAction::doAction(const Server& server) {
 	}
 
 	if (this->http_method == POST) {
-		if (server.getClientMaxBody() >= 0 && (int) this->msg_body.size() > server.getClientMaxBody()) { // NOTE: Limited bodysize
+		try {
+			this->file = File(this->path);
+		}
+		catch (File::FileNotFoundException &e) {
+			this->setupErrorPage(404, server);
+		}
+
+		stringstream size_str(this->headers["Content-Length"]);
+		int size;
+
+		size_str >> size;
+		if (server.getClientMaxBody() >= 0 && size > server.getClientMaxBody()) { // NOTE: Limited bodysize
 			this->setupErrorPage(400, server);
 			return ;
 		}
+
 		std::string upload_dir;
 		if (this->route_index < 0 || server.getRoute(this->route_index).getUploadDir().empty())
 			upload_dir = DEF_UPLOAD_DIR;
 		else
 			upload_dir = server.getRoute(this->route_index).getUploadDir();
 
-		if (extractMsgBody()) {
-			upload_dir.append("/").append(this->upload_filename);
+		extractMsgBody();
+		upload_dir.append("/").append(this->upload_filename);
 
-			std::ofstream outfile(upload_dir.c_str());
-			outfile << this->upload_body;
-			outfile.close();
-		}
-		else {
-			upload_dir.append("/").append(this->randomNameGen());
-			std::ofstream outfile(upload_dir.c_str());
-			outfile << this->msg_body;
-			outfile.close();
-		}
+		std::ofstream outfile(upload_dir.c_str());
+		outfile << this->upload_body;
+		outfile.close();
 		this->status_code = 201;
 	}
 
-	if (this->http_method == DELETE && this->route_index >= 0) { // NOTE: only works if the route is requested
-		std::cout << "ROOT: " << server.getRoot() << std::endl;
-		std::cout << "PATH:" << this->path << std::endl;
+	if (this->http_method == DELETE) {
 		try {
-			this->file = File((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
-			std::remove((server.getRoute(this->route_index).getUploadDir() + "/file.txt").c_str());
+			this->file = File(this->path);
+			std::remove(this->file.getPath().c_str());
+			this->file = File();
 			this->status_code = 204;
 		}
 		catch (File::FileNotFoundException& e) {
@@ -222,13 +226,16 @@ bool HttpAction::isMethodAllowed(const int http_method, const Route& route) cons
 	return (false);
 }
 
-bool HttpAction::extractMsgBody() {
+void HttpAction::extractMsgBody() {
 	std::stringstream sstream (this->msg_body.c_str());
 	std::string tmp;
 	std::string boundary;
 
-	if (this->msg_body.find("Content-Disposition") == std::string::npos)
-		return (false);
+	if (this->msg_body.find("Content-Disposition") == std::string::npos) {
+		this->upload_filename = this->randomNameGen();
+		this->upload_body = this->msg_body;
+		return ;
+	}
 
 	this->upload_body = "";
 
@@ -243,8 +250,7 @@ bool HttpAction::extractMsgBody() {
 			tmp.erase(tmp.find(('\r')));
 		if (tmp.empty())
 			break ;
-		if (tmp.find("Content-Disposition") != std::string::npos)
-		{
+		if (tmp.find("Content-Disposition") != std::string::npos) {
 			this->upload_filename = tmp.substr(tmp.find("filename"));
 			this->upload_filename = this->upload_filename.substr(this->upload_filename.find('\"') + 1);
 			this->upload_filename = this->upload_filename.erase(this->upload_filename.find('\"'));
@@ -260,7 +266,6 @@ bool HttpAction::extractMsgBody() {
 		this->upload_body.append(tmp).append("\n");
 	}
 	this->upload_body.erase(this->upload_body.find_last_of('\n'));
-	return (true);
 }
 
 std::string HttpAction::randomNameGen() const {
