@@ -68,6 +68,7 @@ class HttpAction: public HttpMessage {
 		std::string getDefaultErrorPage(int) const;
 
 		void setPath(const HttpRequest&, const Server&);
+		void removeExtraSlashes();
 		int getRouteIndex(const std::string&, const Server&) const;
 		void checkHttpRedirection(const Server&);
 

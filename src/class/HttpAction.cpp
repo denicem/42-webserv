@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/22 22:49:32 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/23 00:24:46 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,9 @@ std::string HttpAction::getDefaultErrorPage(int err_code) const {
 
 void HttpAction::setPath(const HttpRequest& req, const Server& server) { // TODO: optimize & clean code
 	this->path_req = req.getPath();
+	std::cout << "bf: " << this->path_req << std::endl;
+	this->removeExtraSlashes();
+	std::cout << "af: " << this->path_req << std::endl;
 	this->route_index = getRouteIndex(this->path_req, server);
 
 	if (route_index >= 0) { // FIXME: if route "/hehe" is configured, requesting "/heheeee" still works
@@ -131,10 +134,19 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) { // TODO
 	this->dest = this->path.substr(this->path.find_last_of('/') + 1);
 }
 
+void HttpAction::removeExtraSlashes() {
+	if (path_req == "/")
+		return ;
+	while (this->path_req[this->path_req.size() - 1] == '/')
+		this->path_req.erase(this->path_req.find_last_of('/'));	
+}
+
 int HttpAction::getRouteIndex(const string& uri, const Server& server) const {
 	int res;
 
 	for (res = 0; res < server.getRouteCount(); ++res) {
+		std::cout << "ROUTE: " << server.getRoute(res).getName() << std::endl;
+		std::cout << "URI s: " << uri.substr(0, server.getRoute(res).getName().size()) << std::endl;
 		if (uri.find(server.getRoute(res).getName()) != std::string::npos)
 			return (res);
 	}
