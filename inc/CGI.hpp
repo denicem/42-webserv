@@ -13,6 +13,7 @@
 #pragma once
 
 #include "Webserv.hpp"
+#include "File.hpp"
 #include <cstring>
 #include <sys/wait.h>
 
@@ -29,36 +30,34 @@ class CGI
 		string	_input_content;
 
 		/* ENV FOR CGI */
-		string	_server_name;
-		int		_server_port;
-		string	_request_method; // or get as int?
-		string	_path_info;
-		string	_script_name;
-		string	_query_string;
-		string	_content_type;
-		string	_content_length;
-		char**	_env;
+		map<string, string> _request_headers;
+		int					_server_port;
+		string				_query_string;
+		string				_server_protocol;
+		string				_server_name;
+		vector<string>		_env;
 
 		/* CGI response */
 		string	_response_type;
 		string	_response_body;
 
-		//set enviroment
 		void			setEnv(void);
-
+		static char**	envConverter(const vector<string>& env); //allocates char**
 		static void		CGIError(string error_msg);
 
 	public:
-		CGI(); // for testing
-		/* assumes the request has already been established as valid for CGI */
-		CGI(const map<string, string>& request_headers, const string& query_string, const string& cgi_file, const string& http_version);
-		~CGI();
+		CGI() {}
+		CGI(const map<string, string>& request_headers, int port,
+			const string& query_string, const string& cgi_file,
+			const string& http_version);
+		CGI& operator=(const CGI& rhs);
+		~CGI() {}
 
-		string			executeCGI(void);
+		void			executeCGI(void);
 		const string&	getResponseType(void) { return this->_response_type; }
 		const string&	getResponseBody(void) { return this->_response_body; }
 
-		static bool	isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method);
+		static bool		isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method);
 		static string	intToString(int i);
 		
 		struct CGIException: public exception

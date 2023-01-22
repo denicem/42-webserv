@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpAction.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/22 04:26:53 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/19 20:26:48 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,9 @@ void HttpAction::doAction(const Server& server) {
 
 		try {
 			if (this->is_cgi) {
-				// this->cgi = CGI(this->headers, this->query, this->dest, this->http_ver);
-				// this->cgi_response = this->cgi.executeCGI();
-				// this->file = File("cgi." + cgi.getResponseType(), cgi.getResponseBody());
-				std::cout << "CGI!!!" << std::endl;
-				this->file = File(this->path);
+				this->cgi = CGI(this->headers, server.getPort(0), this->query, this->dest, this->http_ver);
+				this->cgi.executeCGI();
+				this->file = File("cgi." + cgi.getResponseType(), cgi.getResponseBody());
 			}
 			else
 				this->file = File(this->path);
