@@ -6,11 +6,12 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/22 21:47:25 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/22 22:49:32 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpAction.hpp"
+#include "Utils.hpp"
 
 /*
 ** ----------------------- CONSTRUCTORS & DESTRUCTOR -----------------------
@@ -68,81 +69,11 @@ void HttpAction::doAction(const Server& server) {
 	}
 
 	if (this->http_method == GET)
-	{
-		if (this->route_index >= 0) {
-			this->is_cgi = CGI::isCGI(this->dest, server.getRoute(this->route_index).getCgiExts(), getHttpMethodStr(this->http_method));
-		}
-		else if (this->route_index < 0) {
-			this->is_cgi = CGI::isCGI(this->dest, g_cgi_extensions, getHttpMethodStr(this->http_method));
-		}
-
-		try {
-			if (this->is_cgi) {
-				this->cgi = CGI(this->headers, server.getPort(0), this->query, this->dest, this->http_ver);
-				this->cgi.executeCGI();
-				this->file = File("cgi." + cgi.getResponseType(), cgi.getResponseBody());
-			}
-			else
-				this->file = File(this->path);
-			this->status_code = 200;
-		}
-		catch (File::FileNotFoundException& e) {
-			if (this->route_index >= 0 && server.getRoute(this->route_index).getDirList()) { // NOTE: if directory_listing is on
-				this->status_code = 404;
-				std::string tmp = this->dir_list.generateDirOutput(this->route_index, server);
-				this->file = File("dir_list.html", tmp);
-			}
-			else
-				this->setupErrorPage(404, server);
-		}
-		catch (CGI::CGIException &e) {
-			this->setupErrorPage(542, server);
-		}
-	}
-
-	if (this->http_method == POST) {
-		try {
-			this->file = File(this->path);
-		}
-		catch (File::FileNotFoundException &e) {
-			this->setupErrorPage(404, server);
-		}
-
-		stringstream size_str(this->headers["Content-Length"]);
-		int size;
-
-		size_str >> size;
-		if (server.getClientMaxBody() >= 0 && size > server.getClientMaxBody()) { // NOTE: Limited bodysize
-			this->setupErrorPage(400, server);
-			return ;
-		}
-
-		std::string upload_dir;
-		if (this->route_index < 0 || server.getRoute(this->route_index).getUploadDir().empty())
-			upload_dir = DEF_UPLOAD_DIR;
-		else
-			upload_dir = server.getRoute(this->route_index).getUploadDir();
-
-		extractMsgBody();
-		upload_dir.append("/").append(this->upload_filename);
-
-		std::ofstream outfile(upload_dir.c_str());
-		outfile << this->upload_body;
-		outfile.close();
-		this->status_code = 201;
-	}
-
-	if (this->http_method == DELETE) {
-		try {
-			this->file = File(this->path);
-			std::remove(this->file.getPath().c_str());
-			this->file = File();
-			this->status_code = 204;
-		}
-		catch (File::FileNotFoundException& e) {
-			this->setupErrorPage(400, server);
-		}
-	}
+		this->actGet(server);
+	if (this->http_method == POST)
+		this->actPost(server);
+	if (this->http_method == DELETE)
+		this->actDelete(server);
 }
 
 /*
@@ -174,7 +105,7 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) { // TODO
 	this->path_req = req.getPath();
 	this->route_index = getRouteIndex(this->path_req, server);
 
-	if (route_index >= 0) { // FIXME: if route "/hehe" is configured, requesting "/heheeee" still works 
+	if (route_index >= 0) { // FIXME: if route "/hehe" is configured, requesting "/heheeee" still works
 		this->checkHttpRedirection(server);
 		Route tmp(server.getRoute(this->route_index));
 		if (this->path_req.find(tmp.getName()) != std::string::npos && this->path_req.find(".") == std::string::npos) { // if URI has no specific destination, route to index file
@@ -225,6 +156,83 @@ bool HttpAction::isMethodAllowed(const int http_method, const Route& route) cons
 	}
 	return (false);
 }
+
+void HttpAction::actGet(const Server& server) {
+	if (this->route_index >= 0) {
+		this->is_cgi = CGI::isCGI(this->dest, server.getRoute(this->route_index).getCgiExts(), getHttpMethodStr(this->http_method));
+	}
+	else if (this->route_index < 0) {
+		this->is_cgi = CGI::isCGI(this->dest, g_cgi_extensions, getHttpMethodStr(this->http_method));
+	}
+
+	try {
+		if (this->is_cgi) {
+			this->cgi = CGI(this->headers, server.getPort(0), this->query, this->dest, this->http_ver);
+			this->cgi.executeCGI();
+			this->file = File("cgi." + cgi.getResponseType(), cgi.getResponseBody());
+		}
+		else
+			this->file = File(this->path);
+		this->status_code = 200;
+	}
+	catch (File::FileNotFoundException& e) {
+		if (this->route_index >= 0 && server.getRoute(this->route_index).getDirList()) { // NOTE: if directory_listing is on
+			this->status_code = 404;
+			std::string tmp = this->dir_list.generateDirOutput(this->route_index, server);
+			this->file = File("dir_list.html", tmp);
+		}
+		else
+			this->setupErrorPage(404, server);
+	}
+	catch (CGI::CGIException &e) {
+		this->setupErrorPage(542, server);
+	}
+}
+
+void HttpAction::actPost(const Server& server) {
+	try {
+		this->file = File(this->path);
+	}
+	catch (File::FileNotFoundException &e) {
+		this->setupErrorPage(404, server);
+	}
+
+	stringstream size_str(this->headers["Content-Length"]);
+	int size;
+
+	size_str >> size;
+	if (server.getClientMaxBody() >= 0 && size > server.getClientMaxBody()) { // NOTE: Limited bodysize
+		this->setupErrorPage(400, server);
+		return ;
+	}
+
+	std::string upload_dir;
+	if (this->route_index < 0 || server.getRoute(this->route_index).getUploadDir().empty())
+		upload_dir = DEF_UPLOAD_DIR;
+	else
+		upload_dir = server.getRoute(this->route_index).getUploadDir();
+
+	extractMsgBody();
+	upload_dir.append("/").append(this->upload_filename);
+
+	std::ofstream outfile(upload_dir.c_str());
+	outfile << this->upload_body;
+	outfile.close();
+	this->status_code = 201;
+}
+
+void HttpAction::actDelete(const Server& server) {
+	try {
+		this->file = File(this->path);
+		std::remove(this->file.getPath().c_str());
+		this->file = File();
+		this->status_code = 204;
+	}
+	catch (File::FileNotFoundException& e) {
+		this->setupErrorPage(400, server);
+	}
+}
+
 
 void HttpAction::extractMsgBody() {
 	std::stringstream sstream (this->msg_body.c_str());
