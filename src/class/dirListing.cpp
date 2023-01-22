@@ -6,14 +6,27 @@ std::string dirListing::generateDirOutput(int index, const Server& server) {
 
     if(index == -1)
         index = 0;
-    std::cout << "Index: " << index << "Listing output" << std::endl;
-    std::cout << "server location: " << server.getRoute(index).getName() << std::endl;
-    std::cout << "Get root file: " << server.getRoute(index).getRoot() << std::endl;
-    std::cout << "Is Listing on?: " << server.getRoute(index).getDirList() << std::endl;
+    PRINT_W_COLOR(BOLD, "DIR-LISTING");
+    std::cout << RED <<"Index: " << index << "Listing output" << RESET << std::endl;
+    std::cout << RED << "server location: " << server.getRoute(index).getName() << RESET << std::endl;
+    std::cout << RED << "Get root file: " << server.getRoute(index).getRoot() << RESET << std::endl;
+    std::cout << RED <<  "Is Listing on?: " << server.getRoute(index).getDirList() << RESET << std::endl;
 
     //anhand dieser Informationenen muss jetzt eine Listing funktion geschrieben werden.
     std::string dirName = server.getRoute(index).getName();
-    DIR *dir = opendir(server.getRoute(index).getRoot().c_str());
+    // size_t pos = server.getRoute(index).getRoot().find("/");
+    DIR *dir;
+    // std::string fixedRoot = server.getRoute(index).getRoot();
+    // if( pos == std::string::npos)
+        dir = opendir(server.getRoute(index).getRoot().c_str());
+    // else
+    // {
+        // fixedRoot = dirName.substr(pos+4);
+        // PRINT_W_COLOR(BLUE, fixedRoot);
+        // PRINT_W_COLOR(YELLOW, dirName);
+        // dir = opendir(fixedRoot.c_str());
+        // std::cout << GREEN <<"http://localhost:"<< server.getPort(0) << "/" << std::string(dir->d) << RESET <<std::endl;  
+    // }
     std::string page =\
     "<!DOCTYPE html>\n\
     <html>\n\
@@ -28,10 +41,34 @@ std::string dirListing::generateDirOutput(int index, const Server& server) {
         std::cerr << RED << "Error: could not open [" << server.getRoute(index).getRoot() << "]" << RESET << std::endl;
         return "";
     }
-    if (dirName[0] != '/')
-        dirName = "/" + dirName;
+    /***
+     * DT_REG
+
+    A regular file.
+    DT_DIR
+
+    A directory.
+
+    */
+    // if (dirName[0] != '/')
+        // dirName = "/" + dirName;
+    
     for (struct dirent *dirEntry = readdir(dir); dirEntry; dirEntry = readdir(dir)) {
-        page += getLink(std::string(dirEntry->d_name), dirName, server.getServerName(), 0000);
+        std::cout << "http://" << "localhost:" << server.getPort(0) << dirName << "/" << std::string(dirEntry->d_name) << std::endl;
+        std::cout << "dirEntry: " << std::string(dirEntry->d_name) << std::endl;
+        if(dirEntry->d_type == DT_DIR) {
+            std::cout << "dirEntry: " << "is a directory" << std::endl;
+            if(std::string(dirEntry->d_name) == "." || std::string(dirEntry->d_name) == "..")
+                page += getLink(std::string(dirEntry->d_name), dirName, "localhost", server.getPort(0));
+            else {
+                dirEntry = readdir(dir);
+                // page += getLink(std::string(dirEntry->d_name), dirName, "localhost", server.getPort(0));
+            }
+        }
+        else {
+            std::cout << "is a File" << std::endl;
+            page += getLink(std::string(dirEntry->d_name), dirName, "localhost", server.getPort(0));
+        }
     }
     page +="\
     </p>\n\
@@ -45,5 +82,6 @@ std::string         dirListing::getLink(std::string const &dirEntry, std::string
     std::stringstream   ss;
     ss << "\t\t<p><a href=\"http://" + host + ":" <<\
         port << dirName + "/" + dirEntry + "\">" + dirEntry + "</a></p>\n";
+    PRINT_W_COLOR(RED ,ss.str());
     return ss.str();
 }
