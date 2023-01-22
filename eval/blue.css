@@ -1,8 +1,14 @@
-h1 {
+h1, h4 {
 	color: #ffa9cc;
+	text-align: center
 }
 #rnd_img {
 	color: aqua;
 	text-align: right;
 	align-self: fl;
+}
+
+body, a {
+	color: black;
+	font-size: 20px;
 }

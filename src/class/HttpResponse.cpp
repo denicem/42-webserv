@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/17 23:55:23 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/22 23:04:17 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,10 @@ void HttpResponse::addHeaders() { // NOTE: maybe a vector would be more effecien
 
 		if (file_ext == "html" || file_ext == "css" || file_ext == "txt" || file_ext == "plain")
 			this->headers["Content-Type"] = "text/" + (file_ext == "txt" ? "plain" : file_ext);
-		else if (file_ext == "jpeg" || file_ext == "png" || file_ext == "gif")
+		else if (file_ext == "jpeg" || file_ext == "jpg" || file_ext == "png" || file_ext == "gif")
 			this->headers["Content-Type"] = "image/" + file_ext;
+		else if (file_ext == "mp3")
+			this->headers["Content-Type"] = "audio/" + file_ext;
 		this->headers["Content-Length"] = CGI::intToString(this->file.getFileSize());
 	}
 }

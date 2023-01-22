@@ -106,7 +106,8 @@ void	Config:: setDefaultValues(void)
 		_curr_route->http_methods = g_http_methods;
 	//if (route_settings["cgi_extensions"].setting_is_set == false)
 	//	route->cgi_extensions = g_cgi_extensions; // right now, we want to keep it empty if not set
-	if (_route_settings["root"].setting_is_set == false && _route_settings["alias"].setting_is_set == false)
+	if (_route_settings["root"].setting_is_set == false && _route_settings["alias"].setting_is_set == false
+		&& _route_settings["http_redirect"].setting_is_set == false)
 	{
 		if (access((_curr_server->root + _curr_route_name).c_str(), F_OK) == -1)
 			configError(_line_num, "Cannot access route directory");

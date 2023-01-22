@@ -17,6 +17,12 @@
         <h1>Welcome to the evaluation!</h1>
 
 		<img id="rnd_img" src="./img/pink_index.jpg" alt="Index picture" />
+
+        <form action = "/pink_index.html" method="POST" enctype="multipart/form-data">
+			<h3>Upload a file to the server:</h3>
+            <input type="file" name="file1"> <button type="submit">Upload</button>
+            <p>In this server, there is a limit on the client body size. So a file that is too large will generate a "Bad Request" error.</p>
+		</form><br> <br>
 		
     </body>
 </html>
