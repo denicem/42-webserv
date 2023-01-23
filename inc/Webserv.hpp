@@ -12,6 +12,7 @@ using namespace std;
 #include "Config.hpp"
 #include "Server.hpp"
 #include "Route.hpp"
+#include "Utils.hpp"
 
 // #include "HttpMessage.hpp"
 #include "HttpMethod.hpp"
