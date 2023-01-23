@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpAction.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
+/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/23 19:06:09 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/23 20:14:46 by mjeyavat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void HttpAction::doAction(const Server& server) {
 		return ;
 
 	if (this->route_index >= 0) {
+		PRINT_W_COLOR(BLUE, index);
 		if (!isMethodAllowed(this->http_method, server.getRoute(this->route_index))) {
 			this->setupErrorPage(405, server);
 			return ;
