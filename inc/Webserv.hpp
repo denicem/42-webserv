@@ -33,7 +33,7 @@ class Server;
 
 /* MODIFIABLE FEATURES */
 
-#define DEFAULT_CONFIG_FILE_PATH "./conf/default.conf"
+#define DEFAULT_CONFIG_FILE_PATH "./conf/eval.conf"
 
 /* all supported http methods for this server. initialized in initGlobals function */
 extern vector<string>	g_http_methods;

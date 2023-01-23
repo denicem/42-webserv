@@ -42,12 +42,6 @@ char**	CGI::envConverter(const vector<string>& env)
 		if (c_env[i] == NULL)
 			CGIError("Could not allocate memory");
 	}
-	cout << LIGHTBLUE << "ENV\n" << RESET; 
-	for (int i = 0; c_env[i] != NULL; i++)
-	{
-		cout << c_env[i] << '\n';
-	}
-	cout << LIGHTBLUE << "ENV END\n\n" << RESET; 
 	return (c_env);
 }
 

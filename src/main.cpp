@@ -58,7 +58,6 @@ int main(int argc, char* argv[])
 		vector<struct ServerConfig>	server_data;
 		config->extractConfigData(server_data);
 		delete config;
-		Config::printServerConfig(server_data);
 
 		logo();
 
@@ -79,7 +78,9 @@ int main(int argc, char* argv[])
 		}
 		for(size_t i = 0; i < servers.size(); ++i) {
 			std::cout << "Server: " << servers.at(i).getPort(0) << std::endl;
-			std::cout << "server name: " << *dmsServer.getServer(i).getServernameList().begin() << std::endl;
+			std::cout << "server name: " <<
+				(dmsServer.getServer(i).getServernameList().empty() ? "-" : *dmsServer.getServer(i).getServernameList().begin()) 
+				<< std::endl;
 		}
 
 		PRINT_W_COLOR(LIGHTGREEN, "Server fds being added to poll");
@@ -96,7 +97,7 @@ int main(int argc, char* argv[])
 		tcpPoll.status_check();
 	}
 	catch (exception& e) {
-		cerr << e.what() << "\nERRNO: " << errno << '\n';
+		cerr << e.what() << '\n'; //"\nERRNO: " << errno << '\n';
 	}
 	return (0);
 }
