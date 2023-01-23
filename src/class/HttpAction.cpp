@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/23 00:24:46 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/23 19:06:09 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,31 +103,24 @@ std::string HttpAction::getDefaultErrorPage(int err_code) const {
 
 void HttpAction::setPath(const HttpRequest& req, const Server& server) { // TODO: optimize & clean code
 	this->path_req = req.getPath();
-	std::cout << "bf: " << this->path_req << std::endl;
 	this->removeExtraSlashes();
-	std::cout << "af: " << this->path_req << std::endl;
 	this->route_index = getRouteIndex(this->path_req, server);
 
-	if (route_index >= 0) { // FIXME: if route "/hehe" is configured, requesting "/heheeee" still works
+	if (this->path_req.find("favicon.ico") != std::string::npos)
+		this->path = server.getRoot() + "/favicon.ico";
+	else if (route_index >= 0) { 
 		this->checkHttpRedirection(server);
-		Route tmp(server.getRoute(this->route_index));
-		if (this->path_req.find(tmp.getName()) != std::string::npos && this->path_req.find(".") == std::string::npos) { // if URI has no specific destination, route to index file
-			std::cout << "index file for route " << tmp.getName() << std::endl;
-			this->path = tmp.getRoot() + "/" + tmp.getDefaultFile();
+		if (this->path_req.find_first_of('/', 1) != std::string::npos) {
+			this->path_req = this->path_req.substr(this->path_req.find_first_of('/', 1) + 1);
+			this->path = server.getRoute(this->route_index).getRoot() + "/" + this->path_req;
 		}
-		else {
-			std::cout << "Destination file for route " << tmp.getName() << std::endl;
-			this->path = tmp.getRoot() + "/" + this->path_req.substr(tmp.getName().size() + 1);
-			std::cout << this->path << std::endl;
-		}
+		else
+			this->path = server.getRoute(this->route_index).getRoot() + "/" + server.getRoute(this->route_index).getDefaultFile();
 	}
 	else {
-		std::cout << "File from server." << std::endl;
 		this->path = server.getRoot() + "/";
 		if (this->path_req == "/")
 			this->path.append(server.getIndexFile());
-		else if (this->path_req.find("favicon.ico") != std::string::npos)
-			this->path.append("favicon.ico");
 		else
 			this->path.append(this->path_req.substr(this->path_req.find_first_of('/') + 1));
 	}
@@ -137,28 +130,31 @@ void HttpAction::setPath(const HttpRequest& req, const Server& server) { // TODO
 void HttpAction::removeExtraSlashes() {
 	if (path_req == "/")
 		return ;
+
 	while (this->path_req[this->path_req.size() - 1] == '/')
 		this->path_req.erase(this->path_req.find_last_of('/'));	
 }
 
 int HttpAction::getRouteIndex(const string& uri, const Server& server) const {
-	int res;
+	if (uri == "/")
+		return (-1);
 
-	for (res = 0; res < server.getRouteCount(); ++res) {
-		std::cout << "ROUTE: " << server.getRoute(res).getName() << std::endl;
-		std::cout << "URI s: " << uri.substr(0, server.getRoute(res).getName().size()) << std::endl;
-		if (uri.find(server.getRoute(res).getName()) != std::string::npos)
+	int res;
+	std::string uri_route_name = uri.substr(0, uri.find_first_of('/', 1));
+	
+	for (res = 0; res < server.getRouteCount(); ++res) { 
+		if (server.getRoute(res).getName() == uri_route_name)
 			return (res);
 	}
+	std::cout << "NOT FOUND" << std::endl;
 	return (-1);
 }
 
 void HttpAction::checkHttpRedirection(const Server& server) {
 	this->http_redirect = server.getRoute(this->route_index).getHttpRedirect();
-		if (!this->http_redirect.empty()) {
-			this->route_index = getRouteIndex(this->http_redirect, server);
-			this->path_req = this->http_redirect;
-		}
+	if (!this->http_redirect.empty()) {
+		this->route_index = getRouteIndex(this->http_redirect, server);
+	}
 }
 
 bool HttpAction::isMethodAllowed(const int http_method, const Route& route) const {
