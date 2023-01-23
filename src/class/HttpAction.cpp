@@ -65,6 +65,7 @@ void HttpAction::doAction(const Server& server) {
 		this->http_method = DELETE;
 
 	if (this->route_index >= 0) {
+		PRINT_W_COLOR(BLUE, index);
 		if (!isMethodAllowed(this->http_method, server.getRoute(this->route_index))) {
 			this->setupErrorPage(405, server);
 			return ;
