@@ -328,6 +328,8 @@ void	Config::parseConfigFile(void)
 						}
 						else if (*_line.begin() == '/')
 						{
+							if (_line.rfind('/') != 0)
+								configError(_line_num, "Keep the routes simple please, only one '/' per route name");
 							if (_curr_server->routes.insert(map<string, RouteConfig>::value_type(_line, RouteConfig())).second == false)
 								configError(_line_num, "Two routes of the same name shouldn't be in the same server");
 							_curr_route = &_curr_server->routes[_line];
