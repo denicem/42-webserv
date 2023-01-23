@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "File.hpp"
+#include "Utils.hpp"
 
 #include <iostream>
 
@@ -26,7 +27,7 @@ File::File(const std::string& path): path(path) {
 	std::ifstream file (this->path.c_str());
 	if (!file.is_open())
 		throw FileNotFoundException();
-	if (this->file_name.find('.') == std::string::npos) { // NOTE: if file is a dir // TODO: find another solution
+	if (isDirectory(this->path.c_str())) {
 		file.close();
 		throw FileNotFoundException();
 	}
