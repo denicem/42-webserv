@@ -15,14 +15,39 @@
 vector<string>	g_http_methods;
 vector<string>	g_cgi_extensions;
 
-void	initGlobals(void)
+struct StartUpException: public exception
 {
+	const char* what() const throw() {
+		return ("\033[31;1mError occured during startup ⬆️\033[0m");
+	}
+};
+
+void	startUp(string program_path)
+{
+	program_path = program_path.substr(2);
+	if (program_path.find('/') != string::npos ||
+		program_path.find('\\') != string::npos ||
+		program_path.find('.') != string::npos) {
+		cout << "Please startup webserv in the repository's root directory.\n"
+			<< "Otherwise filepaths will not work correctly\n";
+			throw StartUpException();
+	}
+
+	if (access(DEF_UPLOAD_DIR, F_OK) == -1)
+		if (system(("mkdir " + string(DEF_UPLOAD_DIR)).c_str()) != 0) {
+			cout << "The default upload directory seems to be invalid. Perhaps it is in a subdirectory that doesn't exist.\n"
+			<< "Please review in Webserv.hpp (could theoretically also be a failure of the system() function)\n";
+			throw StartUpException();
+		}
+
 	g_http_methods.push_back("GET");
 	g_http_methods.push_back("DELETE");
 	g_http_methods.push_back("POST");
 
 	g_cgi_extensions.push_back(".py");
 	g_cgi_extensions.push_back(".cgi");
+
+
 }
 
 void	logo(void)
@@ -52,7 +77,7 @@ void	logo(void)
 int main(int argc, char* argv[])
 {
 	try {
-		initGlobals();
+		startUp(argv[0]);
 
 		Config*	config = new Config(Config::getFilePath(argc, argv));
 		vector<struct ServerConfig>	server_data;

@@ -13,8 +13,6 @@
 #ifndef ROUTE_HPP
 #define ROUTE_HPP
 
-#define DEF_UPLOAD_DIR "./upload"
-
 #include <string>
 #include <vector>
 #include <iostream>

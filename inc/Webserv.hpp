@@ -35,6 +35,8 @@ class Server;
 
 #define DEFAULT_CONFIG_FILE_PATH "./conf/eval.conf"
 
+#define DEF_UPLOAD_DIR "./upload"
+
 /* all supported http methods for this server. initialized in initGlobals function */
 extern vector<string>	g_http_methods;
 
