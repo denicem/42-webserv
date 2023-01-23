@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpAction.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjeyavat <mjeyavat@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/23 20:14:46 by mjeyavat         ###   ########.fr       */
+/*   Updated: 2023/01/23 20:28:28 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ File HttpAction::getFile() const {
 void HttpAction::doAction(const Server& server) {
 	if (this->http_method == METHOD_UNDEFINED)
 		return ;
+
+	if (this->query == "_method=DELETE")
+		this->http_method = DELETE;
 
 	if (this->route_index >= 0) {
 		PRINT_W_COLOR(BLUE, index);

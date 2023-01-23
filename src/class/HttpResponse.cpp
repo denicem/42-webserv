@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/22 23:04:17 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/23 21:06:21 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void HttpResponse::addHeaders() { // NOTE: maybe a vector would be more effecien
 			this->headers["Content-Type"] = "image/" + file_ext;
 		else if (file_ext == "mp3")
 			this->headers["Content-Type"] = "audio/" + file_ext;
-		this->headers["Content-Length"] = CGI::intToString(this->file.getFileSize());
+		this->headers["Content-Length"] = intToString(this->file.getFileSize());
 	}
 }
 
