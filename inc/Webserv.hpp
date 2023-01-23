@@ -44,8 +44,6 @@ extern vector<string>	g_http_methods;
 /* all supported cgi extensions for this server. initialized in initGlobals function */
 extern vector<string>	g_cgi_extensions;
 
-// string	WAITING_ICON("🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛"); // 🌕🌖🌗🌘🌑🌒🌓🌔🌕
-
 /* COLOURS */
 
 # define RESET	"\e[0m"
