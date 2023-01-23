@@ -36,7 +36,6 @@ class CGI
 		string				_server_protocol;
 		string				_server_name;
 		vector<string>		_env;
-		/*             */
 
 		/* CGI response */
 		string	_response_type;
