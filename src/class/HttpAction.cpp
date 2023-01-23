@@ -6,7 +6,7 @@
 /*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/23 20:28:28 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/23 21:53:37 by shaas            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void HttpAction::doAction(const Server& server) {
 		this->http_method = DELETE;
 
 	if (this->route_index >= 0) {
-		PRINT_W_COLOR(BLUE, index);
 		if (!isMethodAllowed(this->http_method, server.getRoute(this->route_index))) {
 			this->setupErrorPage(405, server);
 			return ;

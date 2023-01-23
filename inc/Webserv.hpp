@@ -94,7 +94,6 @@ extern vector<string>	g_cgi_extensions;
 	std::cout << color << text << RESET << std::endl; \
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////
 
 class Webserv {
