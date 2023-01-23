@@ -36,8 +36,8 @@ void TCPPoll::add_fds(Server server) {
 
 void TCPPoll::status_check()
 {
-	PRINT_W_COLOR(LIGHTGREEN, "status_check is starting:")
-	PRINT_W_COLOR(BLUE, ("Max connection are: " + CGI::intToString(getMaxConnection())))
+	PRINT_W_COLOR(LIGHTGREEN, "Status check is starting")
+	PRINT_W_COLOR(BLUE, ("\nMax connection are: " + CGI::intToString(getMaxConnection())))
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
@@ -61,7 +61,7 @@ void TCPPoll::status_check()
 		if (listen(this->sfds[i].getServerSocketFD(), 10) < 0)
 			throw NoListenException();
 	}
-	PRINT_W_COLOR(LIGHTGREEN, "Poll struct about to inizialised")
+	PRINT_W_COLOR(LIGHTGREEN, "\nPoll struct about to inizialised")
 	//init poll struct
 	for(int i = 0; i < getMaxConnection(); i++)
 	{
@@ -70,7 +70,7 @@ void TCPPoll::status_check()
 		connection_poll[i].events = POLL_IN;
 	}
 	//mainloop 
-	PRINT_W_COLOR(LIGHTCYAN, "HTTP PART")
+	PRINT_W_COLOR(LIGHTCYAN, "\n\nHTTP PART")
 	while(1)
 	{
 		pollStatus = poll(connection_poll, (unsigned int) getMaxConnection(), TIMEOUT);

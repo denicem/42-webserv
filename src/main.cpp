@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 				<< std::endl;
 		}
 
-		PRINT_W_COLOR(LIGHTGREEN, "Server fds being added to poll");
+		PRINT_W_COLOR(LIGHTGREEN, "\nServer fds being added to poll");
 		for (size_t i = 0; i < server_data.size(); i++)
 		{
 			std::cout << "i in Loop is: " << i << std::endl;
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 		}
 		tcpPoll.setMaxConnection();
 		// 	tcpPoll.add_fds(Server(PORT + i, "simple"));
-		PRINT_W_COLOR(LIGHTGREEN, "Status check is being called");
+		PRINT_W_COLOR(LIGHTGREEN, "\nStatus check is being called");
 
 		tcpPoll.status_check();
 	}
