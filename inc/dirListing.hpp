@@ -10,12 +10,10 @@
 
 
 class dirListing {
-    private:
-        //servername
-    public:
-        std::string generateDirOutput(int index, const Server& server);
-        std::string getLink(std::string const &dirEntry, std::string const &dirName, std::string const &host, int port);
-        std::string getSubLink(std::string const &dirEntry, std::string const &secEntry, std::string const &dirName, std::string const &host, int port);
-
-
+	private:
+		//servername
+	public:
+		std::string generateDirOutput(int index, const Server& server);
+		std::string getLink(std::string const &dirEntry, std::string const &dirName, std::string const &host, int port);
+		std::string getSubLink(std::string const &dirEntry, std::string const &secEntry, std::string const &dirName, std::string const &host, int port);
 };

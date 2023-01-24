@@ -22,23 +22,12 @@ TCPPoll::TCPPoll() {
 }
 
 void TCPPoll::add_fds(Server server) {
-	// static int i = 0;
-	// std::cout << BLUE << "server " << i << " is being added to the list" << RESET << std::endl;
-	// std::cout << BLUE << "sever Name: " << server.getServernameList()[0] << RESET << std::endl;
 	this->sfds.push_back(server);
-	// if(i == 0)
-		// this->setMaxConnection(1);
-	// else {
-		// this->setMaxConnection();
-	// }
-	// i++;
 }
 
-void TCPPoll::status_check()
-{
+void TCPPoll::status_check() {
 	PRINT_W_COLOR(LIGHTGREEN, "Status check is starting")
 	PRINT_W_COLOR(BLUE, ("\nMax connection are: " + intToString(getMaxConnection())))
-	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)
 	for(int i = 0; i < getMaxConnection(); i++)
@@ -87,31 +76,26 @@ void TCPPoll::status_check()
 				{
 					if (connection_poll[index].revents & POLL_IN)
 					{
-						std::vector<unsigned char> buf(MAXBUFF);
-						std::string str;
+						std::vector<unsigned char> buff(MAXBUFF);
+						std::string str_buff;
 						cout << "\n---------- We have a connection -----------\n\n";
 						acceptedFd = accept(sfds[index].getServerSocketFD(), (struct sockaddr *)&sfds[index]._address, (socklen_t *) &len);
 						std::cout << MAGENTA << "Port " << this->sfds[index].getPort(0) << " connected to client." << RESET << std::endl;	
 						//read and write to client
 						while (1) {
-							int bytes_rec = recv(acceptedFd, &buf[0], MAXBUFF, 0);
-							std::cout << "BYTES RECEIVED: " << bytes_rec << std::endl;
-							str.insert(str.end(), &buf[0], &buf[bytes_rec]);
-							std::cout << str << std::endl;
-							buf.clear();
+							int bytes_rec = recv(acceptedFd, &buff[0], MAXBUFF, 0);
+							str_buff.insert(str_buff.end(), &buff[0], &buff[bytes_rec]);
+							buff.clear();
 							if (bytes_rec < MAXBUFF)
 								break ;
 						}
-						// std::cout << CYAN << "Bytes read: " << bytes_rec << RESET << std::endl;	
-						// PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
-						// PRINT_W_COLOR(BOLD, buffer)
 
-						// std::cout << str << std::endl;
-						// std::cout << str.size() << std::endl;
+						// PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
+						// PRINT_W_COLOR(BOLD, str_buff)
 
 						// this->sfds[index].printRoutes();
 
-						HttpRequest req(str);
+						HttpRequest req(str_buff);
 						PRINT_W_COLOR(LIGHTBLUE, "HTTP Request")
 						PRINT_W_COLOR(BOLD, req)
 
@@ -125,7 +109,6 @@ void TCPPoll::status_check()
 
 						send(acceptedFd, resp_msg.c_str(), resp_msg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";
-						// memset(this->buffer, 0, MAXBUFF);
 						close(acceptedFd);
 					}
 				}

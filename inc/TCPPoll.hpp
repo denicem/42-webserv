@@ -31,7 +31,7 @@ class Server;
 
 /* our defines */
 
-#define MAXBUFF          (8192)
+#define MAXBUFF          (16384)
 #define MAX_CONN         (3)
 #define TIMEOUT          (1024 * 1024)
 #define MY_MAX(a,b)      (a = (a > b) ? a : b )
@@ -49,7 +49,6 @@ class TCPPoll
 		vector<Server> sfds;
 		int pollStatus, index, acceptedFd;
 		size_t len;
-		char buffer[MAXBUFF];
 		int maxConnection;
 		
 	public:
