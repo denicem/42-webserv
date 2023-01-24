@@ -37,7 +37,7 @@ void TCPPoll::add_fds(Server server) {
 void TCPPoll::status_check()
 {
 	PRINT_W_COLOR(LIGHTGREEN, "Status check is starting")
-	PRINT_W_COLOR(BLUE, ("\nMax connection are: " + CGI::intToString(getMaxConnection())))
+	PRINT_W_COLOR(BLUE, ("\nMax connection are: " + intToString(getMaxConnection())))
 	memset(this->buffer, 0, MAXBUFF);
 	
 	//bind, listen, sock option (Sockets)

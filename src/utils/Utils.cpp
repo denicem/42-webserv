@@ -12,3 +12,10 @@ bool isDirectory(const char* path) {
 
 	return (true);
 }
+
+string	intToString(int i)
+{
+	stringstream ss;
+	ss << i;
+	return (ss.str());
+}

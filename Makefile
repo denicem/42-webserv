@@ -44,7 +44,7 @@ INCLUDE := -I./inc/
 #	RULES																	   #
 # **************************************************************************** #
 
-all: bs4 $(CGI_OBJ) $(NAME)
+all: python $(CGI_OBJ) $(NAME)
 
 $(NAME): $(OBJ)
 	@printf $(BLUE)"Linking objects to a binary file\r"$(RESET)
@@ -64,11 +64,10 @@ $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
 	@$(CC) $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
-bs4:
-ifeq ( , $(BS4INSTALLED))
+python:
 	@pip3 --disable-pip-version-check install bs4 > /dev/null
+	@pip3 --disable-pip-version-check install requests > /dev/null
 	@printf $(CYAN)$(BOLD)"Required Python packages for CGI installed [✓]\n"$(RESET)
-endif
 
 clean:
 	@printf $(MAGENTA)"Removing object files...\r"$(RESET)
@@ -84,9 +83,10 @@ fclean: clean
 re: fclean all
 
 exe:
+	export PATH="`python3 -m site --user-base`/bin:$$PATH"
 	./$(NAME)
 
-run: $(NAME) exe
+run: all exe
 
 .PHONY: all clean fclean re exe
 

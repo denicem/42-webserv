@@ -1,6 +1,9 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-bool isDirectory(const char* path);
+#include <Webserv.hpp>
+
+bool		isDirectory(const char* path);
+string		intToString(int i);
 
 #endif

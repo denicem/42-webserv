@@ -14,6 +14,7 @@
 
 vector<string>	g_http_methods;
 vector<string>	g_cgi_extensions;
+string			g_PATH;
 
 struct StartUpException: public exception
 {
@@ -22,8 +23,16 @@ struct StartUpException: public exception
 	}
 };
 
-void	startUp(string program_path)
+void	startUp(string program_path, char *env[])
 {
+	for (int i = 0; env[i] != NULL; i++) {
+		if (string(env[i]).substr(0, 4).find("PATH") != string::npos) {
+			g_PATH = string(env[i]);
+			cout << g_PATH << '\n';
+			break ;
+		}
+	}
+
 	program_path = program_path.substr(2);
 	if (program_path.find('/') != string::npos ||
 		program_path.find('\\') != string::npos ||
@@ -46,8 +55,6 @@ void	startUp(string program_path)
 
 	g_cgi_extensions.push_back(".py");
 	g_cgi_extensions.push_back(".cgi");
-
-
 }
 
 void	logo(void)
@@ -74,10 +81,10 @@ void	logo(void)
 	
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char* argv[], char* env[])
 {
 	try {
-		startUp(argv[0]);
+		startUp(argv[0], env);
 
 		Config*	config = new Config(Config::getFilePath(argc, argv));
 		vector<struct ServerConfig>	server_data;
@@ -85,11 +92,6 @@ int main(int argc, char* argv[])
 		delete config;
 
 		logo();
-
-		// CGI	cgi;
-		// cout << cgi.executeCGI();
-		// return (0);
-		//return (0);
 
 		Webserv dmsServer;
 		TCPPoll tcpPoll;

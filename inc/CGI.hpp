@@ -58,7 +58,6 @@ class CGI
 		const string&	getResponseBody(void) { return this->_response_body; }
 
 		static bool		isCGI(const string& filename, const vector<string>& allowed_cgi_for_route, const string& method);
-		static string	intToString(int i);
 		
 		struct CGIException: public exception
 		{
