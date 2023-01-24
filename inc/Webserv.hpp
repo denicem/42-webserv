@@ -44,6 +44,9 @@ extern vector<string>	g_http_methods;
 /* all supported cgi extensions for this server. initialized in initGlobals function */
 extern vector<string>	g_cgi_extensions;
 
+/* need to preserve variable "PATH" from env to find python packages in CGI */
+extern string	g_PATH;
+
 /* COLOURS */
 
 # define RESET	"\e[0m"

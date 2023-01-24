@@ -53,6 +53,8 @@ void	CGI::setEnv(void)
 {
 	string	buf;
 
+	if (!g_PATH.empty())
+		_env.push_back(g_PATH);
 	_env.push_back("SERVER_SOFTWARE=DMS-Server/1.0");
 	_env.push_back("GATEWAY_INTERFACE=CGI/1.1");
 	_env.push_back("SERVER_PROTOCOL=HTTP/1.1");
@@ -77,7 +79,7 @@ void	CGI::setEnv(void)
 			if (*j == '-')
 				*j = '_';
 		}
-		_env.push_back("HTTP_" +buf + '=' + i->second);
+		_env.push_back("HTTP_" + buf + '=' + i->second);
 	}
 }
 
