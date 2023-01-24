@@ -45,13 +45,6 @@ char**	CGI::envConverter(const vector<string>& env)
 	return (c_env);
 }
 
-string	CGI::intToString(int i)
-{
-	stringstream ss;
-	ss << i;
-	return (ss.str());
-}
-
 /*
 ** ----------------------- PRIVATE METHODS -----------------------
 */

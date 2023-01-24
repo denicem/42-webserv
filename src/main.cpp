@@ -86,11 +86,6 @@ int main(int argc, char* argv[])
 
 		logo();
 
-		// CGI	cgi;
-		// cout << cgi.executeCGI();
-		// return (0);
-		//return (0);
-
 		Webserv dmsServer;
 		TCPPoll tcpPoll;
 		vector<Server> servers;

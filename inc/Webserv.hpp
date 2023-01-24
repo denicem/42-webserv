@@ -12,6 +12,7 @@ using namespace std;
 #include "Config.hpp"
 #include "Server.hpp"
 #include "Route.hpp"
+#include "Utils.hpp"
 
 // #include "HttpMessage.hpp"
 #include "HttpMethod.hpp"
@@ -42,8 +43,6 @@ extern vector<string>	g_http_methods;
 
 /* all supported cgi extensions for this server. initialized in initGlobals function */
 extern vector<string>	g_cgi_extensions;
-
-// string	WAITING_ICON("🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛"); // 🌕🌖🌗🌘🌑🌒🌓🌔🌕
 
 /* COLOURS */
 
@@ -94,7 +93,6 @@ extern vector<string>	g_cgi_extensions;
 { \
 	std::cout << color << text << RESET << std::endl; \
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
