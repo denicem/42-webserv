@@ -44,7 +44,7 @@ INCLUDE := -I./inc/
 #	RULES																	   #
 # **************************************************************************** #
 
-all: python $(CGI_OBJ) $(NAME)
+all: $(CGI_OBJ) $(NAME)
 
 $(NAME): $(OBJ)
 	@printf $(BLUE)"Linking objects to a binary file\r"$(RESET)
@@ -64,10 +64,11 @@ $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
 	@$(CC) $< -o $@
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
-python:
+install:
 	@pip3 --disable-pip-version-check install bs4 > /dev/null
 	@pip3 --disable-pip-version-check install requests > /dev/null
-	@printf $(CYAN)$(BOLD)"Required Python packages for CGI installed [✓]\n"$(RESET)
+	@brew install siege
+	@printf $(CYAN)$(BOLD)"Required packages installed [✓]\n"$(RESET)
 
 clean:
 	@printf $(MAGENTA)"Removing object files...\r"$(RESET)
