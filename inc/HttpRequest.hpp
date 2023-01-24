@@ -31,6 +31,7 @@ class HttpRequest: public HttpMessage {
 		HttpRequest();
 		HttpRequest(const HttpRequest&);
 		HttpRequest(void*);
+		HttpRequest(const std::string&);
 		~HttpRequest();
 
 		HttpRequest& operator=(const HttpRequest&);

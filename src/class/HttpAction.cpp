@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpAction.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/23 21:53:37 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/24 18:14:13 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,15 +276,21 @@ void HttpAction::extractMsgBody() {
 		}
 		std::getline(sstream, tmp);
 	}
-	while (!sstream.eof()) {
-		std::getline(sstream, tmp);
-		if (tmp.find('\r') != std::string::npos)
-			tmp.erase(tmp.find(('\r')));
-		if (boundary == tmp)
-			break ;
-		this->upload_body.append(tmp).append("\n");
+	this->extractPureBody(boundary);
+}
+
+void HttpAction::extractPureBody(const std::string& boundary) {
+	std::string rn = "\r\n\r\n";
+	size_t pos = 0;
+	std::string tmp = this->msg_body;
+
+	if ((pos = tmp.find(rn)) != std::string::npos) {
+		tmp.erase(0, pos + rn.length());
+		std::string pure_body;
+		if ((pos = tmp.find(boundary)) != std::string::npos)
+			pure_body = tmp.substr(0, pos - 2);
+		this->upload_body = pure_body;
 	}
-	this->upload_body.erase(this->upload_body.find_last_of('\n'));
 }
 
 std::string HttpAction::randomNameGen() const {

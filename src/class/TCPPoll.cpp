@@ -87,18 +87,26 @@ void TCPPoll::status_check()
 				{
 					if (connection_poll[index].revents & POLL_IN)
 					{
+						std::vector<unsigned char> buf(MAXBUFF);
+						std::string str;
 						cout << "\n---------- We have a connection -----------\n\n";
 						acceptedFd = accept(sfds[index].getServerSocketFD(), (struct sockaddr *)&sfds[index]._address, (socklen_t *) &len);
 						//read and write to client
-						if (recv(acceptedFd, this->buffer, MAXBUFF, 0) < 0)
+						int bytes_rec = recv(acceptedFd, &buf[0], MAXBUFF, 0);
+						if (bytes_rec < 0)
 							std::cout << "No bytes are there to read.\n";
+						std::cout << CYAN << "Bytes read: " << bytes_rec << RESET << std::endl;	
 						std::cout << MAGENTA << "Port " << this->sfds[index].getPort(0) << " connected to client." << RESET << std::endl;	
-						PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
-						PRINT_W_COLOR(BOLD, buffer)
+						// PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
+						// PRINT_W_COLOR(BOLD, buffer)
 
-						this->sfds[index].printRoutes();
+						str.insert(str.end(), &buf[0], &buf[bytes_rec]);
+						// std::cout << str << std::endl;
+						// std::cout << str.size() << std::endl;
 
-						HttpRequest req(this->buffer);
+						// this->sfds[index].printRoutes();
+
+						HttpRequest req(str);
 						PRINT_W_COLOR(LIGHTBLUE, "HTTP Request")
 						PRINT_W_COLOR(BOLD, req)
 
@@ -112,7 +120,7 @@ void TCPPoll::status_check()
 
 						send(acceptedFd, resp_msg.c_str(), resp_msg.length(), 0);
 						std::cout << "\n-------- msg sent --------\n";
-						memset(this->buffer, 0, MAXBUFF);
+						// memset(this->buffer, 0, MAXBUFF);
 						close(acceptedFd);
 					}
 				}

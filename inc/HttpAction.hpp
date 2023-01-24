@@ -79,6 +79,7 @@ class HttpAction: public HttpMessage {
 		void actDelete(const Server&);
 
 		void extractMsgBody();
+		void extractPureBody(const std::string& boundary);
 		std::string randomNameGen() const;
 };
 
