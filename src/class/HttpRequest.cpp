@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/17 03:26:18 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/24 03:45:42 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ HttpRequest::HttpRequest(const HttpRequest& other): HttpMessage(other), http_met
 
 HttpRequest::HttpRequest(void* buff) {
 	std::stringstream req_buff(std::string((const char*) buff));
+	std::getline(req_buff, this->request_line);
+	this->fetchRequestBuffer(req_buff);
+}
+
+HttpRequest::HttpRequest(const std::string& buff) {
+	std::stringstream req_buff(buff);
 	std::getline(req_buff, this->request_line);
 	this->fetchRequestBuffer(req_buff);
 }
