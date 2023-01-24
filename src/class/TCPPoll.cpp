@@ -101,8 +101,8 @@ void TCPPoll::status_check()
 						// PRINT_W_COLOR(BOLD, buffer)
 
 						str.insert(str.end(), &buf[0], &buf[bytes_rec]);
-						std::cout << str << std::endl;
-						std::cout << str.size() << std::endl;
+						// std::cout << str << std::endl;
+						// std::cout << str.size() << std::endl;
 
 						// this->sfds[index].printRoutes();
 
