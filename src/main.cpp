@@ -26,10 +26,8 @@ struct StartUpException: public exception
 void	startUp(string program_path, char *env[])
 {
 	for (int i = 0; env[i] != NULL; i++) {
-		cout << env[i] << '\n';
 		if (string(env[i]).substr(0, 10).find("PYTHONPATH") != string::npos) {
 			g_PATH = string(env[i]);
-			cout << g_PATH << "\n\n\n\n\n";
 			break ;
 		}
 	}
