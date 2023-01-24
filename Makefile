@@ -65,7 +65,6 @@ $(DIR_CGI_OBJ)%.cgi:	$(DIR_CGI_SRC)%.cpp
 	@printf $(SPACE)$(GREEN)"[✓]\n"$(RESET)
 
 python:
-	export PATH="`python3 -m site --user-base`/bin:$$PATH"
 	@pip3 --disable-pip-version-check install bs4 > /dev/null
 	@pip3 --disable-pip-version-check install requests > /dev/null
 	@printf $(CYAN)$(BOLD)"Required Python packages for CGI installed [✓]\n"$(RESET)
@@ -84,6 +83,7 @@ fclean: clean
 re: fclean all
 
 exe:
+	export PATH="`python3 -m site --user-base`/bin:$$PATH"
 	./$(NAME)
 
 run: all exe
