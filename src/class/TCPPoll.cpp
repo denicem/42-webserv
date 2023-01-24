@@ -91,16 +91,21 @@ void TCPPoll::status_check()
 						std::string str;
 						cout << "\n---------- We have a connection -----------\n\n";
 						acceptedFd = accept(sfds[index].getServerSocketFD(), (struct sockaddr *)&sfds[index]._address, (socklen_t *) &len);
-						//read and write to client
-						int bytes_rec = recv(acceptedFd, &buf[0], MAXBUFF, 0);
-						if (bytes_rec < 0)
-							std::cout << "No bytes are there to read.\n";
-						std::cout << CYAN << "Bytes read: " << bytes_rec << RESET << std::endl;	
 						std::cout << MAGENTA << "Port " << this->sfds[index].getPort(0) << " connected to client." << RESET << std::endl;	
+						//read and write to client
+						while (1) {
+							int bytes_rec = recv(acceptedFd, &buf[0], MAXBUFF, 0);
+							std::cout << "BYTES RECEIVED: " << bytes_rec << std::endl;
+							str.insert(str.end(), &buf[0], &buf[bytes_rec]);
+							std::cout << str << std::endl;
+							buf.clear();
+							if (bytes_rec < MAXBUFF)
+								break ;
+						}
+						// std::cout << CYAN << "Bytes read: " << bytes_rec << RESET << std::endl;	
 						// PRINT_W_COLOR(LIGHTBLUE, "BUFFER")
 						// PRINT_W_COLOR(BOLD, buffer)
 
-						str.insert(str.end(), &buf[0], &buf[bytes_rec]);
 						// std::cout << str << std::endl;
 						// std::cout << str.size() << std::endl;
 
