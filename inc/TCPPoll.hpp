@@ -31,7 +31,7 @@ class Server;
 
 /* our defines */
 
-#define MAXBUFF          (65536)
+#define MAXBUFF          (8192)
 #define MAX_CONN         (3)
 #define TIMEOUT          (1024 * 1024)
 #define MY_MAX(a,b)      (a = (a > b) ? a : b )
