@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 18:15:07 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/24 18:14:13 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/24 20:54:27 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ int HttpAction::getRouteIndex(const string& uri, const Server& server) const {
 		if (server.getRoute(res).getName() == uri_route_name)
 			return (res);
 	}
-	std::cout << "NOT FOUND" << std::endl;
 	return (-1);
 }
 
@@ -212,7 +211,7 @@ void HttpAction::actPost(const Server& server) {
 	int size;
 
 	size_str >> size;
-	if (server.getClientMaxBody() >= 0 && size > server.getClientMaxBody()) { // NOTE: Limited bodysize
+	if (server.getClientMaxBody() >= 0 && size > server.getClientMaxBody()) {
 		this->setupErrorPage(400, server);
 		return ;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shaas <shaas@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:52 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/23 21:06:21 by shaas            ###   ########.fr       */
+/*   Updated: 2023/01/24 20:55:45 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ std::string HttpResponse::getStatusMsg() const {
 	}
 }
 
-void HttpResponse::addHeaders() { // NOTE: maybe a vector would be more effecient?
+void HttpResponse::addHeaders() {
 	if (!this->file.getContent().empty()) {
 		std::string file_name = this->file.getFilename();
 		std::string file_ext = file_name.substr(file_name.find('.') + 1);
@@ -120,15 +120,15 @@ std::ostream& operator<<(std::ostream& stream, const HttpResponse& resp) {
 	stream << "***** Respone *****" << std::endl;
 	stream << "Status code: " << resp.status_code << std::endl;
 	stream << "Status message: " << resp.getStatusMsg() << std::endl;
-	stream << "Response body: " << std::endl;
-	if (resp.file.getFileSize() == 0 && resp.file.getContent().empty())
-		stream << "Empty body!";
-	else {
-		stream << "File name: " << resp.file.getFilename() << std::endl;
-		stream << "File size: " << resp.file.getFileSize() << " bytes." << std::endl;;
-		stream << "Path: " << resp.file.getPath();
-	}
-	stream << std::endl;
+	// stream << "Response body: " << std::endl;
+	// if (resp.file.getFileSize() == 0 && resp.file.getContent().empty())
+	// 	stream << "Empty body!";
+	// else {
+	// 	stream << "File name: " << resp.file.getFilename() << std::endl;
+	// 	stream << "File size: " << resp.file.getFileSize() << " bytes." << std::endl;;
+	// 	stream << "Path: " << resp.file.getPath();
+	// }
+	// stream << std::endl;
 	stream << "********************" << std::endl;
 	
 	return (stream);

@@ -49,7 +49,6 @@ class TCPPoll
 		vector<Server> sfds;
 		int pollStatus, index, acceptedFd;
 		size_t len;
-		char buffer[MAXBUFF];
 		int maxConnection;
 		
 	public:

@@ -6,7 +6,7 @@
 /*   By: dmontema <dmontema@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:44:39 by dmontema          #+#    #+#             */
-/*   Updated: 2023/01/24 03:45:42 by dmontema         ###   ########.fr       */
+/*   Updated: 2023/01/24 20:53:10 by dmontema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@
 
 HttpRequest::HttpRequest() {}
 HttpRequest::HttpRequest(const HttpRequest& other): HttpMessage(other), http_method(other.http_method), uri(other.uri), path(other.path), query(other.query) {}
-
-HttpRequest::HttpRequest(void* buff) {
-	std::stringstream req_buff(std::string((const char*) buff));
-	std::getline(req_buff, this->request_line);
-	this->fetchRequestBuffer(req_buff);
-}
 
 HttpRequest::HttpRequest(const std::string& buff) {
 	std::stringstream req_buff(buff);
@@ -134,7 +128,7 @@ void HttpRequest::fetchHeaders(std::stringstream& stream) {
 	std::string tmp;
 
 	while (!stream.eof() && tmp != "\r") {
-		std::getline(stream, tmp); // TODO: instead of getline, use cin?!? -> maybe will be simpler?
+		std::getline(stream, tmp);
 		if (tmp != "\r")
 			this->headers[tmp.substr(0, tmp.find(":"))] = tmp.substr(tmp.find(":") + 2, tmp.find("\r") - (tmp.find(":") + 2));
 	}
@@ -167,9 +161,9 @@ std::ostream& operator<<(std::ostream& stream, const HttpRequest& req) {
 	// for (std::map<std::string, std::string>::const_iterator it = req.headers.begin(); it != req.headers.end(); ++it)
 	// 	stream << (*it).first << ": " << (*it).second << std::endl;
 	// stream << std::endl;
-	stream << "HTTP body:" << std::endl;
-	stream << (req.msg_body.empty() ? "Empty body" : req.msg_body) << std::endl;
-	stream << "*******************" << std::endl;
+	// stream << "HTTP body:" << std::endl;
+	// stream << (req.msg_body.empty() ? "Empty body" : req.msg_body) << std::endl;
+	// stream << "*******************" << std::endl;
 
 	return (stream);
 }
